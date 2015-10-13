@@ -1,11 +1,22 @@
 *{font-family: 'Microsoft Yahei'}
+html,body{font-size: 14px; height: 100%; width: 100%; overflow: visible;}
+html{}
+body{margin-bottom: 50px;/* padding-top: -100px; */}
 /**nav**/
-.nav-wrapper{width: 100%; text-align: center;}
-.nav{width: 1000px; margin: 0 auto; /*border-radius: 0px; border: 0px; border-bottom: 1px #eee solid; */}
+.nav-wrapper{width: 100%; text-align: center;position: fixed;top: 0; z-index: 999;}
+.nav{width: 1024px; margin: 0 auto; /*border-radius: 0px; border: 0px; border-bottom: 1px #eee solid; */}
 /**footer**/
-.footer{width: 1000px; text-align: center; margin: 0 auto; position: absolute;left: 0;right: 0;bottom: 0;}
+.footer-wrapper{width: 100%; height: 20px; text-align: center; margin: 0px auto; position: absolute; bottom: 0; clear:both;}
 /**container**/
-.container{width: 1000px; margin: 0 auto;}
+.container{width: 1000px; margin: 0 auto;padding-top: 50px;}
+/** home **/
+.balance-briefing{margin-top: 50px;}
+.balance-table{padding:10px 0;  margin-top: 50px;}
+.balance-table-header-right{float: right;}
+.balance-table table{width: 100%; border: 1px solid #ccc; margin-top: 0;}
+.balance-chart{margin-top: 50px; width: 100%; height: 550px;}
+.balance-chart-bar{width: 480px;height: 500px; display: inline-block;}
+.balance-chart-pip{width: 480px;height: 500px;margin-left: 20px; display: inline-block;}
 /**login and register**/
 .login-register-panel{width: 500px; float: left;margin-top: 100px;padding: 20px; border: 1px solid #ccc;}
 .login-register-panel form{padding: 20px 0;}

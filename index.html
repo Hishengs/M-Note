@@ -3,16 +3,19 @@
 <head>
 	<!-- <base href="/M-Note/"> -->
 	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/uikit.gradient.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/common.css">
-	<script type="text/javascript">var templates_path = 'http://localhost/M-Note/templates';</script>
 	<script type="text/javascript" src="./js/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/index.js"></script>
 	<script type="text/javascript" src="./js/dist/angular.js"></script>
 	<script type="text/javascript" src="./js/app/init.js"></script>
 	<script type="text/javascript" src="./js/app/config.js"></script>
 	<script type="text/javascript" src="./js/app/controller.js"></script>
 	<!--<script type="text/javascript" src="./js/dist/app.js"></script>-->
 	<script type="text/javascript" src="./plugins/uikit/js/uikit.min.js"></script>
+	<!-- ECharts单文件引入 -->
+    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
 	<title>随手记-首页</title>
 </head>
 <body>
@@ -33,14 +36,13 @@
 	</nav>
 </div>
 <!-- 主体 -->
-<div class="container" ui-view="content">
-	
-</div>
-<!-- 页脚 -->
-<footer class="footer">
+<div class="container" ui-view="content"></div>
+<!-- 页脚
+<div class="footer-wrapper">
+	<hr>
 	<div class="site-info">
 		<p>随手记 @ 2015 Theme By Hisheng</p>
 	</div>
-</footer>
+</div> -->
 </body>
 </html>

@@ -8,7 +8,8 @@ m_index.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',fu
 //state
 m_index.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('home',{
-		url:'/'
+		url:'/',
+		views:{'content':{templateUrl:templates_path+'/home.html'}}
 	}).state('login',{
 		url:'/login',
 		views:{'content':{templateUrl:templates_path+'/login.html'}}
