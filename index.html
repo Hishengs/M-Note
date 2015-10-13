@@ -1,33 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="M_NOTE" ng-controller="c_index">
 <head>
+	<!-- <base href="/M-Note/"> -->
 	<meta charset="utf-8"/>
 	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/uikit.gradient.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/common.css">
+	<script type="text/javascript">var templates_path = 'http://localhost/M-Note/templates';</script>
 	<script type="text/javascript" src="./js/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="./plugins/angular/angular.min.js"></script>
+	<script type="text/javascript" src="./js/dist/angular.js"></script>
+	<script type="text/javascript" src="./js/app/init.js"></script>
+	<script type="text/javascript" src="./js/app/config.js"></script>
+	<script type="text/javascript" src="./js/app/controller.js"></script>
+	<!--<script type="text/javascript" src="./js/dist/app.js"></script>-->
 	<script type="text/javascript" src="./plugins/uikit/js/uikit.min.js"></script>
 	<title>随手记-首页</title>
 </head>
 <body>
 <!-- 导航栏 -->
-<div class="nav-wrapper">
+<div class="nav-wrapper" ng-controller="c_nav">
 	<nav class="nav uk-navbar">
 		<ul class="nav-items uk-navbar-nav">
-	        <li class="uk-active"><a href="javascript:void(0);">随手记</a></li>
+	        <li class="uk-active"><a href="javascript:void(0);" ui-sref="home">随手记</a></li>
 	        <li><a href="">记账</a></li>
 	        <li class="uk-parent"><a href="">报表</a></li>
 	    </ul>
 	    <div class="uk-navbar-flip">
 	        <ul class="uk-navbar-nav">
-	            <li><a href="./action/login.html">登陆</a></li>
-	            <li><a href="./action/register.html">注册</a></li>
+	            <li><a href="javascript:void(0);" ui-sref="login">登陆</a></li>
+	            <li><a href="javascript:void(0);" ui-sref="register">注册</a></li>
 	        </ul>
 	    </div>
 	</nav>
 </div>
 <!-- 主体 -->
-<div class="container">
+<div class="container" ui-view="content">
 	
 </div>
 <!-- 页脚 -->

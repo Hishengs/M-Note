@@ -6,7 +6,7 @@
 .footer{width: 1000px; text-align: center; margin: 0 auto; position: absolute;left: 0;right: 0;bottom: 0;}
 /**container**/
 .container{width: 1000px; margin: 0 auto;}
-/**login**/
-.login-panel{width: 500px; float: left;margin-top: 100px;padding: 20px; border: 1px solid #ccc;}
-.login-panel form{padding: 20px 0;}
-.login-panel form button.login-btn{margin-top: 20px;}
+/**login and register**/
+.login-register-panel{width: 500px; float: left;margin-top: 100px;padding: 20px; border: 1px solid #ccc;}
+.login-register-panel form{padding: 20px 0;}
+.login-register-panel form button{margin-top: 20px;}
