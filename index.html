@@ -14,8 +14,9 @@
 	<script type="text/javascript" src="./js/app/controller.js"></script>
 	<!--<script type="text/javascript" src="./js/dist/app.js"></script>-->
 	<script type="text/javascript" src="./plugins/uikit/js/uikit.min.js"></script>
-	<!-- ECharts单文件引入 -->
-    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+	<script type="text/javascript" src="./plugins/uikit/js/components/form-password.min.js"></script>
+	<!-- ECharts -->
+    <script src="./plugins/echarts/dist/echarts-all.js"></script>
 	<title>随手记-首页</title>
 </head>
 <body>
@@ -35,14 +36,18 @@
 	    </div>
 	</nav>
 </div>
-<!-- 主体 -->
-<div class="container" ui-view="content"></div>
-<!-- 页脚
-<div class="footer-wrapper">
-	<hr>
-	<div class="site-info">
-		<p>随手记 @ 2015 Theme By Hisheng</p>
+<div class="main">
+	<!-- 主体 -->
+	<div class="container" ui-view="content"></div>
+	<!-- 页脚 -->
+	<div class="footer-wrapper">
+		<div class="footer">
+			<hr>
+			<div class="site-info">
+				<p>随手记 @ 2015 Theme By Hisheng</p>
+			</div>
+		</div> 
 	</div>
-</div> -->
+</div>
 </body>
 </html>

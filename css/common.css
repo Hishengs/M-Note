@@ -1,14 +1,17 @@
 *{font-family: 'Microsoft Yahei'}
-html,body{font-size: 14px; height: 100%; width: 100%; overflow: visible;}
-html{}
-body{margin-bottom: 50px;/* padding-top: -100px; */}
+html,body{font-size: 14px; height: 100%; width: 100%;}
+html{overflow: auto;}
+body{/* padding-top: -100px; */}
 /**nav**/
 .nav-wrapper{width: 100%; text-align: center;position: fixed;top: 0; z-index: 999;}
 .nav{width: 1024px; margin: 0 auto; /*border-radius: 0px; border: 0px; border-bottom: 1px #eee solid; */}
 /**footer**/
-.footer-wrapper{width: 100%; height: 20px; text-align: center; margin: 0px auto; position: absolute; bottom: 0; clear:both;}
+.footer-wrapper{width: 100%; text-align: center; position: absolute; bottom: 0; clear:both;}
+.footer{width: 1000px; margin: 0px auto;}
+/**main*/
+.main{width: 100%;position: relative; height: 100%; margin-top: 80px; margin-bottom: -80px;}
 /**container**/
-.container{width: 1000px; margin: 0 auto;padding-top: 50px;}
+.container{width: 1000px; margin: 0 auto;}
 /** home **/
 .balance-briefing{margin-top: 50px;}
 .balance-table{padding:10px 0;  margin-top: 50px;}
