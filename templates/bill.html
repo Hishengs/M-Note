@@ -1,0 +1,32 @@
+<!-- 今日账单 -->
+<div class="balance-briefing uk-animation-slide-left">
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">今日账单
+			<span style="float:right;" class="bill-add">
+			<button class="uk-button uk-button-primary" data-uk-modal="{target:'#new-bill-modal'}">记一笔</button>
+			</span></div>
+		</div>
+		<div class="uk-panel-content">
+			<ul class="uk-list uk-list-line uk-list-striped">
+			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">早餐<span style="float:right;" class="bill-count">-3.00</span></a></li>
+			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
+			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
+			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+<div class="uk-modal" id="new-bill-modal">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header">记账</div>
+        <form class="uk-form" action="" method="post">
+        	<label>类型</label><select class="uk-select"><option>饮食</option></select>
+        	<label>账户</label><select class="uk-select"><option>银行卡</option></select>
+        </form>
+        <div class="uk-modal-footer">
+        	<button class="uk-button uk-button-primary">保存</button>
+        </div>
+    </div>
+</div>

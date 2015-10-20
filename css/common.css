@@ -24,3 +24,7 @@ body{/* padding-top: -100px; */}
 .login-register-panel{width: 500px; float: left;margin-top: 100px;padding: 20px; border: 1px solid #ccc;}
 .login-register-panel form{padding: 20px 0;}
 .login-register-panel form button{margin-top: 20px;}
+
+.plain-link{color: #666;}
+.plain-link:hover{color: #333;}
+.block-link{display: block;}

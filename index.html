@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="M_NOTE" ng-controller="c_index">
 <head>
-	<!-- <base href="/M-Note/"> -->
+	<base href="/M-Note/">
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/uikit.gradient.min.css">
@@ -24,9 +24,9 @@
 <div class="nav-wrapper" ng-controller="c_nav">
 	<nav class="nav uk-navbar">
 		<ul class="nav-items uk-navbar-nav">
-	        <li class="uk-active"><a href="javascript:void(0);" ui-sref="home">随手记</a></li>
-	        <li><a href="">记账</a></li>
-	        <li class="uk-parent"><a href="">报表</a></li>
+	        <li ng-class="{'uk-active': current_tab=='home'}" ng-click="switchTab('home')"><a href="javascript:void(0);" ui-sref="home">随手记</a></li>
+	        <li ng-class="{'uk-active': current_tab=='bill'}" ng-click="switchTab('bill')"><a href="javascript:void(0);" ui-sref="bill">记账</a></li>
+	        <li ng-class="{'uk-active': current_tab=='chart'}" ng-click="switchTab('chart')"><a href="">报表</a></li>
 	    </ul>
 	    <div class="uk-navbar-flip">
 	        <ul class="uk-navbar-nav">
