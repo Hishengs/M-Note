@@ -1,13 +1,14 @@
 <!-- 今日账单 -->
-<div class="balance-briefing uk-animation-slide-left">
+<div class="balance-briefing uk-animation-slide-left" ng-controller="c_bill">
 	<div class="uk-panel">
 		<div class="uk-panel uk-panel-header">
 			<div class="uk-panel-title">今日账单
 			<span style="float:right;" class="bill-add">
-			<button class="uk-button uk-button-primary" data-uk-modal="{target:'#new-bill-modal'}">记一笔</button>
+			<button class="uk-button uk-button-primary" ng-click="showBillModal()">记一笔</button>
 			</span></div>
 		</div>
 		<div class="uk-panel-content">
+			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
 			<ul class="uk-list uk-list-line uk-list-striped">
 			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">早餐<span style="float:right;" class="bill-count">-3.00</span></a></li>
 			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>

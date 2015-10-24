@@ -27,5 +27,15 @@ m_index.config(['$stateProvider',function($stateProvider){
 		url:'/income',
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/income.html'}}
+	}).state('charts',{ //报表
+		url:'/charts',
+		views:{'content':{templateUrl:templates_path+'/charts/charts.html'}}
+	}).state('accounts',{ //账户
+		url:'/accounts',
+		views:{'content':{templateUrl:templates_path+'/accounts/accounts.html'}}
+	}).state('cash',{ //账户-现金
+		url:'/cash',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/cash.html'}}
 	});
 }]);
