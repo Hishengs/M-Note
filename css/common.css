@@ -28,3 +28,7 @@ body{/* padding-top: -100px; */}
 .plain-link{color: #666;}
 .plain-link:hover{color: #333;}
 .block-link{display: block;}
+.f-right{float: right;}
+.f-left{float: left;}
+.text-center{text-align: center;}
+.inline-block{display: inline-block;}

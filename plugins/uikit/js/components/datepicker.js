@@ -27,8 +27,8 @@
             mobile: false,
             weekstart: 1,
             i18n: {
-                months        : ['January','February','March','April','May','June','July','August','September','October','November','December'],
-                weekdays      : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+                months        : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                weekdays      : ['日','一','二','三','四','五','六']
             },
             format: "DD.MM.YYYY",
             offsettop: 5,
@@ -1144,7 +1144,7 @@
                 }
             },
 
-            _months : 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
+            _months : '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
             months : function (m) {
                 return this._months[m.month()];
             },

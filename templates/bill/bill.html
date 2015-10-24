@@ -18,15 +18,24 @@
 	</div>
 	
 </div>
-<div class="uk-modal" id="new-bill-modal">
+<div class="uk-modal" id="new-bill-modal" ng-controller="c_bill_modal">
     <div class="uk-modal-dialog">
-        <div class="uk-modal-header">记账</div>
-        <form class="uk-form" action="" method="post">
-        	<label>类型</label><select class="uk-select"><option>饮食</option></select>
-        	<label>账户</label><select class="uk-select"><option>银行卡</option></select>
-        </form>
+        <div class="uk-modal-header">
+        	<h3 style="display:inline-block;" ng-bind="bill_type"></h3>
+        	<button type="button" class="uk-button f-right" ng-click="switchBillType()">切换类型</button>
+        </div>
+      	
+		<div class="bill-view" ui-view="bill_view"></div>
+
         <div class="uk-modal-footer">
         	<button class="uk-button uk-button-primary">保存</button>
         </div>
+
     </div>
 </div>
+<script type="text/javascript">
+	//获取当前日期
+	var date = new Date();
+	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	var maxDate = minDate;
+</script>

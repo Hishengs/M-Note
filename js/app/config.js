@@ -1,5 +1,5 @@
 m_index.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',function($locationProvider, $urlRouterProvider,$compileProvider) {
-    $locationProvider.html5Mode(true);
+    //$locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise("");
     //deal unsafe:javascript:...
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript):/);
@@ -18,6 +18,14 @@ m_index.config(['$stateProvider',function($stateProvider){
 		views:{'content':{templateUrl:templates_path+'/register.html'}}
 	}).state('bill',{ //记账
 		url:'/bill',
-		views:{'content':{templateUrl:templates_path+'/bill.html'}}
+		views:{'content':{templateUrl:templates_path+'/bill/bill.html'}}
+	}).state('bill_outcome',{ //支出
+		url:'/outcome',
+		parent:'bill',
+		views:{'bill_view':{templateUrl:templates_path+'/bill/outcome.html'}}
+	}).state('bill_income',{ //收入
+		url:'/income',
+		parent:'bill',
+		views:{'bill_view':{templateUrl:templates_path+'/bill/income.html'}}
 	});
 }]);

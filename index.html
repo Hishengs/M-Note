@@ -5,6 +5,8 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/uikit.gradient.min.css">
+	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/components/datepicker.min.css"><!-- 日期选择控件样式 -->
+	<link rel="stylesheet" type="text/css" href="./plugins/uikit/css/components/form-select.min.css">
 	<link rel="stylesheet" type="text/css" href="./css/common.css">
 	<script type="text/javascript" src="./js/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/index.js"></script>
@@ -15,6 +17,8 @@
 	<!--<script type="text/javascript" src="./js/dist/app.js"></script>-->
 	<script type="text/javascript" src="./plugins/uikit/js/uikit.min.js"></script>
 	<script type="text/javascript" src="./plugins/uikit/js/components/form-password.min.js"></script>
+	<script type="text/javascript" src="./plugins/uikit/js/components/datepicker.js"></script><!-- 日期选择控件 -->
+	<script type="text/javascript" src="./plugins/uikit/js/components/form-select.min.js"></script><!-- 选择表单控件 -->
 	<!-- ECharts -->
     <script src="./plugins/echarts/dist/echarts-all.js"></script>
 	<title>随手记-首页</title>
@@ -26,7 +30,8 @@
 		<ul class="nav-items uk-navbar-nav">
 	        <li ng-class="{'uk-active': current_tab=='home'}" ng-click="switchTab('home')"><a href="javascript:void(0);" ui-sref="home">随手记</a></li>
 	        <li ng-class="{'uk-active': current_tab=='bill'}" ng-click="switchTab('bill')"><a href="javascript:void(0);" ui-sref="bill">记账</a></li>
-	        <li ng-class="{'uk-active': current_tab=='chart'}" ng-click="switchTab('chart')"><a href="">报表</a></li>
+	        <li ng-class="{'uk-active': current_tab=='chart'}" ng-click="switchTab('chart')"><a href="javascript:void(0);">报表</a></li>
+	        <li ng-class="{'uk-active': current_tab=='account'}" ng-click="switchTab('account')"><a href="javascript:void(0);">账户</a></li>
 	    </ul>
 	    <div class="uk-navbar-flip">
 	        <ul class="uk-navbar-nav">
