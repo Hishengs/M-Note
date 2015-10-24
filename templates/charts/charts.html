@@ -1,10 +1,13 @@
-<div class="charts uk-animation-slide-right" ng-controller="c_charts">
-<ul class="uk-tab uk-tab-left uk-width-medium-1-6">
-    <li class="uk-active"><a href="javascript:void(0);" class="plain-link">本月预算</a></li>
-    <li><a href="javascript:void(0);" class="plain-link">账单查询</a></li>
-    <li><a href="javascript:void(0);" class="plain-link">收支趋势图</a></li>
-    <li><a href="javascript:void(0);" class="plain-link">收支分布图</a></li>
-    <li><a href="javascript:void(0);" class="plain-link">收支对比图</a></li>
-    <li><a href="javascript:void(0);" class="plain-link">资产趋势图</a></li>
-</ul>
+<div class="charts uk-animation-slide-right uk-grid" ng-controller="c_charts">
+<div class="uk-width-1-6">
+	<ul class="uk-tab uk-tab-left">
+	    <li class="uk-active"><a href="javascript:void(0);" class="plain-link">本月预算</a></li>
+	    <li><a href="javascript:void(0);" class="plain-link">账单查询</a></li>
+	    <li><a href="javascript:void(0);" class="plain-link">收支趋势图</a></li>
+	    <li><a href="javascript:void(0);" class="plain-link">收支分布图</a></li>
+	    <li><a href="javascript:void(0);" class="plain-link">收支对比图</a></li>
+	    <li><a href="javascript:void(0);" class="plain-link">资产趋势图</a></li>
+	</ul>
+</div>
+<div class="accounts_view uk-width-5-6" ui-view="charts_view"></div>
 </div>

@@ -10,7 +10,11 @@
 		<div class="uk-panel-content">
 			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
 			<ul class="uk-list uk-list-line uk-list-striped">
-			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">早餐<span style="float:right;" class="bill-count">-3.00</span></a></li>
+			    <li>
+			    	<a href="javascript:;" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
+			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
+			    	</a>
+			    </li>
 			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
 			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
 			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
@@ -34,9 +38,27 @@
 
     </div>
 </div>
+<!--查看单挑账单详情-->
+<div class="uk-modal" id="bill-detail">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header">
+        	<h3 style="display:inline-block;">查看单挑账单详情</h3>
+        	<button type="button" class="uk-button f-right" ng-click="switchBillType()">切换类型</button>
+        </div>
+      	
+		<div class="bill-view" ui-view="bill_view"></div>
+
+        <div class="uk-modal-footer">
+        	<button class="uk-button uk-button-primary">保存</button>
+        </div>
+
+    </div>
+</div>
 <script type="text/javascript">
 	//获取当前日期
 	var date = new Date();
-	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	var maxDate = minDate;
+	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (parseInt(date.getDate())-7);//前一周
+	var maxDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	
+	console.log('minDate:'+minDate+',maxDate:'+maxDate);
 </script>

@@ -30,6 +30,10 @@ m_index.config(['$stateProvider',function($stateProvider){
 	}).state('charts',{ //报表
 		url:'/charts',
 		views:{'content':{templateUrl:templates_path+'/charts/charts.html'}}
+	}).state('budget',{ //报表-预算
+		url:'/budget',
+		parent:'charts',
+		views:{'charts_view':{templateUrl:templates_path+'/charts/budget.html'}}
 	}).state('accounts',{ //账户
 		url:'/accounts',
 		views:{'content':{templateUrl:templates_path+'/accounts/accounts.html'}}
