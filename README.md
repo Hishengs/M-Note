@@ -1,5 +1,5 @@
 # M-Note
-Money Notes
+Money Notes,一个记账系统
 #项目架构
 ##前端
 >[jQuery](http://www.jquery.com)
