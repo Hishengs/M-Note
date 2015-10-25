@@ -54,12 +54,17 @@ m_index.controller('c_bill_modal',function($scope,$state){
 //c_charts
 m_index.controller('c_charts',function($scope,$state){
 	$state.go('budget');
+	$scope.current_charts_tab = 'budget';
+	$scope.switchChartsTab = function(tab){
+		$scope.current_charts_tab = tab;
+	}
 });
 //c_budget
 m_index.controller('c_budget',function($scope,$state){});
 //c_accounts
 m_index.controller('c_accounts',function($scope,$state){
 	$state.go('cash');
+	$scope.current_accounts_tab = 'cash';
 	$scope.addAccount = function(){
 		var add_account_modal = UIkit.modal("#add-account-modal");
 		if ( add_account_modal.isActive() ) {
@@ -67,6 +72,9 @@ m_index.controller('c_accounts',function($scope,$state){
 		} else {
 		    add_account_modal.show();
 		}
+	}
+	$scope.switchAccountsTab = function(tab){
+		$scope.current_accounts_tab = tab;
 	}
 });
 //c_cash

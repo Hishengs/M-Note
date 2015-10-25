@@ -11,13 +11,13 @@
 			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
 			<ul class="uk-list uk-list-line uk-list-striped">
 			    <li>
-			    	<a href="javascript:;" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
+			    	<a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
 			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
 			    	</a>
 			    </li>
-			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
-			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
-			    <li><a href="javascript:;" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
+			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
+			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
+			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -38,12 +38,15 @@
 
     </div>
 </div>
-<!--查看单挑账单详情-->
+<!--查看账单详情-->
 <div class="uk-modal" id="bill-detail">
     <div class="uk-modal-dialog">
         <div class="uk-modal-header">
-        	<h3 style="display:inline-block;">查看单挑账单详情</h3>
-        	<button type="button" class="uk-button f-right" ng-click="switchBillType()">切换类型</button>
+        	<h3 style="display:inline-block;">账单详情</h3>
+        	<span class="f-right">
+	        	<button type="button" class="uk-button uk-button-danger">删除</button>
+	        	<button type="button" class="uk-button uk-button-primary">修改</button>
+        	</span>
         </div>
       	
 		<div class="bill-view" ui-view="bill_view"></div>
