@@ -4,7 +4,7 @@
 		<div class="uk-panel uk-panel-header">
 			<div class="uk-panel-title">今日账单
 			<span style="float:right;" class="bill-add">
-			<button class="uk-button uk-button-primary" ng-click="showBillModal()">记一笔</button>
+			<button class="uk-button uk-button-primary" ng-click="showAddBillModal()">记一笔</button>
 			</span></div>
 		</div>
 		<div class="uk-panel-content">
@@ -15,15 +15,16 @@
 			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
 			    	</a>
 			    </li>
-			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
-			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
-			    <li><a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
 			</ul>
 		</div>
 	</div>
 	
 </div>
-<div class="uk-modal" id="new-bill-modal" ng-controller="c_bill_modal">
+<!--新增账单-->
+<div class="uk-modal" id="add-bill-modal" ng-controller="c_add_bill_modal">
     <div class="uk-modal-dialog">
         <div class="uk-modal-header">
         	<h3 style="display:inline-block;" ng-bind="bill_type"></h3>
@@ -39,21 +40,10 @@
     </div>
 </div>
 <!--查看账单详情-->
-<div class="uk-modal" id="bill-detail">
+<div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details_modal">
     <div class="uk-modal-dialog">
-        <div class="uk-modal-header">
-        	<h3 style="display:inline-block;">账单详情</h3>
-        	<span class="f-right">
-	        	<button type="button" class="uk-button uk-button-danger">删除</button>
-	        	<button type="button" class="uk-button uk-button-primary">修改</button>
-        	</span>
-        </div>
-      	
-		<div class="bill-view" ui-view="bill_view"></div>
 
-        <div class="uk-modal-footer">
-        	<button class="uk-button uk-button-primary">保存</button>
-        </div>
+      	<div class="bill-details-view" ui-view="bill_details_view"></div>
 
     </div>
 </div>
