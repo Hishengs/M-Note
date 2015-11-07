@@ -1,0 +1,118 @@
+<div class="uk-modal-header">
+	<h3 style="display:inline-block;" ng-bind="bill_type"></h3>
+	<button type="button" class="uk-button f-right" ng-click="switchBillType()">切换类型</button>
+</div>
+
+<form class="uk-form" action="" method="post">
+<ul class="uk-list uk-list-line">
+        <input type="text" class="display-none" value="outcome" name="bill_type">
+	<li>
+		<label>分类</label>
+		<span class="bill_category f-right">
+			<!-- 一级选项 -->
+			<select class="uk-select" name="bill_first_category" style="width:229px;" ng-model="bill.first_category"><!-- ng-model="bill_outcome_category" -->
+				<option value="1">衣服饰品</option>
+				<option>食品酒水</option>
+				<option>居家物业</option>
+				<option>行车交通</option>
+				<option>交流通讯</option>
+				<option>休闲娱乐</option>
+				<option>学习进修</option>
+				<option>人情来往</option>
+				<option>医疗保健</option>
+				<option>金融保险</option>
+				<option>其它杂项</option>
+			</select>
+			<!-- 二级选项 -->
+			<select class="uk-select" name="bill_second_category" style="width:230px;" ng-model="bill.second_category"><!-- 二级分类 -->
+				<option value="1">早午晚餐</option>
+				<option>衣服裤子</option>
+				<option>鞋帽包包</option>
+				<option>化妆饰品</option>
+				<option>烟酒茶</option>
+				<option>水果零食</option>
+				<option>日常用品</option>
+			</select>
+			<button type="button" class="uk-button uk-button-small" title="添加分类" ng-click="addCategory('outcome')"><i class="uk-icon-plus"></i></button>
+		</span>
+	</li>
+	<li>
+		<label>账户</label>
+		<span class="bill_account f-right">
+			<!-- 账户类型 -->
+			<select class="uk-select" name="bill_account_type" style="width:229px;" ng-model="bill.account_type"> <!-- ng-model="bill_account_type" -->
+				<option value="1">现金</option>
+				<option>信用卡</option>
+				<option>金融账户</option>
+				<option>虚拟账户</option>
+				<option>负债账户</option>
+				<option>债权账户</option>
+				<option>投资账户</option><!-- <option>其它</option> -->
+			</select>
+			<!-- 账户名称 -->
+			<select class="uk-select" name="bill_account_name" style="width:230px;" ng-model="bill.account_name">
+				<option value="1">支付宝</option>
+				<option>饭卡</option>
+				<option>公交卡</option>
+				<option>应收款项</option>
+				<option>应付款项</option>
+				<option>信用卡</option>
+				<option>现金</option><!-- <option>其它</option> -->
+			</select>
+			<button type="button" class="uk-button uk-button-small" title="添加账户" ng-click="addAccount()"><i class="uk-icon-plus"></i></button>
+		</span>
+	</li>
+	<!-- <li><label>日期</label><input type="text" class="uk-input uk-form-width-large f-right" data-uk-datepicker="{format:'YYYY-MM-DD',minDate:'2015-10-24'}"></li>
+			    <li><label>时间</label><input type="text" class="uk-input uk-form-width-large f-right" data-uk-timepicker></li> -->
+	<li>
+	<label>时间</label>
+	<span class="bill-datetime-picker f-right">
+		<input type="text" class="uk-input" name="bill_date" style="width:230px;" placeholder="日期(空缺默认当前时间)" ng-model="bill.date" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,minDate:minDate,maxDate:maxDate}"><!-- 日期 -->
+		<select class="uk-select" name="bill_time_hour" style="width:130px;" ng-model="bill.time.hour"><!-- 小时 -->
+        	<option ng-repeat="hour in hours track by $index" ng-value="{{hour}}">{{hour}}</option>
+		</select>
+		<select class="uk-select" name="bill_time_minute" style="width:130px;" ng-model="bill.time.minute"><!-- 分钟 -->
+        	<option ng-repeat="minute in minutes track by $index" ng-value="{{minute}}">{{minute}}</option>
+		</select>
+	</span>
+	</li>
+    <li>
+	    <label>地点</label>
+	    <span class="bill_location f-right pos-rel">
+	    <input class="uk-input location-input uk-form-width-large" placeholder="地点" name="bill_location" type="text" ng-model="bill.location" ng-change="locationInputChange()" />
+	    <div class="location-options pos-abs" ng-show="location_options_show">
+	    	<ul class="uk-list uk-list-striped">
+	    		<li ng-repeat="location in location_options">
+	    			<a href="javascript:void(0);" class="block-link plain-link none-decoration-link" ng-click="selectLocation(location.name)">
+	    			{{location.name}}
+	    			<span class="f-right" style="color: #aaa;">{{location.city}}{{location.district}}</span>
+	    			</a>
+	    		</li>
+	    	</ul>
+	    </div>
+	    <!-- <button type="button" class="uk-button uk-button-small" title="定位" ng-click="locate()"><i class="uk-icon-map-marker"></i></button> -->
+	    </span>
+    </li>
+	<li>
+		<label>金额</label>
+		<input class="uk-input uk-form-width-large f-right" placeholder="金额(人民币)" name="bill_sum" type="number" ng-model="bill.sum" />
+	</li>
+	<li>
+		<label>备注</label>
+		<input class="uk-input uk-form-width-large f-right" placeholder="备注" name="bill_remarks" type="text" ng-model="bill.remarks" />
+	</li>
+</ul>
+</form>
+
+<div class="uk-modal-footer">
+	<button class="uk-button uk-button-primary" ng-click="addBill()">保存</button>
+</div>
+
+<!-- <option>0:00</option><option>0:30</option><option>1:00</option><option>1:30</option><option>2:00</option><option>2:30</option>
+    <option>3:00</option><option>3:30</option><option>4:00</option><option>4:30</option><option>5:00</option><option>5:30</option>
+    <option>6:00</option><option>6:30</option><option>7:00</option><option>7:30</option><option>8:00</option><option>8:30</option>
+    <option>9:00</option><option>9:30</option><option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+    <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
+    <option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option>
+    <option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option>20:00</option><option>20:30</option>
+    <option>21:00</option><option>21:30</option><option>22:00</option><option>22:30</option><option>23:00</option><option>23:30</option> -->

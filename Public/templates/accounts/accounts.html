@@ -1,0 +1,152 @@
+<div class="accounts uk-animation-slide-right uk-grid" ng-controller="c_accounts">
+<div class="uk-width-1-6">
+	<ul class="uk-tab uk-tab-left">
+	    <li ng-class="{'uk-active': current_accounts_tab=='cash'}" ng-click="switchAccountsTab('cash')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link" ui-sref="cash">现金<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 现金下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">现金</a></li>
+            </ul>
+        </div>
+      </li>
+	    <li ng-class="{'uk-active': current_accounts_tab=='credit_card'}" ng-click="switchAccountsTab('credit_card')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">信用卡<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 信用卡下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">信用卡</a></li>
+            </ul>
+        </div>
+      </li>
+      <li ng-class="{'uk-active': current_accounts_tab=='finance'}" ng-click="switchAccountsTab('finance')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">金融账户<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 金融账户下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">银行卡</a></li>
+            </ul>
+        </div>
+      </li>
+	    <li ng-class="{'uk-active': current_accounts_tab=='virtual'}" ng-click="switchAccountsTab('virtual')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">虚拟账户<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 虚拟账户下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">支付宝</a></li>
+                <li><a href="javascript:void(0);">饭卡</a></li>
+                <li><a href="javascript:void(0);">公交卡</a></li>
+            </ul>
+        </div>
+      </li>
+	    <li ng-class="{'uk-active': current_accounts_tab=='debt'}" ng-click="switchAccountsTab('debt')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">负债账户<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 负债账户下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">应付款项</a></li>
+            </ul>
+        </div>
+      </li>
+	    <li ng-class="{'uk-active': current_accounts_tab=='credit'}" ng-click="switchAccountsTab('credit')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">债权账户<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 债权账户下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">应收款项</a></li>
+                <li><a href="javascript:void(0);">公司报销</a></li>
+            </ul>
+        </div>
+      </li>
+	    <li ng-class="{'uk-active': current_accounts_tab=='invest'}" ng-click="switchAccountsTab('invest')" data-uk-dropdown="{mode:'click'}">
+        <a href="javascript:void(0);" class="plain-link">投资账户<i class="uk-icon-caret-down f-right"></i></a>
+        <!-- 投资账户下的二级菜单 -->
+        <div class="uk-dropdown uk-dropdown-small">
+            <ul class="uk-nav uk-nav-dropdown">
+                <li><a href="javascript:void(0);">余额宝</a></li>
+                <li><a href="javascript:void(0);">基金账户</a></li>
+                <li><a href="javascript:void(0);">股票账户</a></li>
+            </ul>
+        </div>
+      </li>
+	    <!-- <li ng-class="{'uk-active': current_accounts_tab=='other'}" ng-click="switchAccountsTab('other')"><a href="javascript:void(0);" class="plain-link">其它</a></li> -->
+	    <li><a href="javascript:void(0);" class="plain-link" ng-click="addAccount()">添加账户</a></li>
+	</ul>
+</div>
+<div class="accounts_view uk-width-5-6" ui-view="accounts_view"></div>
+</div>
+<!--添加账户-->
+<div class="uk-modal" id="add-account-modal" ng-controller="c_add_account_modal">
+    <div class="uk-modal-dialog">
+        <!--添加账户-->
+        <div class="uk-modal-header">
+          <h3 style="display:inline-block;">添加账户</h3>
+          <span class="f-right">
+          </span>
+        </div>
+
+        <form class="uk-form" action="" method="post">
+          <ul class="uk-list uk-list-striped">
+            <li>
+              <label>类型</label>
+              <span class="bill_account f-right">
+                <select class="uk-select" style="width:445px;" name="account_type" ng-hide="ifAddSelfAccount">
+                  <option>现金</option><option>信用卡</option><option>金融账户</option><option>虚拟账户</option>
+                  <option>负债账户</option><option>债权账户</option><option>投资账户</option><!-- <option>其它</option> -->
+                </select>
+                <input type="text" class="uk-input" name="account_type" style="width:445px;" placeholder="自定义账户类型" ng-show="ifAddSelfAccount">
+                <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="addSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
+                  
+                </button>
+              </span>
+            </li>
+            <li>
+              <label>名称</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_name" placeholder="账户名称">
+            </li>
+            <li>
+              <label>余额</label><input type="number" class="uk-input uk-form-width-large f-right" name="account_balance" placeholder="余额">
+            </li>
+            <li>
+              <label>备注</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_remarks" placeholder="备注">
+            </li>
+          </ul>
+        </form>
+
+        <div class="uk-modal-footer">
+          <button class="uk-button uk-button-primary">保存</button>
+        </div>
+
+    </div>
+</div>
+<!--编辑账户-->
+<div class="uk-modal" id="modify-account-modal">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header">
+          <h3 style="display:inline-block;">编辑账户-现金</h3>
+        </div>
+        <form class="uk-form" action="" method="post">
+        <ul class="uk-list uk-list-striped">
+          <li>
+            <label>类型</label>
+            <select class="uk-select uk-form-width-large f-right" name="bill_account">
+              <option>现金</option><option>信用卡</option><option>金融账户</option><option>虚拟账户</option>
+              <option>负债账户</option><option>债权账户</option><option>投资账户</option><!-- <option>其它</option> -->
+            </select>
+          </li>
+          <li>
+            <label>账户名</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_name" placeholder="账户名">
+          </li>
+          <li>
+            <label>余额</label><input type="number" class="uk-input uk-form-width-large f-right" name="account_balance" placeholder="余额">
+          </li>
+          <li>
+            <label>备注</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_remarks" placeholder="备注">
+          </li>
+        </ul>
+        </form>
+        <div class="uk-modal-footer">
+          <button class="uk-button uk-button-primary">保存</button>
+        </div>
+
+    </div>
+</div>

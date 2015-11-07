@@ -1,0 +1,36 @@
+<!-- 基本信息 -->
+<div class="user-basic-info uk-animation-slide-right" ng-controller="c_user_basicInfo">
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">基本信息
+			<span style="float:right;" class="bill-add">
+			<button class="uk-button uk-button-primary" ng-click="modifyUserInfo()">修改</button>
+			<button class="uk-button uk-button-danger" ng-click="logout()">退出</button>
+			</span></div>
+		</div>
+		<div class="uk-panel-content">
+			<ul class="uk-list uk-list-line uk-list-striped">
+				<li>
+					<a href="javascript:void(0);" ng-click="modifyAvatar()" class="plain-link block-link" title="点击修改头像">头像
+					<span style="float:right;" class="user-avatar">
+						<img ng-src="{{user.avatar}}" alt="用户头像">
+					</span>
+					</a>
+				</li>
+			    <li>
+			    	<a href="javascript:void(0);" ng-click="modifyUsername()" class="plain-link block-link" title="点击修改用户名">
+			    		用户名<span style="float:right;" class="bill-count" ng-bind="user.name"></span>
+			    	</a>
+			    </li>
+			    <li>
+				    <a href="javascript:void(0);" ng-click="modifyEmail()" class="plain-link block-link" title="点击修改邮箱">邮箱
+				    	<span style="float:right;" class="user-email" ng-bind="user.email"></span>
+				    </a>
+			    </li>
+			    <!-- <li><a href="javascript:void(0);" ng-click="modifySignature()" class="plain-link block-link" title="点击修改签名">签名<span style="float:right;" class="user-signature">情不知所起，一往而深</span></a></li> -->
+			    
+			</ul>
+		</div>
+	</div>
+</div>
+

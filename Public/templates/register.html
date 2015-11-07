@@ -1,0 +1,14 @@
+<!-- 登陆注册Panel -->
+<div class="login-register-panel" ng-controller="c_register">
+	<ul class="uk-tab" data-uk-tab>
+	    <li><a href="javascript:void(0);" ui-sref="login">登陆</a></li>
+	    <li class="uk-active"><a href="javascript:void(0);" ui-sref="register">注册</a></li>
+	</ul>
+	<form class="uk-form">
+		<div class="uk-form-row"><input type="text" name="username" placeholder="用户名" ng-model="username"></div>
+		<div class="uk-form-row"><input type="text" name="email" placeholder="邮箱" ng-model="email"></div>
+		<div class="uk-form-row"><input type="password" name="password" placeholder="密码" ng-model="password"></div>
+		<div class="uk-form-row"><input type="password" name="password_confirm" placeholder="确认密码" ng-model="password_confirm"></div>
+		<button ng-click="register()" class="uk-button uk-button-primary register-btn">注册</button>
+	</form>
+</div>

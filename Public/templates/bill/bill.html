@@ -1,0 +1,47 @@
+<!-- 今日账单 -->
+<div class="balance-briefing uk-animation-slide-left" ng-controller="c_bill">
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">今日账单
+			<span style="float:right;" class="bill-add">
+			<button class="uk-button uk-button-primary" ng-click="showAddBillModal()">记一笔</button>
+			</span></div>
+		</div>
+		<div class="uk-panel-content">
+			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
+			<ul class="uk-list uk-list-line uk-list-striped">
+			    <li>
+			    	<a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
+			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
+			    	</a>
+			    </li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+<!--新增账单-->
+<div class="uk-modal" id="add-bill-modal" ng-controller="c_add_bill_modal">
+    <div class="uk-modal-dialog" ng-click="add_bill_modal_click()">
+		<div class="bill-view" ui-view="bill_view"></div>
+    </div>
+</div>
+<!--查看账单详情-->
+<div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details_modal">
+    <div class="uk-modal-dialog">
+
+      	<div class="bill-details-view" ui-view="bill_details_view"></div>
+
+    </div>
+</div>
+<script type="text/javascript">
+	//获取当前日期
+	var date = new Date();
+	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (parseInt(date.getDate())-7);//前一周
+	var maxDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+	
+	console.log('minDate:'+minDate+',maxDate:'+maxDate);
+</script>

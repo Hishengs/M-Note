@@ -1,0 +1,41 @@
+<div class="user uk-animation-slide-right uk-grid" ng-controller="c_user">
+<div class="uk-width-1-6">
+	<ul class="uk-tab uk-tab-left">
+	    <li ng-class="{'uk-active': current_user_tab=='basicInfo'}" ng-click="switchUserTab('basicInfo')"><a href="javascript:void(0);" class="plain-link">基本信息</a></li>
+	    <li ng-class="{'uk-active': current_user_tab=='modifyPasswd'}" ng-click="switchUserTab('modifyPasswd')"><a href="javascript:void(0);" class="plain-link">修改密码</a></li>
+	</ul>
+</div>
+<div class="user_view uk-width-5-6" ui-view="user_view"></div>
+</div>
+
+<!--修改用户信息-->
+<div class="uk-modal" id="modify-userInfo-modal" ng-controller="c_modify_userInfo_modal">
+    <div class="uk-modal-dialog">
+        <div class="uk-modal-header">
+        	<h3 style="display:inline-block;">修改基本信息</h3>
+        </div>
+      	<ul class="uk-list uk-list-line">	
+      		<li>
+		    	<form class="upload-avatar-form" enctype="multipart/form-data" action="http://localhost/note2/index.php/Home/User/upload_user_avatar.html" method="post" target="upload_avatar_iframe">
+			    <label>头像</label>
+			    <span class="f-right">
+				    <input class="uk-input" style="width:425px;" placeholder="头像" name="user_avatar" id="user_avatar_img" type="file" ng-model="user_avatar" />
+				    <button type="submit" class="uk-button uk-button-primary uk-button-small uploadAvatarBtn" ng-click="uploadUserAvatar()" ng-bind-html="uploadAvatarBtn | trustHtml"></button>
+			    </span>
+			    </form>
+			    <iframe id='upload_avatar_iframe' name='upload_avatar_iframe' style="display:none"/>
+		    </li>
+		</ul>
+		<form class="uk-form">
+		<ul class="uk-list uk-list-line">		
+			<li><label>用户名</label><input class="uk-input uk-form-width-large f-right" placeholder="用户名" name="username" type="text" ng-model="user_name" /></li>
+			<li><label>邮箱</label><input class="uk-input uk-form-width-large f-right" placeholder="邮箱" name="user_email" type="text" ng-model="user_email" /></li>
+		</ul>
+		</form>
+
+        <div class="uk-modal-footer">
+        	<button class="uk-button uk-button-primary" ng-click="modifyUserInfo()">保存</button>
+        </div>
+
+    </div>
+</div>
