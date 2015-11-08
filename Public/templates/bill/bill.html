@@ -10,14 +10,20 @@
 		<div class="uk-panel-content">
 			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
 			<ul class="uk-list uk-list-line uk-list-striped">
-			    <li>
+				<li ng-repeat="bill in today_bills">
+					<a href="javascript:void(0);" ng-click="showBillDetail($index)" class="plain-link block-link" title="点击查看账单详情">
+						{{bill.bill_remarks}}
+						<span style="float:right;" class="bill-count">{{bill.bill_sum}}</span>
+					</a>
+				</li>
+			    <!-- <li>
 			    	<a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
 			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
 			    	</a>
 			    </li>
 			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
 			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
-			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li>
+			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li> -->
 			</ul>
 		</div>
 	</div>
@@ -42,6 +48,4 @@
 	var date = new Date();
 	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (parseInt(date.getDate())-7);//前一周
 	var maxDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
-	
-	console.log('minDate:'+minDate+',maxDate:'+maxDate);
 </script>

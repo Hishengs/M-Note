@@ -32,14 +32,8 @@ m_index.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 	});*/
 	$scope.current_tab = 'home';
 	$scope.switchTab = function(tab){
-		if(ipCookie('is_logined')){
-				$scope.current_tab = tab;
-				$state.go(tab);
-		}
-		else {//未登录
-			hMessage("请登陆后再操作！",1500);
-			$state.go('login');
-		}
+		$scope.current_tab = tab;
+		$state.go(tab);
 	}
 	if(!ipCookie('is_logined'))
 	{
@@ -70,7 +64,7 @@ m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
 				$rootScope.user_show = true;
-				$rootScope.username_text = '<i class="uk-icon-user"></i> ' + $scope.username;
+				
 				//信息记录
 				$rootScope.user = {};//记录所有用户相关的信息
 				$rootScope.user.is_logined = true;//登陆状态
@@ -78,6 +72,7 @@ m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 				ipCookie('is_logined',1);
 				ipCookie('username',$scope.username);
 				$rootScope.user.name = $scope.username;
+				$rootScope.username_text = '<i class="uk-icon-user"></i> ' + $scope.username;
 				$rootScope.user.email = "819537918@qq.com";
 				$rootScope.user.id = 1000;
 				$rootScope.user.avatar = "https://dn-lanbaidiao.qbox.me/avatar_1000_a645761e1fc399f5be08308eacead7ce?imageView2/1/w/80/h/80";
@@ -88,6 +83,9 @@ m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 				setTimeout(function(){$state.go('home');},1500);
 			}else if(res.error === 2){hMessage("该用户不存在！",1500);}
 			else hMessage(res.msg,2000);
+		}).error(function(data,state){
+			console.log(data);
+			console.log(state);
 		});
 	}
 });
@@ -111,6 +109,7 @@ m_index.controller('c_register',function($scope,$state,$http){
           url:home_path+"/User/register.html",
           data:{'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm}
         }).success(function(res){
+        	console.log(res);
 			if(res.error === 0){
 				hMessage("注册成功，请登陆！",2000);
 				$state.go('login');
@@ -126,22 +125,28 @@ m_index.controller('c_register',function($scope,$state,$http){
 //|---|---c_modify_bill
 
 //c_bill
-m_index.controller('c_bill',function($scope,$state,$http){
+m_index.controller('c_bill',function($scope,$rootScope,$state,$http){
 	setTitle("随手记-记账");
+	$rootScope.bill_operation_type = 0;//0新增,1修改
 	//获取当日账单列表，bill_list
-	/*$http.get(controller_path+'').success(function(res){
-		if(res.error === 0)
-			$scope.bill_list = res.data;
+	$http.get(home_path+"/Bill/get_today_bills.html").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$scope.today_bills = res.bills;
 			$scope.bill_tip_show = false;
+		}
 		else if(res.error === 2){//查询为空
 			$scope.bill_tip_show = true;
 			$scope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
 		}
 		else console.log(res.msg);
-	});*/
+	}).error(function(data,state){
+		console.log(data);
+	});
 	$scope.bill_tip_show = true;
 	$scope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
 	$scope.showAddBillModal = function(){//显示新增账单模态框
+		$rootScope.bill_operation_type = 0;//新增
 		var bill_modal = UIkit.modal("#add-bill-modal");
 		if ( bill_modal.isActive() ) {
 		    bill_modal.hide();
@@ -150,7 +155,9 @@ m_index.controller('c_bill',function($scope,$state,$http){
 		}
 		$state.go('bill_outcome');
 	}
-	$scope.showBillDetail = function(){//显示账单详情模态框
+	$scope.showBillDetail = function(index){//显示账单详情模态框
+		console.log("index:"+index);
+		$rootScope.current_bill = $scope.today_bills[index];
 		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 		if ( bill_detail_modal.isActive() ) {
 		    bill_detail_modal.hide();
@@ -161,77 +168,193 @@ m_index.controller('c_bill',function($scope,$state,$http){
 	}
 });
 //c_add_bill_modal
-m_index.controller('c_add_bill_modal',function($scope,$state,$http,$interval){
-	//设置账单的默认值
+m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,$interval){
+	$rootScope.bill_accounts = $rootScope.bill_child_accounts = $rootScope.bill_categories = $rootScope.child_bill_categories = {};
+	//获取用户账户信息
+	$http.get(home_path+"/Account/get_user_accounts.html").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$rootScope.bill_accounts = res.accounts;
+			$rootScope.bill_child_accounts = res.accounts[0].child_accounts;
+			console.log($rootScope.bill_child_accounts);
+		}
+	});
+
+	//获取用户账单分类-默认outcome支出
+	$http.get(home_path+"/Bill/get_user_bill_categories.html?type=outcome").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$rootScope.bill_categories = res.bill_categories;
+			$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+		}
+	});
+	//------------------------设置账单默认值----------------------------
 	$scope.bill = {};
-	$scope.bill.time = {};
-	
-	$scope.bill.first_category = $scope.bill.second_category = $scope.bill.account_type = $scope.bill.account_name = "1";
+	//设置账单默认的时间
 	var date = new Date();
-	$scope.bill.date = date.getFullYear()+"-"+(parseInt(date.getMonth())+1)+"-"+date.getDate();
+	$scope.bill.time = {};
 	$scope.bill.time.hour = date.getHours()+"";
 	$scope.bill.time.minute = date.getMinutes()+"";
-	//$scope.bill.time = date.getHours()+":"+date.getMinutes();
 	$scope.hours = [];
 	$scope.minutes = [];
 	for(var i=0;i<parseInt($scope.bill.time.hour)+1;i++)$scope.hours.push(i);
 	console.log($scope.hours);
 	for(var i=0;i<parseInt($scope.bill.time.minute)+1;i++)$scope.minutes.push(i);
 
-	$scope.bill_type = '记账-支出';
-	$scope.current_bill_view = $scope.previous_view = 'outcome';
+	console.log("bill_operation_type:"+$rootScope.bill_operation_type);
+	//if($rootScope.bill_operation_type == 0){//如果是新增操作
+		console.log("当前是新增操作");
+		//设置账单的类型
+		$scope.bill_type = 1;//支出
+		$scope.bill_type_text = '记账-支出';
+		//设置账单默认时间
+		$scope.bill.date = date.getFullYear()+"-"+(parseInt(date.getMonth())+1)+"-"+date.getDate();
+		$scope.current_bill_view = $scope.previous_view = 'outcome';
+		$rootScope.bill_accounts = {};
+		$rootScope.bill_child_accounts = {};
+		$scope.bill.first_category = $scope.bill.second_category = $scope.bill.account_type = $scope.bill.account_name = "1";
+	/*}else*/
+	$rootScope.$watch('bill_operation_type',function(newValue,oldValue){
+		if(newValue == 1){
+		console.log("当前是修改操作");
 
-	//定位
-	$scope.location_options_show = false;
-	//点击模态框提示消失
+		$scope.bill_type = $rootScope.current_bill.bill_type==1?1:2;
+		$scope.bill_type_text = $rootScope.current_bill.bill_type==1?'记账-支出':'记账-收入';
+		console.log("bill_type:"+$scope.bill_type);
+
+		//更新用户账单分类
+		var type = $scope.bill_type==1?'outcome':'income';
+		$http.get(home_path+"/Bill/get_user_bill_categories.html?type="+type).success(function(res){
+			if(res.error === 0){
+				$rootScope.bill_categories = res.bill_categories;
+				$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+			}
+		});
+		
+		$scope.bill.date = $rootScope.current_bill.bill_time.split(' ')[0];
+		$scope.bill.time.hour = parseInt($rootScope.current_bill.bill_time.split(' ')[1].split(':')[0]);
+		$scope.bill.time.minute = $rootScope.current_bill.bill_time.split(' ')[1].split(':')[1];
+		$scope.bill.first_category = $rootScope.current_bill.bill_category_type_id;
+		//更新子分类选项
+		$rootScope.child_bill_categories = $rootScope.bill_categories[$scope.bill.first_category-$rootScope.bill_categories[0].bill_category_type.bill_category_type_id].child_bill_categories;
+		$scope.bill.second_category = $rootScope.current_bill.bill_category_id;
+		$scope.bill.account_type = $rootScope.current_bill.account_type_id;
+		//更新子账户选项
+		$rootScope.bill_child_accounts = $rootScope.bill_accounts[$scope.bill.account_type-$rootScope.bill_accounts[0].account_type.account_type_id].child_accounts;
+		$scope.bill.account_name = $rootScope.current_bill.account_id;
+		$scope.bill.location = $rootScope.current_bill.bill_location;
+		$scope.bill.sum = parseFloat($rootScope.current_bill.bill_sum);
+		$scope.bill.remarks = $rootScope.current_bill.bill_remarks;
+
+		console.log("hour:"+$scope.bill.time.hour);
+		console.log("first_category:"+$scope.bill.first_category);
+		console.log("second_category:"+$scope.bill.second_category);
+		console.log("account_type:"+$scope.bill.account_type);
+		console.log("account_name:"+$scope.bill.account_name);
+	}//修改操作
+	});
+	//---------------------监听账单变化-----------------------
+	//监听账户选项变化
+	$scope.billAccountTypeChange = function(){
+		console.log("index:"+($scope.bill.account_type-$rootScope.bill_accounts[0].account_type.account_type_id));
+		$rootScope.bill_child_accounts = $rootScope.bill_accounts[$scope.bill.account_type-$rootScope.bill_accounts[0].account_type.account_type_id].child_accounts;
+		$scope.bill.account_name = $rootScope.bill_child_accounts[0].account_id;
+	}
+	//监听分类选项变化
+	$scope.billCategoryTypeChange = function(){
+		console.log("index:"+($scope.bill.first_category-$rootScope.bill_categories[0].bill_category_type.bill_category_type_id));
+		$rootScope.child_bill_categories = $rootScope.bill_categories[$scope.bill.first_category-$rootScope.bill_categories[0].bill_category_type.bill_category_type_id].child_bill_categories;
+		$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
+	}
+	//----------------------定位---------------------------
+	$scope.location_options_show = false;//是否显示建议选项
+	//点击模态框建议选项消失
 	$scope.add_bill_modal_click = function(){$scope.location_options_show = false;}
 	var url = "http://api.map.baidu.com/location/ip?ak="+baidu_ak+"&callback=JSON_CALLBACK";
-	var city_code = 131;
+	var city_code = 131;//默认城市编码
 	//获取城市码
 	$http.jsonp(url).success(function(res){
 		city_code = res.content.address_detail.city_code;
-		console.log("当前城市编码:"+city_code);
-	});
-	$scope.locate = function(){
-		$http.jsonp(url).success(function(res){
-			console.log(res);
-			$scope.bill.location = res.content.address;
-		});
-	}	
+	});	
 	//监听input内容
 	$scope.location_options = [];
 	var baidu_suggestion_api_url = "http://api.map.baidu.com/place/v2/suggestion";
 	$scope.locationInputChange = function(){
-		console.log("监听到input改变...");
 		var url = baidu_suggestion_api_url+"?query="+$scope.bill.location+"&region="+city_code+"&ak="+baidu_ak+"&output=json&callback=JSON_CALLBACK";
-		console.log(url);
 		$http.jsonp(url).success(function(res){
-			console.log(res);
 			if(res.status == 0){
-				$scope.location_options_show = true;
+				$scope.location_options_show = true;//显示建议选项
 				$scope.location_options = res.result;
 			}else{console.log("获取位置列表失败！");}
 		});
 	}
-	//选择某个建议项后
+	//选择某个建议项后将账单位置设为该位置，隐藏建议选项
 	$scope.selectLocation = function(location){
 		$scope.bill.location = location;
 		$scope.location_options_show = false;
 	}
-	//添加账单
+
+	//---------------------添加账单-------------------
 	$scope.addBill = function(){
-		var data = [$scope.bill.first_category,$scope.bill.second_category,$scope.bill.account_type,$scope.bill.account_name,$scope.bill.date,
-		$scope.bill.time,$scope.bill.location,$scope.bill.sum,$scope.bill.remarks];
+		//判断是新增操作还是修改操作
+		var data = [$scope.bill_type,$scope.bill.first_category,$scope.bill.second_category,$scope.bill.account_type,$scope.bill.account_name,$scope.bill.date+" "+
+		$scope.bill.time.hour+":"+$scope.bill.time.minute,$scope.bill.location,$scope.bill.sum,$scope.bill.remarks];
 		if($scope.bill.sum < 0){hMessage("金额不能为负！");return;}
 		console.log(data);
+		$http({
+          method:'POST',
+          url:home_path+"/Bill/add_bill.html",
+          data:{'bill_type':$scope.bill_type,'bill_category_id':$scope.bill.second_category,'bill_account_id':$scope.bill.account_name,
+          'bill_time':$scope.bill.date+" "+$scope.bill.time.hour+":"+$scope.bill.time.minute,'bill_location':$scope.bill.location,
+          'bill_sum':$scope.bill.sum,'bill_remarks':$scope.bill.remarks}
+        }).success(function(res){
+        	console.log(res);
+			if(res.error === 0){
+				hMessage("账单添加成功成功！",2000);
+			}
+			else hMessage(res.msg,2000);
+		});
 	}
+
+	//切换账单类型
 	$scope.switchBillType = function(){
+		//重置账户选项
+		$rootScope.bill_child_accounts = $rootScope.bill_accounts[0].child_accounts;
+		$scope.bill.account_type = $rootScope.bill_accounts[0].account_type.account_type_id;
+		$scope.bill.account_name = $rootScope.bill_child_accounts[0].account_id;
+		
 		if($scope.current_bill_view == 'outcome'){
+			//分类选项切换
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type=income").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+					//重置分类选项
+					$scope.bill.first_category = $rootScope.bill_categories[0].bill_category_type.bill_category_type_id;
+					$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
+				}
+			});
+			$scope.bill_type = 2;
 			$state.go('bill_income');
 			$scope.current_bill_view = $scope.previous_view = 'income';
-			$scope.bill_type = '记账-收入';
+			$scope.bill_type_text = '记账-收入';
 		}
-		else {$state.go('bill_outcome');$scope.current_bill_view = $scope.previous_view = 'outcome';$scope.bill_type = '记账-支出';}
+		else {
+			//分类选项切换
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type=outcome").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+					//重置分类选项
+					$scope.bill.first_category = $rootScope.bill_categories[0].bill_category_type.bill_category_type_id;
+					$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
+				}
+			});
+			$scope.bill_type = 1;
+			$state.go('bill_outcome');$scope.current_bill_view = $scope.previous_view = 'outcome';$scope.bill_type_text = '记账-支出';
+		}
 	}
 	//账单post
 	//添加分类
@@ -269,12 +392,21 @@ m_index.controller('c_add_bill_modal',function($scope,$state,$http,$interval){
 	}
 });
 //c_bill_details_modal
-m_index.controller('c_bill_details_modal',function($scope,$state,$http){
+m_index.controller('c_bill_details_modal',function($scope,$rootScope,$state,$http){
 	$scope.deleteBill = function(){//删除账单
 		confirm('你确定要删除该账单？本操作不可撤销！');
 	}
 	$scope.modifyBill = function(){//修改账单
-		$state.go('modify_bill');
+		//$state.go('modify_bill');
+		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
+		bill_detail_modal.hide();
+		$state.go('bill_outcome');
+		//$state.go('bill_outcome', {}, { reload: true });
+		var bill_modal = UIkit.modal("#add-bill-modal");
+		bill_modal.show();
+		$rootScope.bill_operation_type = 0;//操作类型改为修改
+		$rootScope.bill_operation_type = 1;
+		//$state.go('bill_outcome');
 	}
 });
 //c_modify_bill
@@ -318,13 +450,35 @@ m_index.controller('c_budget',function($scope,$state){});
 
 //----------------------------------------账户页面----------------------------------------------
 //---+c_accounts
+//---|---c_account 单个账户详情
 //---|---c_cash
 
 //c_accounts
-m_index.controller('c_accounts',function($scope,$state){
+m_index.controller('c_accounts',function($scope,$rootScope,$state,$http){
+	//获取用户的账户列表信息
+	$scope.accounts = {};
+	$http.get(home_path+"/Account/get_user_accounts.html").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$scope.accounts = res.accounts;
+		}
+	});
 	setTitle("随手记-账户");
-	$state.go('cash');
+	$state.go('accounts_sum');
 	$scope.current_accounts_tab = 'cash';
+	//显示单个账户信息
+	$scope.showAccount = function(account_id){
+		console.log("account_id:"+account_id);
+		//$rootScope.account_id = account_id;
+		//请求该账户的信息
+		$http.get(home_path+"/Account/get_account_info.html?account_id="+account_id).success(function(res){
+			if(res.error === 0){
+				$rootScope.account = res.account;
+			}
+		});
+		$state.go('account');
+	}
+	//添加账户
 	$scope.addAccount = function(){
 		var add_account_modal = UIkit.modal("#add-account-modal");
 		if ( add_account_modal.isActive() ) {
@@ -333,6 +487,7 @@ m_index.controller('c_accounts',function($scope,$state){
 		    add_account_modal.show();
 		}
 	}
+	//切换账户
 	$scope.switchAccountsTab = function(tab){
 		$scope.current_accounts_tab = tab;
 	}
@@ -349,8 +504,8 @@ m_index.controller('c_add_account_modal',function($scope,$state){
 		else $scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 	}
 })
-//c_cash
-m_index.controller('c_cash',function($scope,$state){
+//c_accounts_sum
+m_index.controller('c_accounts_sum',function($scope,$state){
 	//modify-account-modal
 	$scope.modifyAccount = function(){
 		var modify_account_modal = UIkit.modal("#modify-account-modal");
@@ -360,6 +515,10 @@ m_index.controller('c_cash',function($scope,$state){
 		    modify_account_modal.show();
 		}
 	}
+});
+//c_account 
+m_index.controller('c_account',function($scope,$rootScope,$state,$http){
+	//
 });
 
 //----------------------------------------用户中心页面----------------------------------------------
@@ -373,6 +532,21 @@ m_index.controller('c_user',function($scope,$state,$http,$rootScope){
 });
 m_index.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$http,ipCookie){
 	$rootScope.current_user_tab = 'basicInfo';
+	//获取用户的基本信息
+	$http.get(home_path+"/User/get_user_basic_info.html").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$rootScope.user = {};
+			$rootScope.user.name = res.user.user_name;
+			$rootScope.username_text = '<i class="uk-icon-user"></i> ' + res.user.user_name;
+			$rootScope.user.email = res.user.user_email;
+			//判断是相对路径还是绝对路径
+			var pattern = /^(https|http|www)/g;
+			if(pattern.test(res.user.user_avatar))
+				$rootScope.user.avatar = res.user.user_avatar;
+			else $rootScope.user.avatar = public_path+ "/img/avatar/" + res.user.user_avatar;
+		}
+	});
 	//注销
 	$scope.logout = function(){
 		$http.get(home_path+"/User/logout.html").success(function(res){
@@ -403,11 +577,6 @@ m_index.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$inte
 	$scope.resetPassword = function(){
 		//console.log('old_password:'+$scope.old_password+',new_password:'+$scope.new_password+',password_confirm:'+$scope.password_confirm);
 		//post
-		//对密码进行检查
-		/*if($scope.old_password.length < 1 || $scope.new_password.length < 1 || $scope.password_confirm.length < 1){
-			hMessage("密码不能为空！");
-			return;
-		}*/
 		if(checkEmpty($scope.old_password) || checkEmpty($scope.new_password) || checkEmpty($scope.password_confirm)){
 			hMessage("密码不能为空(不能包含空格等非显示字符)！");
 			return;
@@ -435,7 +604,8 @@ m_index.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$inte
 });
 //修改用户的基本信息
 m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,$http,ipCookie){
-	$scope.user_name = ipCookie('username');
+	$scope.avatar_upload_url = "http://localhost/M-Note/index.php/Home/User/upload_user_avatar.html";
+	$scope.user_name = $scope.user_email = "";
 	$scope.uploadAvatarBtn = "上传头像";
 
 	//上传用户头像
@@ -459,12 +629,17 @@ m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$
 	            if($(window.frames["upload_avatar_iframe"].document).find('pre').html() != undefined)
 	            {
 		            var callback = JSON.parse($(window.frames["upload_avatar_iframe"].document).find('pre').html());
+		            console.log(callback);
 		            if(callback.error == 0){
-		              $rootScope.user_avatar = callback.url;
-		              $scope.uploadAvatarBtn = "上传成功！";
-		              hMessage("上传成功！");
-		              $interval(function(){$scope.uploadAvatarBtn = "上传头像";},2000);
-		            }else hMessage('头像修改失败，请稍后重试！');
+		            	//判断是相对路径还是绝对路径
+						var pattern = /^(https|http|www)/g;
+						if(pattern.test(callback.url))
+							$rootScope.user.avatar = callback.url;
+						else $rootScope.user.avatar = public_path+ "/img/avatar/" + callback.url;
+		              	$scope.uploadAvatarBtn = "上传成功！";
+		              	hMessage("上传成功！");
+		              	$interval(function(){$scope.uploadAvatarBtn = "上传头像";},2000);
+		            }else hMessage(callback.msg);
 		            $(window.frames["upload_avatar_iframe"].document).find('pre').html('');
 		            $interval.cancel(stop);
 	            }
@@ -474,13 +649,9 @@ m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$
 	//修改用户基本信息
 	$scope.modifyUserInfo = function(){
 		//判空，格式检测
-		if($scope.user_name == ipCookie('username') && $scope.user_email == $rootScope.user_email){
-			hMessage("您未作任何修改！");
-			return;
-		}else if($scope.user_name.length < 1){hMessage("用户名不能为空！");return;}
-		else if(!usernameVerify($scope.user_name)){hMessage("用户名只能以英文字母或中文开头,包含数字，下划线，字母，中文！",3000);return;}
-		else if($scope.user_email.length < 1){hMessage("邮箱不能为空！");return;}
-		else if(!emailVerify($scope.user_email)){hMessage("请输入正确的邮箱格式！");return;}
+		if($scope.user_name.length < 1 && $scope.user_email.length < 1){hMessage("不能提交空信息，请至少修改一项！");return;}
+		else if($scope.user_name.length > 0 && !usernameVerify($scope.user_name)){hMessage("用户名只能以英文字母或中文开头,包含数字，下划线，字母，中文！",3000);return;}
+		else if($scope.user_email.length > 0 && !emailVerify($scope.user_email)){hMessage("请输入正确的邮箱格式！");return;}
 		console.log('username:'+$scope.user_name+',email:'+$scope.user_email);
 		$http({
 	      method:'POST',
@@ -489,15 +660,16 @@ m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$
 	    }).success(function(res){
 	    	console.log(res);
 			if(res.error === 0){
+				//这里更新一下页面的用户信息
+				$rootScope.user.name = res.user.user_name;
+				$rootScope.username_text = '<i class="uk-icon-user"></i> ' + res.user.user_name;
+				$rootScope.user.email = res.user.user_email;
 				ipCookie('username',$scope.user_name)
 				hMessage("用户信息修改成功！",2000);
-				$interval(function(){
+				setTimeout(function(){
 					var user_info_modal = UIkit.modal("#modify-userInfo-modal");
 					user_info_modal.hide();
 				},1000);
-				//这里更新一下页面的用户信息
-				/*$rootScope.user.name = $scope.user_name;
-				$rootScope.user_email = $scope.user_email;*/
 			}else hMessage(res.msg,2000);
 		});
 	}

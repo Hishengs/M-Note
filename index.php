@@ -18,8 +18,9 @@ if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
 define('APP_DEBUG',True);
 
 // 定义应用目录
-define('APP_PATH','./Application/');
-
+define('APP_PATH','./App/');
+//定义资源目录路径
+define("PUBLIC_PATH", dirname(__DIR__)."\M-Note\Public");
 // 引入ThinkPHP入口文件
 require './ThinkPHP/ThinkPHP.php';
 

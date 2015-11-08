@@ -1,11 +1,11 @@
 <div class="uk-modal-header">
-	<h3 style="display:inline-block;" ng-bind="bill_type"></h3>
+	<h3 style="display:inline-block;" ng-bind="bill_type_text"></h3>
 	<button type="button" class="uk-button f-right" ng-click="switchBillType()">切换类型</button>
 </div>
 
 <form class="uk-form" action="" method="post">
 <ul class="uk-list uk-list-line">
-	<input type="text" class="display-none" value="income" name="bill_type">
+	<input type="text" class="display-none" value="2" name="bill_type">
 	<li>
 		<label>分类</label>
 		<!-- <select class="uk-select uk-form-width-large f-right" name="bill_category" ng-model="bill_income_category">
@@ -14,23 +14,21 @@
 		</select> -->
 		<span class="bill_category f-right">
 			<!-- 一级选项 -->
-			<select class="uk-select" name="bill_first_category" style="width:229px;" ng-model="bill.first_category"><!-- ng-model="bill.first_category" -->
-				<option value="1">职业收入</option>
-				<option>其它收入</option>
-			</select>
+			<!-- <select class="uk-select" name="bill_first_category" style="width:229px;" ng-model="bill.first_category" ng-change="billCategoryTypeChange()">
+				<option ng-repeat="bill_category in bill_categories" value="{{bill_category.bill_category_type.bill_category_type_id}}">
+					{{bill_category.bill_category_type.bill_category_type_name}}
+				</option>
+			</select> -->
+			<select class="uk-select" name="bill_first_category" style="width:229px;" ng-model="bill.first_category" ng-change="billCategoryTypeChange()" ng-options="bill_category.bill_category_type.bill_category_type_id as bill_category.bill_category_type.bill_category_type_name for bill_category in bill_categories"></select>
+
 			<!-- 二级选项 -->
-			<select class="uk-select" name="bill_second_category" style="width:230px;" ng-model="bill.second_category">
-				<option value="1">工资收入</option>
-				<option>利息收入</option>
-				<option>加班收入</option>
-				<option>奖金收入</option>
-				<option>投资收入</option>
-				<option>兼职收入</option>
-				<option>礼金收入</option>
-				<option>中奖收入</option>
-				<option>意外收入</option>
-				<option>经营所得</option>
-			</select>
+			<!-- <select class="uk-select" name="bill_second_category" style="width:230px;" ng-model="bill.second_category">二级分类
+				<option ng-repeat="child_bill_category in child_bill_categories" value="{{child_bill_category.bill_category_id}}">
+					{{child_bill_category.bill_category_name}}
+				</option>
+			</select> -->
+			<select class="uk-select" name="bill_second_category" style="width:230px;" ng-model="bill.second_category" ng-options="child_bill_category.bill_category_id as child_bill_category.bill_category_name for child_bill_category in child_bill_categories"></select>
+			
 			<button type="button" class="uk-button uk-button-small" title="添加分类" ng-click="addCategory('income')"><i class="uk-icon-plus"></i></button>
 		</span>
 	</li>
@@ -42,25 +40,19 @@
 		</select> -->
 		<span class="bill_account f-right">
 			<!-- 账户类型 -->
-			<select class="uk-select" name="bill_account_type" style="width:229px;" ng-model="bill.account_type"> <!-- ng-model="bill.account_type" -->
-				<option value="1">现金</option>
-				<option>信用卡</option>
-				<option>金融账户</option>
-				<option>虚拟账户</option>
-				<option>负债账户</option>
-				<option>债权账户</option>
-				<option>投资账户</option><!-- <option>其它</option> -->
-			</select>
+			<!-- <select class="uk-select" name="bill_account_type" style="width:229px;" ng-model="bill.account_type" ng-change="billAccountTypeChange()"> 
+				<option ng-repeat="account in bill_accounts" value="{{account.account_type.account_type_id}}">
+					{{account.account_type.account_type_name}}
+				</option>
+			</select> -->
+			<select class="uk-select" name="bill_account_type" style="width:229px;" ng-model="bill.account_type" ng-change="billAccountTypeChange()" ng-options="account.account_type.account_type_id as account.account_type.account_type_name for account in bill_accounts"></select>
+
 			<!-- 账户名称 -->
-			<select class="uk-select" name="bill_account_name" style="width:230px;" ng-model="bill.account_name">
-				<option value="1">支付宝</option>
-				<option>饭卡</option>
-				<option>公交卡</option>
-				<option>应收款项</option>
-				<option>应付款项</option>
-				<option>信用卡</option>
-				<option>现金</option><!-- <option>其它</option> -->
-			</select>
+			<!-- <select class="uk-select" name="bill_account_name" style="width:230px;" ng-model="bill.account_name">
+				<option ng-repeat="account in bill_child_accounts" value="{{account.account_id}}">{{account.account_name}}</option>
+			</select> -->
+			<select class="uk-select" name="bill_account_name" style="width:230px;" ng-model="bill.account_name" ng-options="account.account_id as account.account_name for account in bill_child_accounts"></select>
+
 			<button type="button" class="uk-button uk-button-small" title="添加账户" ng-click="addAccount()"><i class="uk-icon-plus"></i></button>
 		</span>
 	</li>
@@ -69,10 +61,10 @@
 		<span class="bill-datetime-picker f-right">
 			<input type="text" class="uk-input" name="bill_date" style="width:230px;" placeholder="日期(空缺默认当前时间)" ng-model="bill.date" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,minDate:minDate,maxDate:maxDate}"><!-- 日期 -->
 			<select class="uk-select" name="bill_time_hour" style="width:130px;" ng-model="bill.time.hour"><!-- 小时 -->
-	        	<option ng-repeat="hour in hours" ng-value="{{hour}}">{{hour}}</option>
+	        	<option ng-repeat="hour in hours" value="{{hour}}">{{hour}}</option>
 			</select>
 			<select class="uk-select" name="bill_time_minute" style="width:130px;" ng-model="bill.time.minute"><!-- 分钟 -->
-	        	<option ng-repeat="minute in minutes" ng-value="{{minute}}">{{minute}}</option>
+	        	<option ng-repeat="minute in minutes" value="{{minute}}">{{minute}}</option>
 			</select>
 		</span>
 	</li>

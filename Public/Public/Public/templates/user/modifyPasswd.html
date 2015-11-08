@@ -1,0 +1,24 @@
+<!-- 修改密码 -->
+<div class="user-modify-password uk-animation-slide-right" ng-controller="c_user_modifyPasswd">
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">修改密码
+			<span style="float:right;" class="bill-add">
+			
+			</span></div>
+		</div>
+		<div class="uk-panel-content">
+			<form class="uk-form">
+			<ul class="uk-list uk-list-line">		
+			    <li><label>旧密码</label><input class="uk-input uk-form-width-large f-right" placeholder="旧密码" name="old_password" type="password" ng-model="old_password" /></li>
+				<li><label>新密码</label><input class="uk-input uk-form-width-large f-right" placeholder="新密码" name="new_password" type="password" ng-model="new_password" /></li>
+				<li><label>确认密码</label><input class="uk-input uk-form-width-large f-right" placeholder="确认密码" name="password_confirm" type="password" ng-model="password_confirm" /></li>
+			</ul>
+			</form>
+
+	        <div class="uk-modal-footer">
+	        	<button class="uk-button uk-button-primary" ng-click="resetPassword()">保存</button>
+	        </div>
+		</div>
+	</div>
+</div>
