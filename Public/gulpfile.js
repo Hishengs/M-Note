@@ -20,7 +20,14 @@ gulp.task('angular', function() {
     .pipe(uglify())
     .pipe(gulp.dest('./js/dist/'));
 });
-
+//合并Controller
+gulp.task('concat-controller',function(){
+	gulp.src(['./js/app/controller/commonController.js','./js/app/controller/loginRegisterController.js',
+		'./js/app/controller/billController.js','./js/app/controller/accountController.js',
+    './js/app/controller/userController.js','./js/app/controller/routerController.js'])
+	.pipe(concat('controller.js'))
+	.pipe(gulp.dest('./js/app/'));
+});
 // 默认任务
 gulp.task('default', function() {
     gulp.run('app');

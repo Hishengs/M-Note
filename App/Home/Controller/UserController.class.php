@@ -13,6 +13,7 @@ class UserController extends Controller {
 
     public function index(){
         echo "Hello World!";
+        echo "My id is ".session('user_id');
     } 
     //登陆
     public function login(){
@@ -189,7 +190,22 @@ class UserController extends Controller {
     }
     //初始化用户数据
     public function _init_user_data($user_id){
+        //$user_id = I("get.user_id");
+        //添加默认的一级账单分类和账户类型
+        $this->_init_outcome_category_type($user_id);
+        $this->_init_income_category_type($user_id);
+        $this->_init_account_type($user_id);
         //添加默认的账单分类和账户
+        //获取新增的一级分类和账户类型
+        $bill_category_type_model = D('BillCategoryType');
+        $account_type_model = D('AccountType');
+        $cdt = array('bill_category_type_creater_id'=>$user_id,'bill_type'=>1);//支出分类
+        $outcome_category_types = $bill_category_type_model->where($cdt)->select();
+        $cdt = array('bill_category_type_creater_id'=>$user_id,'bill_type'=>2);//收入分类
+        $income_category_types = $bill_category_type_model->where($cdt)->select();
+        $cdt = array('account_type_creater_id'=>$user_id);//账户分类
+        $account_types = $account_type_model->where($cdt)->select();
+
         $bill_category_model = M('BillCategory');
         $outcome_category = array(array('衣服裤子','鞋帽包包','化妆饰品'),array('早午晚餐','烟酒茶','水果零食'),
             array('日常用品','水电煤气','房租','物业管理','维修保养'),array('公共交通','打车租车','私家车费用'),
@@ -199,14 +215,14 @@ class UserController extends Controller {
             array('其它支出','意外丢失','烂账损失'));
         foreach ($outcome_category as $key => $value) {
             for($i=0;$i<count($value);$i++){
-                $data = array('bill_type'=>1,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$key+1);
+                $data = array('bill_type'=>1,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$outcome_category_types[$key]['bill_category_type_id']);
                 $bill_category_model->add($data);
             }
         }
         $income_category = array(array('工资收入','利息收入','加班收入','奖金收入','投资收入','兼职收入'),array('礼金收入','中奖收入','意外收入','经营所得'));
         foreach ($income_category as $key => $value) {
             for($i=0;$i<count($value);$i++){
-                $data = array('bill_type'=>2,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$key+1+count($outcome_category));
+                $data = array('bill_type'=>2,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$income_category_types[$key]['bill_category_type_id']);
                 $bill_category_model->add($data);
             }
         }
@@ -215,37 +231,37 @@ class UserController extends Controller {
         $account = array(array('现金'),array('信用卡'),array('银行卡'),array('饭卡','支付宝','公交卡'),array('应付款项'),array('公司报销','应收款项'),array('基金账户','余额宝','股票账户'));
         foreach ($account as $key => $value) {
             for($i=0;$i<count($value);$i++){
-                $data = array('account_user_id'=>$user_id,'account_type_id'=>$key+1,'account_name'=>$value[$i],'account_balance'=>0);
+                $data = array('account_user_id'=>$user_id,'account_type_id'=>$account_types[$key]['account_type_id'],'account_name'=>$value[$i],'account_balance'=>0);
                 $account_model->add($data);
             }
         }
     }
-    public function init_outcome_category_type(){
-        /*$outcome_category_type = array('衣服服饰','食品酒水','居家物业','行车交通','交流通讯','休闲娱乐','学习进修','人情来往','医疗保健','金融保险','其它杂项');
+    protected function _init_outcome_category_type($user_id){
+        $outcome_category_type = array('衣服服饰','食品酒水','居家物业','行车交通','交流通讯','休闲娱乐','学习进修','人情来往','医疗保健','金融保险','其它杂项');
         $bill_category_type_model = M('BillCategoryType');
         foreach ($outcome_category_type as $key => $value) {
-            $data = array('bill_type'=>1,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>0);
+            $data = array('bill_type'=>1,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>$user_id);
             $bill_category_type_model->add($data);
-        }*/
-        echo "outcome_category_type init success!";
+        }
+        //echo "outcome_category_type init success!";
     }
-    public function init_income_category_type(){
-        /*$income_category_type = array('职业收入','其它收入');
+    protected function _init_income_category_type($user_id){
+        $income_category_type = array('职业收入','其它收入');
         $bill_category_type_model = M('BillCategoryType');
         foreach ($income_category_type as $key => $value) {
-            $data = array('bill_type'=>2,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>0);
+            $data = array('bill_type'=>2,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>$user_id);
             $bill_category_type_model->add($data);
-        }*/
-        echo "income_category_type init success!";
+        }
+        //echo "income_category_type init success!";
     }
-    public function init_account_type(){
-        /*$account_type = array('现金账户','信用卡','金融账户','虚拟账户','负债账户','债权账户','投资账户');
+    protected function _init_account_type($user_id){
+        $account_type = array('现金账户','信用卡','金融账户','虚拟账户','负债账户','债权账户','投资账户');
         $account_type_model = M('AccountType');
         foreach ($account_type as $key => $value) {
-            $data = array('account_type_name'=>$value,'account_type_creater_id'=>0);
+            $data = array('account_type_name'=>$value,'account_type_creater_id'=>$user_id);
             $account_type_model->add($data);
-        }*/
-        echo "account_type init success!";
+        }
+        //echo "account_type init success!";
     }
-    
+
 }

@@ -1,87 +1,18 @@
 <div class="accounts uk-animation-slide-right uk-grid" ng-controller="c_accounts">
 <div class="uk-width-1-6">
 	<ul class="uk-tab uk-tab-left">
-          <li ng-repeat="account in accounts" ng-class="{'uk-active': current_accounts_tab=='cash'}" ng-click="switchAccountsTab('cash')" data-uk-dropdown="{mode:'click'}">
-            <a href="javascript:void(0);" class="plain-link">{{account.account_type.account_type_name}}<i class="uk-icon-caret-down f-right"></i></a>
+          <li ng-repeat="account_item in account_items" ng-class="{'uk-active': current_accounts_tab=='cash'}" ng-click="switchAccountsTab('cash')" data-uk-dropdown="{mode:'click'}">
+            <a href="javascript:void(0);" class="plain-link">{{account_item.account.account_name}}<i class="uk-icon-caret-down f-right"></i></a>
             <div class="uk-dropdown uk-dropdown-small">
                 <ul class="uk-nav uk-nav-dropdown">
-                    <li ng-repeat="child_account in account.child_accounts" ng-click="showAccount(child_account.account_id)">
+                    <li ng-repeat="child_account in account_item.child_accounts" ng-click="showAccount(child_account.child_account_id)">
                       <a href="javascript:void(0);">
-                      {{child_account.account_name}}
+                      {{child_account.child_account_name}}
                       </a>
                     </li>
                 </ul>
             </div>
           </li>
-	    <!-- <li ng-class="{'uk-active': current_accounts_tab=='cash'}" ng-click="switchAccountsTab('cash')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link" ui-sref="cash">现金<i class="uk-icon-caret-down f-right"></i></a>
-              现金下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">现金</a></li>
-                  </ul>
-              </div>
-            </li>
-      <li ng-class="{'uk-active': current_accounts_tab=='credit_card'}" ng-click="switchAccountsTab('credit_card')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">信用卡<i class="uk-icon-caret-down f-right"></i></a>
-              信用卡下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">信用卡</a></li>
-                  </ul>
-              </div>
-            </li>
-            <li ng-class="{'uk-active': current_accounts_tab=='finance'}" ng-click="switchAccountsTab('finance')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">金融账户<i class="uk-icon-caret-down f-right"></i></a>
-              金融账户下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">银行卡</a></li>
-                  </ul>
-              </div>
-            </li>
-      <li ng-class="{'uk-active': current_accounts_tab=='virtual'}" ng-click="switchAccountsTab('virtual')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">虚拟账户<i class="uk-icon-caret-down f-right"></i></a>
-              虚拟账户下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">支付宝</a></li>
-                      <li><a href="javascript:void(0);">饭卡</a></li>
-                      <li><a href="javascript:void(0);">公交卡</a></li>
-                  </ul>
-              </div>
-            </li>
-      <li ng-class="{'uk-active': current_accounts_tab=='debt'}" ng-click="switchAccountsTab('debt')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">负债账户<i class="uk-icon-caret-down f-right"></i></a>
-              负债账户下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">应付款项</a></li>
-                  </ul>
-              </div>
-            </li>
-      <li ng-class="{'uk-active': current_accounts_tab=='credit'}" ng-click="switchAccountsTab('credit')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">债权账户<i class="uk-icon-caret-down f-right"></i></a>
-              债权账户下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">应收款项</a></li>
-                      <li><a href="javascript:void(0);">公司报销</a></li>
-                  </ul>
-              </div>
-            </li>
-      <li ng-class="{'uk-active': current_accounts_tab=='invest'}" ng-click="switchAccountsTab('invest')" data-uk-dropdown="{mode:'click'}">
-              <a href="javascript:void(0);" class="plain-link">投资账户<i class="uk-icon-caret-down f-right"></i></a>
-              投资账户下的二级菜单
-              <div class="uk-dropdown uk-dropdown-small">
-                  <ul class="uk-nav uk-nav-dropdown">
-                      <li><a href="javascript:void(0);">余额宝</a></li>
-                      <li><a href="javascript:void(0);">基金账户</a></li>
-                      <li><a href="javascript:void(0);">股票账户</a></li>
-                  </ul>
-              </div>
-            </li> -->
-	    <!-- <li ng-class="{'uk-active': current_accounts_tab=='other'}" ng-click="switchAccountsTab('other')"><a href="javascript:void(0);" class="plain-link">其它</a></li> -->
 	    <li><a href="javascript:void(0);" class="plain-link" ng-click="addAccount()">添加账户</a></li>
 	</ul>
 </div>
@@ -102,10 +33,7 @@
             <li>
               <label>类型</label>
               <span class="bill_account f-right">
-                <select class="uk-select" style="width:445px;" name="account_type" ng-hide="ifAddSelfAccount">
-                  <option>现金</option><option>信用卡</option><option>金融账户</option><option>虚拟账户</option>
-                  <option>负债账户</option><option>债权账户</option><option>投资账户</option><!-- <option>其它</option> -->
-                </select>
+                <select class="uk-select" name="account" style="width:445px;" ng-model="account" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items" ng-hide="ifAddSelfAccount"></select>
                 <input type="text" class="uk-input" name="account_type" style="width:445px;" placeholder="自定义账户类型" ng-show="ifAddSelfAccount">
                 <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="addSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
                   

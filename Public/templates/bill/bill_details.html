@@ -9,8 +9,8 @@
 <ul class="uk-list uk-list-striped">
 	<li ng-if="current_bill.bill_type == 1"><label>类型</label><span class="f-right">支出</span></li>
 	<li ng-if="current_bill.bill_type == 2"><label>类型</label><span class="f-right">收入</span></li>
-	<li><label>类别</label><span class="f-right">{{current_bill.bill_category_name}}</span></li>
-	<li><label>账户</label><span class="f-right">{{current_bill.account_name}}</span></li>
+	<li><label>类别</label><span class="f-right">{{current_bill.child_bill_category_name}}</span></li>
+	<li><label>账户</label><span class="f-right">{{current_bill.child_account_name}}</span></li>
 	<li><label>时间</label><span class="f-right">{{current_bill.bill_time}}</span></li>
     <li><label>地点</label><span class="f-right">{{current_bill.bill_location}}</span></li>
 	<li><label>金额</label><span class="f-right">￥ {{current_bill.bill_sum}}</span></li>

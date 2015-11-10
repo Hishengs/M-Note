@@ -6,33 +6,37 @@
   </span>
 </div>
 
-<form class="uk-form" action="" method="post">
+<form class="uk-form">
   <ul class="uk-list uk-list-striped">
     <li>
       <label>类型</label>
       <span class="bill_account f-right">
-        <select class="uk-select" style="width:445px;" name="account_type" ng-hide="ifAddSelfAccount">
-          <option>现金</option><option>信用卡</option><option>金融账户</option><option>虚拟账户</option>
-          <option>负债账户</option><option>债权账户</option><option>投资账户</option><!-- <option>其它</option> -->
-        </select>
-        <input type="text" class="uk-input" name="account_type" style="width:445px;" placeholder="自定义账户类型" ng-show="ifAddSelfAccount">
+
+        <select class="uk-select" style="width:446px;" name="added_account" ng-model="added_account" ng-show="!ifAddSelfAccount" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items">
+          </select>
+
+        <input type="text" class="uk-input" name="added_account" style="width:446px;" placeholder="自定义账户类型" ng-model="added_account" ng-show="ifAddSelfAccount">
+
         <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="addSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
-          
         </button>
+
       </span>
     </li>
     <li>
-      <label>名称</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_name" placeholder="账户名称">
+      <label>名称</label>
+      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_name" ng-model="added_child_account_name" placeholder="账户名称">
     </li>
     <li>
-      <label>余额</label><input type="number" class="uk-input uk-form-width-large f-right" name="account_balance" placeholder="余额">
+      <label>余额</label>
+      <input type="number" class="uk-input uk-form-width-large f-right" name="added_child_account_balance" placeholder="余额" ng-model="added_child_account_balance">
     </li>
     <li>
-      <label>备注</label><input type="text" class="uk-input uk-form-width-large f-right" name="account_remarks" placeholder="备注">
+      <label>备注</label>
+      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_remarks" placeholder="备注" ng-model="added_child_account_remarks">
     </li>
   </ul>
 </form>
 
 <div class="uk-modal-footer">
-  <button class="uk-button uk-button-primary">保存</button>
+  <button class="uk-button uk-button-primary" ng-click="addAccount()">保存</button>
 </div>

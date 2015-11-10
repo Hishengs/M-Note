@@ -1,4 +1,3 @@
-//------------------共有的控制器----------------
 var site_prefix = "http://localhost/note2/"
 //var controller_path = '';
 //----------------------------------------主页------------------------------------------------
@@ -47,7 +46,7 @@ m_index.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 		$rootScope.username_text = '<i class="uk-icon-user"></i> ' + ipCookie('username');
 	}
 });
-//-------------------登陆注册控制器----------------------
+//----------------------------------------登陆/注册---------------------------------------------
 m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
@@ -125,22 +124,17 @@ m_index.controller('c_register',function($scope,$state,$http){
 		});
 	}
 });
-//----------------------账单控制器-------------------------------
+//----------------------------------------记账页面----------------------------------------------
 //|-+c_bill
 //|---c_add_bill_modal
 //|---+c_bill_details_modal
 //|---|---c_modify_bill
 
 //c_bill
-m_index.controller('c_bill',function($scope,$rootScope,$state,$http,BillOutcomeCategory,BillIncomeCategory){
-	//更新账户分类
-	BillOutcomeCategory.updateBillOutcomeCategory();
-	BillIncomeCategory.updateBillIncomeCategory();
-
+m_index.controller('c_bill',function($scope,$rootScope,$state,$http){
 	setTitle("随手记-记账");
 	$rootScope.bill_operation_trigger = 0;//触发器变量
-	$rootScope.current_operation = "add_bill";//当前操作
-	$rootScope.account_items = $rootScope.child_accounts = $rootScope.bill_category_items = $rootScope.child_bill_categories = {};
+	$rootScope.bill_accounts = $rootScope.bill_child_accounts = $rootScope.bill_categories = $rootScope.child_bill_categories = {};
 	$rootScope.bill_tip_show = true;
 	$rootScope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
 	//获取当日账单列表，bill_list
@@ -157,35 +151,35 @@ m_index.controller('c_bill',function($scope,$rootScope,$state,$http,BillOutcomeC
 	}).error(function(data,state){
 		console.log(data);
 	});
-	//显示新增账单模态框
-	$scope.showAddBillModal = function(){
-		$rootScope.current_operation = "add_bill";//当前操作
-		$rootScope.bill_operation_trigger = $rootScope.bill_operation_trigger==0?1:0;//触发
+	
+	$scope.showAddBillModal = function(){//显示新增账单模态框
+		$rootScope.bill_operation_trigger = -1;//设为-1说明是新增操作
 		var bill_modal = UIkit.modal("#add-bill-modal");
 		bill_modal.show();
 		$state.go('bill_outcome');
 	}
-	//显示账单详情模态框
-	$scope.showBillDetail = function(index){
+	$scope.showBillDetail = function(index){//显示账单详情模态框
 		$rootScope.current_bill = $rootScope.today_bills[index];//设置当前账单
 		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 		bill_detail_modal.show();
 		$state.go('bill_details');
 	}
 });
-
 //c_add_bill_modal
-m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,BillOutcomeCategory,BillIncomeCategory,Accounts){
+m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,$interval){
 	$scope.bill_category = {};
 	$scope.current_bill_view = $scope.previous_view = 'outcome';
 	//------------------------设置账单默认值----------------------------
 	$scope.bill = {};
 	$scope.bill.time = {};
-
 	
+	$rootScope.bill_accounts = {};
+	$rootScope.bill_child_accounts = {};
+	//$scope.bill.first_category = $scope.bill.second_category = $scope.bill.account_type = $scope.bill.account_name = "1";
+
 	//监听触发变量,进而确定是新增还是修改账单
 	$rootScope.$watch('bill_operation_trigger',function(newValue,oldValue){
-		if($rootScope.current_operation == "modify_bill"){//修改操作
+		if(newValue!=oldValue && newValue!=-1 && oldValue!=-1){//修改操作
 			console.log("触发器被触发了！");
 			console.log("newValue:"+newValue+",oldValue:"+oldValue);
 			console.log("当前是修改操作");
@@ -196,29 +190,16 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 
 			//更新用户账单分类
 			var type = $scope.bill_type==1?'outcome':'income';
-			if(type == 'outcome'){
-				BillOutcomeCategory.getBillOutcomeCategory(true).success(function(res){
-					$rootScope.bill_category_items = res.bill_category_items;
-					for(var i=0;i<$rootScope.bill_category_items.length;i++){
-						if($rootScope.bill_category_items[i].bill_category.bill_category_id == $rootScope.current_bill.bill_category_id)break;
-					}
-					$rootScope.child_bill_categories = $rootScope.bill_category_items[i].child_bill_categories;
-				});
-			}else{
-				BillIncomeCategory.getBillIncomeCategory(true).success(function(res){
-					$rootScope.bill_category_items = res.bill_category_items;
-					//$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-					for(var i=0;i<$rootScope.bill_category_items.length;i++){
-						if($rootScope.bill_category_items[i].bill_category.bill_category_id == $rootScope.current_bill.bill_category_id)break;
-					}
-					$rootScope.child_bill_categories = $rootScope.bill_category_items[i].child_bill_categories;
-				});
-			}
-			
-			$scope.bill.category = $rootScope.current_bill.bill_category_id;
-			$scope.bill.child_category = $rootScope.current_bill.child_bill_category_id;
-			console.log("category:"+$scope.bill.category+",child_category:"+$scope.bill.child_category)
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type="+type).success(function(res){
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
 
+					//更新子分类选项和子账户选项
+					$rootScope.child_bill_categories = $rootScope.bill_categories[$scope.bill.first_category-$rootScope.bill_categories[0].bill_category_type.bill_category_type_id].child_bill_categories;
+					$rootScope.bill_child_accounts = $rootScope.bill_accounts[$scope.bill.account_type-$rootScope.bill_accounts[0].account_type.account_type_id].child_accounts;
+				}
+			});
 			//时间
 			$scope.hours = [];
 			$scope.minutes = [];
@@ -228,49 +209,29 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 			$scope.bill.time.hour = parseInt($rootScope.current_bill.bill_time.split(' ')[1].split(':')[0]);
 			$scope.bill.time.minute = parseInt($rootScope.current_bill.bill_time.split(' ')[1].split(':')[1]);
 
-			//更新账户分类
-			for(var i=0;i<$rootScope.account_items.length;i++){
-				if($rootScope.account_items[i].account.account_id == $rootScope.current_bill.account_id)break;
-			}
-			$rootScope.child_accounts = $rootScope.account_items[i].child_accounts;
-			$scope.bill.account = $rootScope.current_bill.account_id;
-			$scope.bill.child_account = $rootScope.current_bill.child_account_id;
+			$scope.bill.first_category = $rootScope.current_bill.bill_category_type_id;
+			$scope.bill.second_category = $rootScope.current_bill.bill_category_id;
+			$scope.bill.account_type = $rootScope.current_bill.account_type_id;
+			$scope.bill.account_name = $rootScope.current_bill.account_id;
 			
 			
 			$scope.bill.location = $rootScope.current_bill.bill_location;
 			$scope.bill.sum = parseFloat($rootScope.current_bill.bill_sum);
 			$scope.bill.remarks = $rootScope.current_bill.bill_remarks;
-			
+
+			console.log("hour:"+$scope.bill.time.hour);
+			console.log("minute:"+$scope.bill.time.minute);
+			console.log("first_category:"+$scope.bill.first_category);
+			console.log("second_category:"+$scope.bill.second_category);
+			console.log("account_type:"+$scope.bill.account_type);
+			console.log("account_name:"+$scope.bill.account_name);
 		}else{//是新增操作
 
 			console.log("当前是新增操作");
 			//设置账单的类型
 			$scope.bill_type = 1;//支出
 			$scope.bill_type_text = '记账-支出';
-
-			//获取账单分类(默认是支出分类)
-			BillOutcomeCategory.getBillOutcomeCategory(true).success(function(res){
-				$rootScope.bill_category_items = res.bill_category_items;
-				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
-			});
-			//获取账户分类
-			Accounts.getAccounts(true).success(function(res){
-				console.log(res);
-				$rootScope.account_items = res.account_items;
-				$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-
-				$scope.bill.account = $rootScope.account_items[0].account.account_id;
-				$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
-				//设置添加账户的默认值
-				$scope.added_account = $rootScope.account_items[0].account.account_id;
-				$scope.added_child_account_name = "";
-				$scope.added_child_account_balance = $scope.added_child_account_remarks = "";
-			});
-
-			
+			$scope.bill.first_category = $scope.bill.second_category = $scope.bill.account_type = $scope.bill.account_name = "1";
 			//设置账单默认的时间
 			var date = new Date();
 			//设置账单默认时间
@@ -284,8 +245,24 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 			for(var i=0;i<parseInt($scope.bill.time.minute)+1;i++)$scope.minutes.push(i);
 			//其它值恢复默认
 			$scope.bill.location = $scope.bill.sum = $scope.bill.remarks = null;
+			//获取用户账户信息
+			$http.get(home_path+"/Account/get_user_accounts.html").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_accounts = res.accounts;
+					$rootScope.bill_child_accounts = res.accounts[0].child_accounts;
+					console.log($rootScope.bill_child_accounts);
+				}
+			});
 
-			
+			//获取用户账单分类-默认outcome支出
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type=outcome").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+				}
+			});
 		}
 	});
 	//---------------------监听账单变化-----------------------
@@ -293,31 +270,30 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 	$scope.billAccountTypeChange = function(){
 		//遍历获取当前一级分类的数组下标
 		var index = 0;
-		for (var i=0; i<$rootScope.account_items.length; i++) {
-			if($scope.bill.account == $rootScope.account_items[i].account.account_id){
+		for (var i=0; i<$rootScope.bill_accounts.length; i++) {
+			if($scope.bill.account_type == $rootScope.bill_accounts[i].account_type.account_type_id){
 				index = i;
 				break;
 			}
 		};
 		console.log("index:"+index);
-		$rootScope.child_accounts = $rootScope.account_items[index].child_accounts;
-		$scope.bill.child_account = $rootScope.child_accounts[0].child_account_id;
+		$rootScope.bill_child_accounts = $rootScope.bill_accounts[index].child_accounts;
+		$scope.bill.account_name = $rootScope.bill_child_accounts[0].account_id;
 	}
 	//监听分类选项变化
 	$scope.billCategoryTypeChange = function(){
 		//遍历获取当前一级分类的数组下标
 		var index = 0;
-		for (var i=0; i<$rootScope.bill_category_items.length; i++) {
-			if($scope.bill.category == $rootScope.bill_category_items[i].bill_category.bill_category_id){
+		for (var i=0; i<$rootScope.bill_categories.length; i++) {
+			if($scope.bill.first_category == $rootScope.bill_categories[i].bill_category_type.bill_category_type_id){
 				index = i;
 				break;
 			}
 		};
 		console.log("index:"+index);
-		$rootScope.child_bill_categories = $rootScope.bill_category_items[index].child_bill_categories;
-		$scope.bill.child_category = $rootScope.child_bill_categories[0].child_bill_category_id;
+		$rootScope.child_bill_categories = $rootScope.bill_categories[index].child_bill_categories;
+		$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
 	}
-
 	//----------------------定位---------------------------
 	$scope.location_options_show = false;//是否显示建议选项
 	//点击模态框建议选项消失
@@ -348,14 +324,14 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 
 	//---------------------添加账单-------------------
 	$scope.addBill = function(){
-		var data = [$scope.bill_type,$scope.bill.category,$scope.bill.child_category,$scope.bill.account,$scope.bill.child_account,$scope.bill.date+" "+
+		var data = [$scope.bill_type,$scope.bill.first_category,$scope.bill.second_category,$scope.bill.account_type,$scope.bill.account_name,$scope.bill.date+" "+
 		$scope.bill.time.hour+":"+$scope.bill.time.minute,$scope.bill.location,$scope.bill.sum,$scope.bill.remarks];
 		if($scope.bill.sum < 0){hMessage("金额不能为负！");return;}
 		console.log(data);
 		$http({
           method:'POST',
           url:home_path+"/Bill/add_bill.html",
-          data:{'bill_type':$scope.bill_type,'bill_category_id':$scope.bill.child_category,'bill_account_id':$scope.bill.child_account,
+          data:{'bill_type':$scope.bill_type,'bill_category_id':$scope.bill.second_category,'bill_account_id':$scope.bill.account_name,
           'bill_time':$scope.bill.date+" "+$scope.bill.time.hour+":"+$scope.bill.time.minute,'bill_location':$scope.bill.location,
           'bill_sum':$scope.bill.sum,'bill_remarks':$scope.bill.remarks}
         }).success(function(res){
@@ -387,13 +363,13 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 	}
 	//------------------修改账单-------------------------
 	$scope.modifyBill = function(){
-		if($rootScope.current_operation == 'modify_bill'){
+		if($rootScope.bill_operation_trigger != -1){
 			if($scope.bill.sum < 0){hMessage("金额不能为负！");return;}
 			$http({
 	          method:'POST',
 	          url:home_path+"/Bill/modify_bill.html",
-	          data:{'bill_id':$rootScope.current_bill.bill_id,'bill_type':$scope.bill_type,'bill_category_id':$scope.bill.child_category,
-	          'bill_account_id':$scope.bill.child_account,
+	          data:{'bill_id':$rootScope.current_bill.bill_id,'bill_type':$scope.bill_type,'bill_category_id':$scope.bill.second_category,
+	          'bill_account_id':$scope.bill.account_name,
 	          'bill_time':$scope.bill.date+" "+$scope.bill.time.hour+":"+$scope.bill.time.minute,'bill_location':$scope.bill.location,
 	          'bill_sum':$scope.bill.sum,'bill_remarks':$scope.bill.remarks}
 	        }).success(function(res){
@@ -425,18 +401,21 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 	//------------------切换账单类型----------------------
 	$scope.switchBillType = function(){
 		//重置账户选项
-		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-		$scope.bill.account = $rootScope.account_items[0].account.account_id;
-		$scope.bill.child_account = $rootScope.child_accounts[0].child_account_id;
-		//更新并重置账单分类选项
+		$rootScope.bill_child_accounts = $rootScope.bill_accounts[0].child_accounts;
+		$scope.bill.account_type = $rootScope.bill_accounts[0].account_type.account_type_id;
+		$scope.bill.account_name = $rootScope.bill_child_accounts[0].account_id;
+		
 		if($scope.current_bill_view == 'outcome'){
-			//获取账单分类
-			BillIncomeCategory.getBillIncomeCategory(true).success(function(res){
-				$rootScope.bill_category_items = res.bill_category_items;
-				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
+			//分类选项切换
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type=income").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+					//重置分类选项
+					$scope.bill.first_category = $rootScope.bill_categories[0].bill_category_type.bill_category_type_id;
+					$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
+				}
 			});
 			$scope.bill_type = 2;
 			$state.go('bill_income');
@@ -444,18 +423,19 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 			$scope.bill_type_text = '记账-收入';
 		}
 		else {
-			//获取账单分类
-			BillOutcomeCategory.getBillOutcomeCategory(true).success(function(res){
-				$rootScope.bill_category_items = res.bill_category_items;
-				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
+			//分类选项切换
+			$http.get(home_path+"/Bill/get_user_bill_categories.html?type=outcome").success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					$rootScope.bill_categories = res.bill_categories;
+					$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+					//重置分类选项
+					$scope.bill.first_category = $rootScope.bill_categories[0].bill_category_type.bill_category_type_id;
+					$scope.bill.second_category = $rootScope.child_bill_categories[0].bill_category_id;
+				}
 			});
 			$scope.bill_type = 1;
-			$state.go('bill_outcome');
-			$scope.current_bill_view = $scope.previous_view = 'outcome';
-			$scope.bill_type_text = '记账-支出';
+			$state.go('bill_outcome');$scope.current_bill_view = $scope.previous_view = 'outcome';$scope.bill_type_text = '记账-支出';
 		}
 	}
 	//-----------------返回账单详情--------------------------------
@@ -472,21 +452,15 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
 		if(previous_view == 'outcome')
 			$scope.add_category_title = "支出";
 		else $scope.add_category_title = "收入";
-		//console.log($rootScope.bill_category_items);
-		$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+		$scope.bill_category.bill_category_type = $rootScope.bill_categories[0].bill_category_type.bill_category_type_id;
 		$state.go('add_category');
 	}
 	//添加自定义一级分类
 	$scope.switchAddSelfCategory = function(){
 		$scope.ifAddSelfCategory = $scope.ifAddSelfCategory?false:true;
-		if($scope.ifAddSelfCategory){
-			$scope.bill_category.bill_category = "";
+		if($scope.ifAddSelfCategory)
 			$scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-on uk-icon-medium"></i>';
-		}
-		else{
-			$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-			$scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
-		}
+		else $scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 	}
 	//提交添加分类
 	$scope.addCategory = function(){
@@ -496,79 +470,35 @@ m_index.controller('c_add_bill_modal',function($scope,$rootScope,$state,$http,Bi
           method:'POST',
           url:home_path+"/Bill/add_bill_category.html",
           data:{'is_self_defined':is_self_defined,'bill_type':bill_type,
-          'bill_category':$scope.bill_category.bill_category,'child_bill_category':$scope.bill_category.child_bill_category}
+          'bill_category_type':$scope.bill_category.bill_category_type,'bill_category':$scope.bill_category.bill_category}
         }).success(function(res){
         	console.log(res);
 			if(res.error === 0){
 				hMessage("添加分类成功！",2000);
 				//刷新一下分类信息
 				//获取用户账单分类-默认outcome支出
-				if($scope.previous_view == 'outcome'){
-					$rootScope.bill_category_items = BillOutcomeCategory.getBillOutcomeCategory(true).success(function(res){
-						$rootScope.bill_category_items = res.bill_category_items;
-						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
-					});
-				}else{
-					$rootScope.bill_category_items = BillIncomeCategory.getBillIncomeCategory(true).success(function(res){
-						$rootScope.bill_category_items = res.bill_category_items;
-						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
-					});
-				}
+				$http.get(home_path+"/Bill/get_user_bill_categories.html?type="+$scope.previous_view).success(function(res){
+					if(res.error === 0){
+						$rootScope.bill_categories = res.bill_categories;
+						$rootScope.child_bill_categories = res.bill_categories[0].child_bill_categories;
+					}
+				});
 			}
 			else hMessage(res.msg,2000);
 		});
 	}
 	//------------------添加账户------------------------
-	
-
 	$scope.showAddAccount = function(){
 		$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 		$scope.ifAddSelfAccount = false;
-		
 		$state.go('add_account');
 	}
 	//添加自定义类型
 	$scope.addSelfAccount = function(){
 		$scope.ifAddSelfAccount = $scope.ifAddSelfAccount?false:true;
-		if($scope.ifAddSelfAccount){
-			$scope.added_account = "";
+		if($scope.ifAddSelfAccount)
 			$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-on uk-icon-medium"></i>';
-		}
-		else{
-			$scope.added_account = $rootScope.account_items[0].account.account_id;
-			$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
-		}
-	}
-	//提交添加账户
-	$scope.addAccount = function(){
-		var is_self_defined = $scope.ifAddSelfAccount?"1":"0";
-		var data = {'is_self_defined':is_self_defined,'account':$scope.added_account,'child_account_name':$scope.added_child_account_name,
-			'child_account_balance':$scope.added_child_account_balance,'child_account_remarks':$scope.added_child_account_remarks};
-		console.log(data);
-		/*$http({
-			method:'POST',
-			url:home_path+"/Account/add_account.html",
-			data:{'is_self_defined':is_self_defined,'account':$scope.added_account,'child_account_name':$scope.added_child_account_name,
-			'child_account_balance':$scope.added_child_account_balance,'child_account_remarks':$scope.added_child_account_remarks}
-		}).success(function(res){
-			if(res.error === 0){
-				//刷新账户分类信息
-				Accounts.getAccounts(true).success(function(res){
-					$rootScope.account_items = res.account_items;
-					$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-					$scope.added_account = $rootScope.account_items[0].account.account_id;
-					$scope.bill.account = $rootScope.account_items[0].account.account_id;
-					$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
-				});
-				hMessage("添加成功！");
-			}
-		});*/
+		else $scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 	}
 	$scope.backward = function(){
 		$state.go('bill_'+$scope.previous_view);
@@ -597,9 +527,9 @@ m_index.controller('c_bill_details_modal',function($scope,$rootScope,$state,$htt
 	}
 	$scope.modifyBill = function(){//修改账单
 		$state.go('bill_outcome');
+		//$state.go('bill_outcome', {}, { reload: true });
 		var bill_modal = UIkit.modal("#add-bill-modal");
 		bill_modal.show();
-		$rootScope.current_operation = "modify_bill";
 		$rootScope.bill_operation_trigger = $rootScope.bill_operation_trigger==0?1:0;//触发器
 	}
 });
@@ -625,18 +555,37 @@ m_index.controller('c_modify_bill',function($scope,$state,$http){
 		$state.go('bill_details');
 	}
 });
-//---------------------账户控制器-------------------------
+
+//----------------------------------------报表页面----------------------------------------------
+//---+c_charts
+//---|---c_budget
+
+//c_charts
+m_index.controller('c_charts',function($scope,$state){
+	setTitle("随手记-报表");
+	$state.go('budget');
+	$scope.current_charts_tab = 'budget';
+	$scope.switchChartsTab = function(tab){
+		$scope.current_charts_tab = tab;
+	}
+});
+//c_budget
+m_index.controller('c_budget',function($scope,$state){});
+
 //----------------------------------------账户页面----------------------------------------------
 //---+c_accounts
 //---|---c_account 单个账户详情
 //---|---c_cash
 
 //c_accounts
-m_index.controller('c_accounts',function($scope,$rootScope,$state,$http,Accounts){
-	//获取账户分类
-	Accounts.getAccounts(true).success(function(res){
-		$rootScope.account_items = res.account_items;
-		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
+m_index.controller('c_accounts',function($scope,$rootScope,$state,$http){
+	//获取用户的账户列表信息
+	$scope.accounts = {};
+	$http.get(home_path+"/Account/get_user_accounts.html").success(function(res){
+		console.log(res);
+		if(res.error === 0){
+			$scope.accounts = res.accounts;
+		}
 	});
 	setTitle("随手记-账户");
 	$state.go('accounts_sum');
@@ -695,7 +644,8 @@ m_index.controller('c_accounts_sum',function($scope,$state){
 m_index.controller('c_account',function($scope,$rootScope,$state,$http){
 	//
 });
-//----------------------用户控制器------------------------
+
+//----------------------------------------用户中心页面----------------------------------------------
 m_index.controller('c_user',function($scope,$state,$http,$rootScope){
 	$state.go('basicInfo');
 	$rootScope.current_user_tab = 'basicInfo';
@@ -848,4 +798,3 @@ m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$
 		});
 	}
 });
-//----------------路由控制器---------------
