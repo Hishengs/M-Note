@@ -1,1 +1,0 @@
-var m_index = angular.module('M_NOTE',['ui.router','ipCookie']);
