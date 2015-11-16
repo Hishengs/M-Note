@@ -1,5 +1,5 @@
 //----------------------用户控制器------------------------
-m_index.controller('c_user',function($scope,$state,$http,$rootScope){
+note.controller('c_user',function($scope,$state,$http,$rootScope){
 	$state.go('basicInfo');
 	$rootScope.current_user_tab = 'basicInfo';
 	$scope.switchUserTab = function(tab){
@@ -7,7 +7,7 @@ m_index.controller('c_user',function($scope,$state,$http,$rootScope){
 		$state.go(tab);
 	}
 });
-m_index.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$http,ipCookie){
 	$rootScope.current_user_tab = 'basicInfo';
 	//获取用户的基本信息
 	$http.get(home_path+"/User/get_user_basic_info.html").success(function(res){
@@ -48,7 +48,7 @@ m_index.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interva
 	}
 });
 //修改密码
-m_index.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interval,$http){
+note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interval,$http){
 	$rootScope.current_user_tab = 'modifyPasswd';
 	$scope.old_password = $scope.new_password = $scope.password_confirm = '';
 	$scope.resetPassword = function(){
@@ -80,7 +80,7 @@ m_index.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$inte
 	}
 });
 //修改用户的基本信息
-m_index.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,$http,ipCookie){
 	$scope.avatar_upload_url = "http://localhost/M-Note/index.php/Home/User/upload_user_avatar.html";
 	$scope.user_name = $scope.user_email = "";
 	$scope.uploadAvatarBtn = "上传头像";

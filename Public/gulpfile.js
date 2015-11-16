@@ -36,6 +36,13 @@ gulp.task('state-concat',function(){
     .pipe(concat('state.js'))
     .pipe(gulp.dest('./js/app/'));
 });
+//合并Service
+gulp.task('service-concat',function(){
+    gulp.src(['./js/app/service/userService.js','./js/app/service/billService.js',
+        './js/app/service/accountService.js'])
+    .pipe(concat('service.js'))
+    .pipe(gulp.dest('./js/app/'));
+});
 // 默认任务
 gulp.task('default', function() {
     gulp.run('app');

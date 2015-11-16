@@ -4,8 +4,6 @@ Money Notes,一个记账系统
 ##前端
 >[jQuery](http://www.jquery.com)
 
->[Bootstrap](http://www.bootcss.com)
-
 >[uikit](http://www.getuikit.net/index.html)
 
 >[AngularJs](http://www.angularjs.org)
@@ -19,6 +17,10 @@ Money Notes,一个记账系统
 
 #进度
 #### 2015/10/13
-完成登陆注册的页面
+*完成登陆注册的页面
+*首页
+*账单页面及基本功能
+*账户页面
+*用户页面
 
 ####切换到dev分支

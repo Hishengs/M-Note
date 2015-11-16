@@ -15,11 +15,17 @@ class BillController extends Controller {
         $this->bill_category_model = D('BillCategory');
         $this->user_id = session('user_id');
     }
+    public function index(){
+        echo "Hello,My Friend!";
+    }
     //获取今日账单
     public function get_today_bills(){
         //$cdt['bill.bill_user_id'] = $this->user_id;
+        //$today = getdate();
+        $today = date("Y-m-d");
         $bills = $this->bill_model->join("child_account on bill.bill_account_id = child_account.child_account_id")
-        ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")->where("bill.bill_user_id=".$this->user_id)->select();
+        ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")
+        ->where("bill.bill_user_id=".$this->user_id." AND DATE_FORMAT(bill.bill_time,'%Y-%m-%d')='".$today."'")->select();
         //$bills = $this->bill_model->where($cdt)->select();
         if($bills){
             $this->ajaxReturn(array('error'=>0,'bills'=>$bills));

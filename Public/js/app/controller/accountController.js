@@ -5,9 +5,9 @@
 //---|---c_cash
 
 //c_accounts
-m_index.controller('c_accounts',function($scope,$rootScope,$state,$http,Accounts){
+note.controller('c_accounts',function($scope,$rootScope,$state,$http,Account){
 	//获取账户分类
-	Accounts.getAccounts(true).success(function(res){
+	Account.getAccountInfo().success(function(res){
 		$rootScope.account_items = res.account_items;
 		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
 	});
@@ -41,7 +41,7 @@ m_index.controller('c_accounts',function($scope,$rootScope,$state,$http,Accounts
 	}
 });
 //添加账户
-m_index.controller('c_add_account_modal',function($scope,$state){
+note.controller('c_add_account_modal',function($scope,$state){
 	$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 	$scope.ifAddSelfAccount = false;
 	//添加自定义类型
@@ -53,7 +53,7 @@ m_index.controller('c_add_account_modal',function($scope,$state){
 	}
 })
 //c_accounts_sum
-m_index.controller('c_accounts_sum',function($scope,$state){
+note.controller('c_accounts_sum',function($scope,$state){
 	//modify-account-modal
 	$scope.modifyAccount = function(){
 		var modify_account_modal = UIkit.modal("#modify-account-modal");
@@ -65,6 +65,6 @@ m_index.controller('c_accounts_sum',function($scope,$state){
 	}
 });
 //c_account 
-m_index.controller('c_account',function($scope,$rootScope,$state,$http){
+note.controller('c_account',function($scope,$rootScope,$state,$http){
 	//
 });

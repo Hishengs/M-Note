@@ -1,5 +1,5 @@
 //首页
-m_index.config(['$stateProvider',function($stateProvider){
+note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('home',{  
 		url:'',
 		views:{'content':{templateUrl:templates_path+'/home.html'}}

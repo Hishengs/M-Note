@@ -1,4 +1,4 @@
-m_index.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',function($locationProvider, $urlRouterProvider,$compileProvider) {
+note.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',function($locationProvider, $urlRouterProvider,$compileProvider) {
     //$locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise("");
     //deal unsafe:javascript:...
@@ -6,7 +6,7 @@ m_index.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',fu
 }]);
 
 //deal post issue
-m_index.config(['$httpProvider',function($httpProvider){
+note.config(['$httpProvider',function($httpProvider){
    // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   $httpProvider.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -45,7 +45,7 @@ m_index.config(['$httpProvider',function($httpProvider){
 }]);
 
 //state
-/*m_index.config(['$stateProvider',function($stateProvider){
+/*note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('home',{  //首页
 		url:'',
 		views:{'content':{templateUrl:templates_path+'/home.html'}}
@@ -134,7 +134,7 @@ m_index.config(['$httpProvider',function($httpProvider){
 	});
 }]);*/
 
-/*m_index.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {  
+/*note.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {  
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);  
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);  
   

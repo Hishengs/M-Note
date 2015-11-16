@@ -1,5 +1,5 @@
 //----------------------------------账户-----------------------------------------------------
-m_index.config(['$stateProvider',function($stateProvider){
+note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('accounts',{ 
 		url:'/accounts',
 		views:{'content':{templateUrl:templates_path+'/accounts/accounts.html'}}

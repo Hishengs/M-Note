@@ -1,5 +1,5 @@
 //--------------------------------------记账-----------------------------------------------
-m_index.config(['$stateProvider',function($stateProvider){
+note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('bill',{ 
 		url:'/bill',
 		views:{'content':{templateUrl:templates_path+'/bill/bill.html'}}
@@ -16,7 +16,7 @@ m_index.config(['$stateProvider',function($stateProvider){
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_category.html'}}
 	}).state('bill_details',{ //记账-账单详情
-		url:'/details',
+		url:'/bill/:billId',
 		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/bill_details.html'}}
 	}).state('modify_bill',{ //记账-账单修改

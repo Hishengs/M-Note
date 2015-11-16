@@ -1,5 +1,5 @@
 //----------------------------------用户中心-----------------------------------------------------
-m_index.config(['$stateProvider',function($stateProvider){
+note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('user',{ 
 		url:'/user',
 		views:{'content':{templateUrl:templates_path+'/user/user.html'}}

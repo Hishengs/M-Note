@@ -1,5 +1,5 @@
 //------------------------------------报表----------------------------------------------------
-m_index.config(['$stateProvider',function($stateProvider){
+note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('charts',{ 
 		url:'/charts',
 		views:{'content':{templateUrl:templates_path+'/charts/charts.html'}}

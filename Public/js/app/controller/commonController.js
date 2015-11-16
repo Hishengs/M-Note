@@ -2,7 +2,7 @@
 var site_prefix = "http://localhost/note2/"
 //var controller_path = '';
 //----------------------------------------主页------------------------------------------------
-m_index.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
+note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
 		//$log.log('locationChangeStart');  
@@ -22,7 +22,7 @@ m_index.controller('c_index',function($scope,$rootScope,$state,$http,$location,$
 	$rootScope.user_accounts = ;*/
 });
 //----------------------------------------导航栏------------------------------------------------
-m_index.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
+note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 	//在这之前向服务器请求用户的登陆状态
 	/*$http.get(home_path+"/User/is_logined.html").success(function(){
 		if(res.error === 0){

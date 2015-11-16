@@ -1,5 +1,5 @@
 //-------------------登陆注册控制器----------------------
-m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
+note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
 	$scope.login = function(){
@@ -41,7 +41,7 @@ m_index.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 		});
 	}
 });
-m_index.controller('c_register',function($scope,$state,$http){
+note.controller('c_register',function($scope,$state,$http){
 	setTitle("随手记-注册");
 	$scope.username = $scope.email = $scope.password = $scope.password_confirm = '';
 	$scope.register = function(){
