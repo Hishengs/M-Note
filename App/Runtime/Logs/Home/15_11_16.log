@@ -21976,3 +21976,156 @@ SQL: SELECT * FROM `child_account` WHERE `account_id` = 6  [ RunTime:0.0010s ]
 SQL: SELECT * FROM `child_account` WHERE `account_id` = 7  [ RunTime:0.0000s ]
 SQL: SELECT * FROM `child_account` WHERE `account_id` = 29  [ RunTime:0.0000s ]
 
+[ 2015-11-16T14:52:42+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_today_bills.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001001s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0050s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0050s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM `bill` INNER JOIN child_account on bill.bill_account_id = child_account.child_account_id INNER JOIN child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id  WHERE ( bill.bill_user_id=1 )  [ RunTime:0.0010s ]
+
+[ 2015-11-16T14:52:42+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0040s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0040s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0020s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=1 AND bill_category_user_id=1 [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 1 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 2 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 3 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 4 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 5 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 6 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 7 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 8 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 9 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 10 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 11 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 55 AND `bill_type` = 1  [ RunTime:0.0000s ]
+
+[ 2015-11-16T14:52:42+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=2
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=2 AND bill_category_user_id=1 [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 12 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 13 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 15 AND `bill_type` = 2  [ RunTime:0.0010s ]
+
+[ 2015-11-16T14:52:44+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=2
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0020s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=2 AND bill_category_user_id=1 [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 12 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 13 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 15 AND `bill_type` = 2  [ RunTime:0.0000s ]
+
+[ 2015-11-16T14:52:44+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_today_bills.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM `bill` INNER JOIN child_account on bill.bill_account_id = child_account.child_account_id INNER JOIN child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id  WHERE ( bill.bill_user_id=1 )  [ RunTime:0.0010s ]
+
+[ 2015-11-16T14:52:44+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=1 AND bill_category_user_id=1 [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 1 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 2 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 3 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 4 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 5 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 6 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 7 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 8 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 9 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 10 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 11 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 55 AND `bill_type` = 1  [ RunTime:0.0010s ]
+
+[ 2015-11-16T14:52:46+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_today_bills.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0050s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0050s ]
+SQL: SELECT * FROM `bill` INNER JOIN child_account on bill.bill_account_id = child_account.child_account_id INNER JOIN child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id  WHERE ( bill.bill_user_id=1 )  [ RunTime:0.0010s ]
+
+[ 2015-11-16T14:52:46+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0040s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=1 AND bill_category_user_id=1 [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 1 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 2 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 3 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 4 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 5 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 6 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 7 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 8 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 9 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 10 AND `bill_type` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 11 AND `bill_type` = 1  [ RunTime:0.0010s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 55 AND `bill_type` = 1  [ RunTime:0.0000s ]
+
+[ 2015-11-16T14:52:46+08:00 ] ::1 /M-Note/index.php/Home/Bill/get_user_bill_categories.html?type=2
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `bill` [ RunTime:0.0030s ]
+SQL: SHOW COLUMNS FROM `child_bill_category` [ RunTime:0.0020s ]
+SQL: SHOW COLUMNS FROM `bill_category` [ RunTime:0.0030s ]
+SQL: SELECT * FROM bill_category WHERE bill_type=2 AND bill_category_user_id=1 [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 12 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 13 AND `bill_type` = 2  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `child_bill_category` WHERE `bill_category_id` = 15 AND `bill_type` = 2  [ RunTime:0.0000s ]
+
