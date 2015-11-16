@@ -1,4 +1,6 @@
 <!--添加账户-->
+<div class="add_account" ng-controller="c_add_account">
+
 <div class="uk-modal-header">
   <h3 style="display:inline-block;">添加账户</h3>
   <span class="f-right">
@@ -17,7 +19,7 @@
 
         <input type="text" class="uk-input" name="added_account" style="width:446px;" placeholder="自定义账户类型" ng-model="added_account" ng-show="ifAddSelfAccount">
 
-        <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="addSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
+        <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="switchSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
         </button>
 
       </span>
@@ -39,4 +41,6 @@
 
 <div class="uk-modal-footer">
   <button class="uk-button uk-button-primary" ng-click="addAccount()">保存</button>
+</div>
+
 </div>

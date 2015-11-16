@@ -29,7 +29,7 @@ class BillController extends Controller {
     //获取用户相关账单分类信息
     public function get_user_bill_categories(){
         $type = I('get.type');
-        $type = $type=='outcome'?1:2;
+        //$type = $type=='outcome'?1:2;
         $user_id = session('user_id');
         $bill_category_items = array();
         //选择所有的账户一级分类
@@ -51,9 +51,9 @@ class BillController extends Controller {
     //新增账单
     public function add_bill(){
         $user_id = session('user_id');
-        $bill_type = I('post.bill_type');//支出?收入
-        $bill_category_id = I('post.bill_category_id');//分类ID
-        $bill_account_id = I('post.bill_account_id');//账户ID
+        $bill_type = I('post.bill_type');//支出1收入2
+        $bill_category_id = I('post.bill_category_id');//子分类ID
+        $bill_account_id = I('post.bill_account_id');//子账户ID
         $bill_time = I('post.bill_time');
         $bill_location = I('post.bill_location');
         $bill_sum = I('post.bill_sum');
@@ -76,9 +76,9 @@ class BillController extends Controller {
         $user_id = session('user_id');
         $bill_id = I('post.bill_id');
         $cdt['bill_id'] = $bill_id;
-        $bill_type = I('post.bill_type');//支出?收入
-        $bill_category_id = I('post.bill_category_id');//分类ID
-        $bill_account_id = I('post.bill_account_id');//账户ID
+        $bill_type = I('post.bill_type');//支出1收入2
+        $bill_category_id = I('post.bill_category_id');//子分类ID
+        $bill_account_id = I('post.bill_account_id');//子账户ID
         $bill_time = I('post.bill_time');
         $bill_location = I('post.bill_location');
         $bill_sum = I('post.bill_sum');
@@ -109,33 +109,33 @@ class BillController extends Controller {
         $is_self_defined = I("post.is_self_defined");//是否是自定义分类
         $is_self_defined = $is_self_defined=="1"?true:false;
         $bill_type = I("post.bill_type");//收入分类还是支出分类
-        $bill_category_type = I("post.bill_category_type");
-        $bill_category = I("post.bill_category");
+        $bill_category = I("post.bill_category");//一级分类
+        $child_bill_category = I("post.child_bill_category");//二级分类
         //判空
-        if(empty($bill_category) || empty($bill_category_type))$this->ajaxReturn(array('error'=>1,'msg'=>'请填写完整的分类信息！'));
-        //查询是否存在属于该用户的同名分类
-        $cdt['child_bill_category_name'] = $bill_category;
+        if(empty($bill_category) || empty($child_bill_category))$this->ajaxReturn(array('error'=>1,'msg'=>'请填写完整的分类信息！'));
+        //查询是否存在属于该用户的同名子分类
+        $cdt['child_bill_category_name'] = $child_bill_category;
         $cdt['child_bill_category_user_id'] = $this->user_id;
         if($this->child_bill_category_model->where($cdt)->find())$this->ajaxReturn(array('error'=>1,'msg'=>'已存在同名分类！'));
         if(!$is_self_defined){
-            $category = array('bill_type'=>$bill_type,'child_bill_category_name'=>$bill_category,'child_bill_category_user_id'=>$this->user_id,
-                'bill_category_id'=>$bill_category_type);
+            $category = array('bill_type'=>$bill_type,'child_bill_category_name'=>$child_bill_category,'child_bill_category_user_id'=>$this->user_id,
+                'bill_category_id'=>$bill_category);
             if($this->child_bill_category_model->add($category))$this->ajaxReturn(array('error'=>0,'msg'=>'添加分类成功！'));
             else $this->ajaxReturn(array('error'=>1,'msg'=>'添加分类失败！'));
         }else{//自定义的一级分类
             //查询是否存在属于该用户的同名的一级分类
             $cdt = array();
-            $cdt['bill_category_name'] = $bill_category_type;
+            $cdt['bill_category_name'] = $bill_category;
             $cdt['bill_category_user_id'] = $this->user_id;
             if($this->bill_category_model->where($cdt)->find())$this->ajaxReturn(array('error'=>1,'msg'=>'已存在同名一级分类！'));
             else{
                 //添加一级分类
-                $category = array('bill_type'=>$bill_type,'bill_category_name'=>$bill_category_type,'bill_category_user_id'=>$this->user_id);
-                $bill_category_type_id = $this->bill_category_model->add($category);
-                if($bill_category_type_id){
+                $category = array('bill_type'=>$bill_type,'bill_category_name'=>$bill_category,'bill_category_user_id'=>$this->user_id);
+                $bill_category_id = $this->bill_category_model->add($category);
+                if($bill_category_id){
                     //继续添加二级分类
-                    $category = array('bill_type'=>$bill_type,'child_bill_category_name'=>$bill_category,'child_bill_category_user_id'=>$this->user_id,
-                        'bill_category_id'=>$bill_category_type_id);
+                    $category = array('bill_type'=>$bill_type,'child_bill_category_name'=>$child_bill_category,'child_bill_category_user_id'=>$this->user_id,
+                        'bill_category_id'=>$bill_category_id);
                     if($this->child_bill_category_model->add($category))$this->ajaxReturn(array('error'=>0,'msg'=>'添加分类成功！'));
                     else $this->ajaxReturn(array('error'=>1,'msg'=>'添加分类失败！'));
                 }else $this->ajaxReturn(array('error'=>1,'msg'=>'添加分类失败！'));

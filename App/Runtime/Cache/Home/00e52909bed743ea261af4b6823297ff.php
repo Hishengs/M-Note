@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="/M-Note/Public/js/dist/angular.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/app/init.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/app/config.js"></script>
+	<script type="text/javascript" src="/M-Note/Public/js/app/state.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/app/filter.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/app/service.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/app/controller.js"></script>

@@ -1,50 +1,28 @@
-<!-- 今日账单 -->
-<div class="balance-briefing uk-animation-slide-left" ng-controller="c_bill">
-	<div class="uk-panel">
-		<div class="uk-panel uk-panel-header">
-			<div class="uk-panel-title">今日账单
-			<span style="float:right;" class="bill-add">
-			<button class="uk-button uk-button-primary" ng-click="showAddBillModal()">记一笔</button>
-			</span></div>
-		</div>
-		<div class="uk-panel-content">
-			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
-			<ul class="uk-list uk-list-line uk-list-striped">
-				<li ng-repeat="bill in today_bills" id="bill_{{bill.bill_id}}">
-					<a href="javascript:void(0);" ng-click="showBillDetail($index)" class="plain-link block-link" title="点击查看账单详情">
-						<i class="uk-icon-minus" ng-if="bill.bill_type==1" title="支出"></i>
-						<i class="uk-icon-plus" ng-if="bill.bill_type==2" title="收入"></i>&nbsp;&nbsp;
-						{{bill.child_bill_category_name}} {{"[" + bill.bill_remarks + "]"}}
-						<span style="float:right;" class="bill-count">￥ {{bill.bill_sum}}</span>
-					</a>
-				</li>
-			    <!-- <li>
-			    	<a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">
-			    		早餐<span style="float:right;" class="bill-count">-3.00</span>
-			    	</a>
-			    </li>
-			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">午餐<span style="float:right;" class="bill-count">-16.00</span></a></li>
-			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">晚餐<span style="float:right;" class="bill-count">-35.00</span></a></li>
-			    <li><a href="javascript:void(0);" ng-click="showBillDetail()" class="plain-link block-link" title="点击查看账单详情">红包<span style="float:right;" class="bill-count">+100.00</span></a></li> -->
-			</ul>
-		</div>
+<div class="bill uk-grid" ng-controller="c_bill">
+	<div class="uk-width-1-6">
+		<ul class="uk-tab uk-tab-left">
+		    <li ng-class="{'uk-active': current_bill_tab=='today_bills'}" ng-click="switchBillTab('today_bills')">
+		    	<a href="javascript:void(0);" class="plain-link">今日账单</a>
+		    </li>
+		    <li ng-class="{'uk-active': current_bill_tab=='bill_query'}" ng-click="switchBillTab('bill_query')">
+		    	<a href="javascript:void(0);" class="plain-link">账单查询</a>
+		    </li>
+		    <li ng-class="{'uk-active': current_bill_tab=='bill_category'}" ng-click="switchBillTab('bill_category')">
+		    	<a href="javascript:void(0);" class="plain-link">账单分类</a>
+		    </li>
+		</ul>
 	</div>
-	
+	<div class="bill_view uk-width-5-6" ui-view="bill_view"></div>
+	<!--新增账单-->
+	<div class="uk-modal bill-add" id="add-bill-modal" ng-controller="c_bill_add">
+	    <div class="uk-modal-dialog" ng-click="add_bill_modal_click()">
+			<div class="bill-view" ui-view="bill_add_view"></div>
+	    </div>
+	</div>
 </div>
-<!--新增账单-->
-<div class="uk-modal" id="add-bill-modal" ng-controller="c_add_bill_modal">
-    <div class="uk-modal-dialog" ng-click="add_bill_modal_click()">
-		<div class="bill-view" ui-view="bill_view"></div>
-    </div>
-</div>
-<!--查看账单详情-->
-<div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details_modal">
-    <div class="uk-modal-dialog">
 
-      	<div class="bill-details-view" ui-view="bill_details_view"></div>
 
-    </div>
-</div>
+
 <script type="text/javascript">
 	//获取当前日期
 	var date = new Date();

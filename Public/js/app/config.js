@@ -45,7 +45,7 @@ m_index.config(['$httpProvider',function($httpProvider){
 }]);
 
 //state
-m_index.config(['$stateProvider',function($stateProvider){
+/*m_index.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('home',{  //首页
 		url:'',
 		views:{'content':{templateUrl:templates_path+'/home.html'}}
@@ -58,13 +58,25 @@ m_index.config(['$stateProvider',function($stateProvider){
 	}).state('bill',{ //--------------------------------------记账-----------------------------------------------
 		url:'/bill',
 		views:{'content':{templateUrl:templates_path+'/bill/bill.html'}}
-	}).state('bill_details',{ //记账-账单详情
-		url:'/bill_details',
+	}).state('today_bills',{ //记账-今日账单-默认的state
+		url:'/today_bills',
 		parent:'bill',
+		views:{'bill_view':{templateUrl:templates_path+'/bill/today_bills.html'}}
+	}).state('bill_query',{ //记账-账单查询
+		url:'/bill_query',
+		parent:'bill',
+		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_query.html'}}
+	}).state('bill_category',{ //记账-账单分类
+		url:'/bill_category',
+		parent:'bill',
+		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_category.html'}}
+	}).state('bill_details',{ //记账-账单详情
+		url:'/details',
+		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/bill_details.html'}}
 	}).state('modify_bill',{ //记账-账单修改
 		url:'/modify_bill',
-		parent:'bill',
+		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/modify_bill.html'}}
 	}).state('modify_bill_outcome',{ //记账-账单修改-outcome
 		url:'/modify_bill_outcome',
@@ -74,22 +86,22 @@ m_index.config(['$stateProvider',function($stateProvider){
 		url:'/modify_bill_income',
 		parent:'modify_bill',
 		views:{'modify_bill_view':{templateUrl:templates_path+'/bill/modify_bill_income.html'}}
-	}).state('bill_outcome',{ //支出
-		url:'/outcome',
+	}).state('bill_add_outcome',{ //新建支出
+		url:'/add/outcome',
 		parent:'bill',
-		views:{'bill_view':{templateUrl:templates_path+'/bill/outcome.html'}}
-	}).state('bill_income',{ //收入
-		url:'/income',
+		views:{'bill_add_view':{templateUrl:templates_path+'/bill/bill_add_outcome.html'}}
+	}).state('bill_add_income',{ //新建收入
+		url:'/add/income',
 		parent:'bill',
-		views:{'bill_view':{templateUrl:templates_path+'/bill/income.html'}}
+		views:{'bill_add_view':{templateUrl:templates_path+'/bill/bill_add_income.html'}}
 	}).state('add_category',{ //添加分类
 		url:'/add_category',
 		parent:'bill',
-		views:{'bill_view':{templateUrl:templates_path+'/bill/add_category.html'}}
+		views:{'bill_add_view':{templateUrl:templates_path+'/bill/add_category.html'}}
 	}).state('add_account',{ //添加账户
 		url:'/add_account',
 		parent:'bill',
-		views:{'bill_view':{templateUrl:templates_path+'/bill/add_account.html'}}
+		views:{'bill_add_view':{templateUrl:templates_path+'/bill/add_account.html'}}
 	}).state('charts',{ //------------------------------------报表----------------------------------------------------
 		url:'/charts',
 		views:{'content':{templateUrl:templates_path+'/charts/charts.html'}}
@@ -120,7 +132,7 @@ m_index.config(['$stateProvider',function($stateProvider){
 		parent:'user',
 		views:{'user_view':{templateUrl:templates_path+'/user/modifyPasswd.html'}}
 	});
-}]);
+}]);*/
 
 /*m_index.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {  
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);  

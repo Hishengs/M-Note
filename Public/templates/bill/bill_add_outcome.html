@@ -18,7 +18,7 @@
 			<!-- 二级选项 -->
 			<select class="uk-select" name="child_category" style="width:230px;" ng-model="bill.child_category" ng-options="child_bill_category.child_bill_category_id as child_bill_category.child_bill_category_name for child_bill_category in child_bill_categories"></select>
 
-			<button type="button" class="uk-button uk-button-small" title="添加分类" ng-click="showAddCategory('outcome')"><i class="uk-icon-plus"></i></button>
+			<button type="button" class="uk-button uk-button-small" title="添加分类" ng-click="vAddCategory('outcome')"><i class="uk-icon-plus"></i></button>
 		</span>
 	</li>
 	<li>
@@ -30,14 +30,14 @@
 			<!-- 二级账户 -->
 			<select class="uk-select" name="child_account" style="width:230px;" ng-model="bill.child_account" ng-options="child_account.child_account_id as child_account.child_account_name for child_account in child_accounts"></select>
 
-			<button type="button" class="uk-button uk-button-small" title="添加账户" ng-click="showAddAccount()"><i class="uk-icon-plus"></i></button>
+			<button type="button" class="uk-button uk-button-small" title="添加账户" ng-click="vAddAccount()"><i class="uk-icon-plus"></i></button>
 		</span>
 	</li>
 	
 	<li>
 	<label>时间</label>
 	<span class="bill-datetime-picker f-right">
-		<input type="text" class="uk-input" name="bill_date" style="width:230px;" placeholder="日期(空缺默认当前时间)" ng-model="bill.date" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,minDate:minDate,maxDate:maxDate}"><!-- 日期 -->
+		<input type="text" class="uk-input" name="bill_date" style="width:230px;" placeholder="日期(空缺默认当前时间)" ng-model="bill.date" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}"><!-- 日期 -->
 		
 		<select class="uk-select" name="bill_time_hour" style="width:130px;" ng-model="bill.time.hour" ng-options="hour as hour for hour in hours"></select>
 			
@@ -75,6 +75,10 @@
 <div class="uk-modal-footer">
 	<button type="button" class="uk-button uk-button-primary" ng-click="addBill()" ng-show="current_operation == 'add_bill'">保存</button>
 	<button type="button" class="uk-button uk-button-primary" ng-click="modifyBill()" ng-show="current_operation == 'modify_bill'">保存修改</button>
+	<div class="uk-alert uk-alert-danger" ng-show="bill_type_switch_tip_show" data-uk-alert>
+		<a href="javascript:void(0);" class="uk-alert-close uk-close"></a>
+		<span ng-bind-html="bill_type_switch_tip | trustHtml"></span>
+	</div>
 </div>
 
 <!-- <option>0:00</option><option>0:30</option><option>1:00</option><option>1:30</option><option>2:00</option><option>2:30</option>

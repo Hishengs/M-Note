@@ -1,0 +1,34 @@
+<!-- 账单查询 -->
+<div class="bill_query" >
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">账单查询
+			<span style="float:right;" class="bill-query">
+			<button class="uk-button uk-button-primary" ng-click="">查询</button>
+			</span></div>
+		</div>
+		<div class="uk-panel-content">
+			<!-- <div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div> -->
+			<ul class="uk-list uk-list-line uk-list-striped">
+				<li>
+					<label>开始日期</label>
+					<input type="text" class="uk-input" name="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
+					<label>结束日期</label>
+					<input type="text" class="uk-input" name="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
+				</li>
+				<li>
+					<label>账单类型</label>
+					<input type="radio" name="bill_type" value="1">支出
+					<input type="radio" name="bill_type" value="2">收入
+					<!-- <label>所属账户</label>
+					一级账户
+					<select class="uk-select" name="account" ng-model="bill.account" ng-change="billAccountTypeChange()" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items"></select>
+					
+					二级账户
+					<select class="uk-select" name="child_account" ng-model="bill.child_account" ng-options="child_account.child_account_id as child_account.child_account_name for child_account in child_accounts"></select> -->
+				</li>
+				<!-- <li><label>所属账户</label><span class="f-right"></span></li> -->
+			</ul>
+		</div>
+	</div>
+</div>

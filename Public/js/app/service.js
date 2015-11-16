@@ -2,7 +2,7 @@
 //账单服务，用户获取用户账单分类信息
 //支出分类
 m_index.service('BillOutcomeCategory',function($http){
-	this.requestUrl = home_path+"/Bill/get_user_bill_categories.html?type=outcome";
+	this.requestUrl = home_path+"/Bill/get_user_bill_categories.html?type=1";
 	this.billOutcomeCategories = [];
 
 	this.updateBillOutcomeCategory = function(){
@@ -23,7 +23,7 @@ m_index.service('BillOutcomeCategory',function($http){
 });
 //收入分类
 m_index.service('BillIncomeCategory',function($http){
-	this.requestUrl = home_path+"/Bill/get_user_bill_categories.html?type=income";
+	this.requestUrl = home_path+"/Bill/get_user_bill_categories.html?type=2";
 	this.billIncomeCategories = [];
 	this.updateBillIncomeCategory = function(){
 		$http.get(this.requestUrl).success(function(res){

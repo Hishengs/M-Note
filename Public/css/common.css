@@ -1,7 +1,7 @@
 *{font-family: 'Microsoft Yahei'}
 html,body{font-size: 14px; height: 100%; width: 100%;}
 html{overflow: auto;}
-body{/* padding-top: -100px; */}
+body{}
 /**nav**/
 .nav-wrapper{width: 100%; text-align: center;position: fixed;top: 0; z-index: 999;}
 .nav{width: 1024px; margin: 0 auto; /*border-radius: 0px; border: 0px; border-bottom: 1px #eee solid; */}
@@ -38,6 +38,9 @@ body{/* padding-top: -100px; */}
 .margin-top-40{margin-top: 40px;}
 .margin-top-50{margin-top: 50px;}
 .margin-top-80{margin-top: 80px;}
+/**padding*/
+.padding-x-20{padding:0 20px; }
+.padding-y-20{padding:20 0px; }
 /*display*/
 .display-none{display: none;}
 .display-inline-block{display: inline-block;}
@@ -51,6 +54,6 @@ div.location-options{left:0px;top:30px;width:500px;max-height:500px;background:#
 div.location-options ul{padding:0;}
 div.location-options ul li{padding:8px 10px;}
 div.location-options ul li:hover{background: #eee;}
-
+.bill_view{overflow: visible;}
 /**user info*/
 img.user-avatar{width: 80px; height: 80px; border-radius: 40px;}
