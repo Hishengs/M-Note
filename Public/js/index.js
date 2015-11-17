@@ -84,12 +84,13 @@ var pip_option = {
 //timeout为空则设为默认timeout，为false或0则返回modal自己处理
 function hMessage(msg){
 	var timeout = arguments[1] == null ? 2000:arguments[1];
-	var modal = UIkit.modal.blockUI(msg);
+	/*var modal = UIkit.modal.blockUI(msg);
 	modal.show();
 	if(timeout)
 		setTimeout(function(){modal.hide();},timeout);
 	else 
-		return modal;
+		return modal;*/
+    UIkit.notify(msg,{timeout:timeout});
 }
 //邮箱验证
 function emailVerify(email){

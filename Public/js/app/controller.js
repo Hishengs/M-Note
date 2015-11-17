@@ -114,6 +114,11 @@ note.controller('c_register',function($scope,$state,User){
 //----------------------账单控制器-------------------------------
 //账单 c_bill
 note.controller('c_bill',function($scope,$rootScope,$state){
+	//默认设置
+	setTitle("随手记-记账");
+	$rootScope.bill_operation_trigger = 0;//触发器变量
+	$rootScope.current_operation = "add_bill";//当前操作
+	$rootScope.account_items = $rootScope.child_accounts = $rootScope.bill_category_items = $rootScope.child_bill_categories = {};
 	//默认的state
 	$state.go("today_bills");
 	//模板路径
@@ -133,11 +138,6 @@ note.controller('c_bill',function($scope,$rootScope,$state){
 });
 //c_today_bills 今日账单
 note.controller('c_today_bills',function($scope,$rootScope,$state,$http,Bill){
-
-	setTitle("随手记-记账");
-	$rootScope.bill_operation_trigger = 0;//触发器变量
-	$rootScope.current_operation = "add_bill";//当前操作
-	$rootScope.account_items = $rootScope.child_accounts = $rootScope.bill_category_items = $rootScope.child_bill_categories = {};
 	$rootScope.bill_tip_show = true;
 	$rootScope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
 	//获取当日账单列表，bill_list
@@ -227,6 +227,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 			var type = $scope.bill_type==1?'outcome':'income';
 			if(type == 'outcome'){
 				Bill.getCategoryInfo(1).success(function(res){
+					console.log(res);
 					$rootScope.bill_category_items = res.bill_category_items;
 					for(var i=0;i<$rootScope.bill_category_items.length;i++){
 						if($rootScope.bill_category_items[i].bill_category.bill_category_id == $rootScope.current_bill.bill_category_id)break;
@@ -235,6 +236,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				});
 			}else{
 				Bill.getCategoryInfo(2).success(function(res){
+					console.log(res);
 					$rootScope.bill_category_items = res.bill_category_items;
 					//$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 					for(var i=0;i<$rootScope.bill_category_items.length;i++){
@@ -379,20 +381,11 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				    bill_modal.hide();
 				}
 				hMessage("账单添加成功！",2000);
-				//更新今日账单列表
-				//获取当日账单列表，bill_list
-				Bill.getTodayBills().success(function(res){
-					if(res.error === 0){
-						$rootScope.bills = res.bills;
-						$rootScope.bill_tip_show = false;
-					}
-					else if(res.error === 2){//查询为空
-						$rootScope.bill_tip_show = true;
-						$rootScope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
-					}
-					else console.log(res.msg);
-				}).error(function(data,state){
-					console.log(data);
+				//把新增加的账单push到bills
+				Bill.getBillById(res.bill.bill_id).success(function(result){
+					if(result.error === 0){
+						$rootScope.bills.push(result.bill);
+					}else hMessage(result.msg);
 				});
 			}
 			else hMessage(res.msg,2000);
@@ -635,23 +628,27 @@ note.controller('c_bill_details',function($scope,$rootScope,$state,$http,Bill){
 	}
 });
 //账单查询
-note.controller('c_bill_query',function($scope,$rootScope,$state,$http,Bill){
+note.controller('c_bill_query',function($scope,$rootScope,$state,Bill){
 	$scope.bill_query_tip_show = false;
-	$scope.bill_query_tip = "查询不到符合条件的记录！";
+	$scope.bill_query_tip = "";
 	$scope.bill_type = 3;
 	$scope.start_date = $scope.end_date = null;
 	$rootScope.bills = {};
 	//查询
 	$scope.query = function(){
+		$scope.bill_query_tip_show = true;
+		$scope.bill_query_tip = "<i class='uk-icon-spinner'></i> 拼命查询中...";
 		var queryCdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'bill_type':$scope.bill_type};
 		console.log(queryCdt);
 		Bill.query(queryCdt).success(function(res){
 			console.log(res);
 			if(res.error === 0){
 				$rootScope.bills = res.bills;
-				if(!$rootScope.bills.length)$scope.bill_query_tip_show = true;
+				if(!$rootScope.bills.length){
+					$scope.bill_query_tip = "<i class='uk-icon-warning'></i> 查询不到符合条件的记录！";
+				}
 				else $scope.bill_query_tip_show = false;
-			}else hMessage(res.msg);
+			}else $scope.bill_query_tip = "<i class='uk-icon-warning'></i> "+res.msg;
 		});
 	}
 	//查看账单
@@ -659,6 +656,62 @@ note.controller('c_bill_query',function($scope,$rootScope,$state,$http,Bill){
 		$rootScope.current_bill = $rootScope.bills[index];
 		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 		bill_detail_modal.show();
+	}
+});
+
+//账单分类
+note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
+	$scope.bill_category_type = 1;
+	$scope.bill_category_title = "支出分类";
+	$scope.bill_category_items = {};
+	$scope.is_self_defined = false;
+	$scope.toggle_type = "off";
+	$scope.bill_category = "";
+
+	Bill.getCategoryInfo(1).success(function(res){
+		if(res.error === 0){
+			$scope.bill_category_items = res.bill_category_items;
+			$scope.bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+		}
+	});
+	//切换分类
+	$scope.switchCategoryType = function(){
+		$scope.bill_category_type = $scope.bill_category_type==1?2:1;
+		$scope.bill_category_title =  $scope.bill_category_title=="支出分类"?"收入分类":"支出分类";
+		Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
+			if(res.error === 0){
+				$scope.bill_category_items = res.bill_category_items;
+				$scope.bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+			}
+		});
+	}
+	//添加分类
+	$scope.vAddCategory = function(){
+		UIkit.modal("#bill_category_add_modal").show();
+	}
+	$scope.switchAddSelfCategory = function(){
+		if($scope.is_self_defined){
+			$scope.toggle_type = "off";
+			$scope.bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+		}
+		else {
+			$scope.toggle_type = "on";
+			$scope.bill_category = "";
+		}
+		$scope.is_self_defined = $scope.is_self_defined?false:true;
+	}
+	
+	//修改一级分类
+	$scope.modifyBillCategory = function(index){}
+	//删除一级分类
+	$scope.deleteBillCategory = function(id){
+		return confirm("你确定要删除该一级分类-"+id+"(该分类下的所有二级分类也将被删除！！)??");
+	}
+	//修改二级分类
+	$scope.modifyChildBillCategory = function(){}
+	//删除二级分类
+	$scope.deleteChildBillCategory = function(){
+		return confirm("你确定要删除该二级分类??");
 	}
 });
 //---------------------账户控制器-------------------------

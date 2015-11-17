@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/M-Note/Public/plugins/uikit/css/components/datepicker.min.css"><!-- 日期选择控件样式 -->
 	<link rel="stylesheet" type="text/css" href="/M-Note/Public/plugins/uikit/css/components/form-select.min.css">
 	<link rel="stylesheet" type="text/css" href="/M-Note/Public/plugins/uikit/css/components/progress.min.css"><!-- 进度条样式 -->
+	<link rel="stylesheet" type="text/css" href="/M-Note/Public/plugins/uikit/css/components/notify.min.css"><!-- 顶部通知样式 -->
 	<link rel="stylesheet" type="text/css" href="/M-Note/Public/css/common.css">
 	<script type="text/javascript">
     	var templates_path = "/M-Note/Public"+"/templates";
@@ -29,6 +30,7 @@
 	<script type="text/javascript" src="/M-Note/Public/plugins/uikit/js/components/form-password.min.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/plugins/uikit/js/components/datepicker.js"></script><!-- 日期选择控件 -->
 	<script type="text/javascript" src="/M-Note/Public/plugins/uikit/js/components/form-select.min.js"></script><!-- 选择表单控件 -->
+	<script type="text/javascript" src="/M-Note/Public/plugins/uikit/js/components/notify.min.js"></script><!-- 顶部通知控件 -->
 	<!-- ECharts -->
     <script src="/M-Note/Public/plugins/echarts/dist/echarts-all.js"></script>
 	<title>随手记-首页</title>

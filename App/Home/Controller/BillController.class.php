@@ -73,6 +73,7 @@ class BillController extends Controller {
             'bill_remarks'=>$bill_remarks);
         //在这之前可能还要进行其他操作，例如从账户的余额中增加这笔账，添加流入/流出记录等
         $result = $this->bill_model->add($bill);
+        $bill = $this->bill_model->where("bill_id=".$result)->find();
         if($result != false){
             $this->ajaxReturn(array('error'=>0,'bill'=>$bill));
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'账单添加失败！'));
