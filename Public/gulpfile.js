@@ -38,7 +38,7 @@ gulp.task('state-concat',function(){
 });
 //合并Service
 gulp.task('service-concat',function(){
-    gulp.src(['./js/app/service/userService.js','./js/app/service/billService.js',
+    gulp.src(['./js/app/service/validatorService.js','./js/app/service/userService.js','./js/app/service/billService.js',
         './js/app/service/accountService.js'])
     .pipe(concat('service.js'))
     .pipe(gulp.dest('./js/app/'));

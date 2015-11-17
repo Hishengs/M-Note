@@ -1,5 +1,5 @@
 //-------------------登陆注册控制器----------------------
-note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
+note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
 	$scope.login = function(){
@@ -7,11 +7,8 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 		if($scope.username.length < 1 || $scope.password.length < 1){hMessage("用户名或密码不能为空！",2000);return;}
 		else if($scope.password.length >= 1 && $scope.password.length < 6){hMessage("请输入6位以上的密码！",2000);return;}
 		//post
-		$http({
-          method:'POST',
-          url:home_path+"/User/login.html",
-          data:{'username':$scope.username,'password':$scope.password}
-        }).success(function(res){
+		var loginInfo = {'username':$scope.username,'password':$scope.password};
+		User.login(loginInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
@@ -28,9 +25,6 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 				$rootScope.user.email = "819537918@qq.com";
 				$rootScope.user.id = 1000;
 				$rootScope.user.avatar = "https://dn-lanbaidiao.qbox.me/avatar_1000_a645761e1fc399f5be08308eacead7ce?imageView2/1/w/80/h/80";
-				/*$rootScope.user.email = res.userInfo.email;
-				$rootScope.user.id = res.userInfo.id;
-				$rootScope.user.avatar = res.userInfo.avatar;*/
 
 				setTimeout(function(){$state.go('home');},1500);
 			}else if(res.error === 2){hMessage("该用户不存在！",1500);}
@@ -41,7 +35,7 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 		});
 	}
 });
-note.controller('c_register',function($scope,$state,$http){
+note.controller('c_register',function($scope,$state,User){
 	setTitle("随手记-注册");
 	$scope.username = $scope.email = $scope.password = $scope.password_confirm = '';
 	$scope.register = function(){
@@ -59,12 +53,8 @@ note.controller('c_register',function($scope,$state,$http){
 		$("#register-btn").html("注册中...");
 		$("#register-btn").attr("disabled","disabled");
 		//post
-		$http({
-          method:'POST',
-          url:home_path+"/User/register.html",
-          data:{'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm}
-        }).success(function(res){
-        	console.log(res);
+		var registerInfo = {'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm};
+		User.register(registerInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("注册成功，请登陆！",2000);
 				$state.go('login');

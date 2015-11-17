@@ -1,25 +1,25 @@
 <!-- 账单查询 -->
-<div class="bill_query" >
+<div class="bill_query" ng-controller="c_bill_query">
 	<div class="uk-panel">
 		<div class="uk-panel uk-panel-header">
 			<div class="uk-panel-title">账单查询
 			<span style="float:right;" class="bill-query">
-			<button class="uk-button uk-button-primary" ng-click="">查询</button>
+			<button class="uk-button uk-button-primary" ng-click="query()">查询</button>
 			</span></div>
 		</div>
-		<div class="uk-panel-content">
-			<!-- <div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div> -->
-			<ul class="uk-list uk-list-line uk-list-striped">
+		<div class="uk-panel uk-panel-content">
+			<ul class="uk-list">
 				<li>
 					<label>开始日期</label>
-					<input type="text" class="uk-input" name="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
+					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
 					<label>结束日期</label>
-					<input type="text" class="uk-input" name="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
+					<input type="text" name="end_date" ng-model="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
 				</li>
-				<li>
+				<li class="margin-top-20">
 					<label>账单类型</label>
-					<input type="radio" name="bill_type" value="1">支出
-					<input type="radio" name="bill_type" value="2">收入
+					<input type="radio" name="bill_type" ng-model="bill_type" value="3" checked>所有
+					<input type="radio" name="bill_type" ng-model="bill_type" value="1">支出
+					<input type="radio" name="bill_type" ng-model="bill_type" value="2">收入
 					<!-- <label>所属账户</label>
 					一级账户
 					<select class="uk-select" name="account" ng-model="bill.account" ng-change="billAccountTypeChange()" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items"></select>
@@ -30,5 +30,47 @@
 				<!-- <li><label>所属账户</label><span class="f-right"></span></li> -->
 			</ul>
 		</div>
+	</div>
+	<hr>
+	<!-- 查询结果 -->
+	<div class="uk-alert" ng-show="bill_query_tip_show" ng-bind-html="bill_query_tip | trustHtml"></div>
+	<div class="uk-panel margin-top-40">
+		<div class="uk-panel uk-panel-header"></div>
+		<div class="uk-panel uk-panel-content">
+			<ul class="uk-list uk-list-line uk-list-striped">
+				<li ng-repeat="bill in bills" id="bill_{{bill.bill_id}}" ng-click="billView($index)">
+					<a href="javascript:void(0);" class="plain-link block-link" title="点击查看账单详情">
+						<i class="uk-icon-minus" ng-if="bill.bill_type==1" title="支出"></i>
+						<i class="uk-icon-plus" ng-if="bill.bill_type==2" title="收入"></i>&nbsp;&nbsp;
+						{{bill.child_bill_category_name}} {{"[" + bill.bill_remarks + "]"}}
+						<span style="float:right;" class="bill-count">￥ {{bill.bill_sum}}</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="uk-panel uk-panel-footer"></div>
+	</div>
+	<!-- 账单详情 -->
+	<div class="uk-modal" id="bill_query_bill_detail">
+	    <div class="uk-modal-dialog">
+	      	<div class="uk-modal-header">
+			<h3 style="display:inline-block;">账单详情</h3>
+			<span class="f-right">
+		    	<button type="button" class="uk-button uk-button-danger" ng-click="deleteBill()">删除</button>
+		    	<button type="button" class="uk-button uk-button-primary" ng-click="modifyBill()">修改</button>
+			</span>
+		</div>
+		        
+		<ul class="uk-list uk-list-striped">
+			<li ng-if="current_bill.bill_type == 1"><label>类型</label><span class="f-right">支出</span></li>
+			<li ng-if="current_bill.bill_type == 2"><label>类型</label><span class="f-right">收入</span></li>
+			<li><label>类别</label><span class="f-right">{{current_bill.child_bill_category_name}}</span></li>
+			<li><label>账户</label><span class="f-right">{{current_bill.child_account_name}}</span></li>
+			<li><label>时间</label><span class="f-right">{{current_bill.bill_time}}</span></li>
+		    <li><label>地点</label><span class="f-right">{{current_bill.bill_location}}</span></li>
+			<li><label>金额</label><span class="f-right">￥ {{current_bill.bill_sum}}</span></li>
+			<li><label>备注</label><span class="f-right">{{current_bill.bill_remarks}}</span></li>
+		</ul>
+	    </div>
 	</div>
 </div>

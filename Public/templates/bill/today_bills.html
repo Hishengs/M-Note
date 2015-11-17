@@ -10,7 +10,7 @@
 		<div class="uk-panel-content">
 			<div class="uk-alert" ng-show="bill_tip_show" ng-bind-html="bill_tip | trustHtml"></div>
 			<ul class="uk-list uk-list-line uk-list-striped">
-				<li ng-repeat="bill in today_bills" id="bill_{{bill.bill_id}}">
+				<li ng-repeat="bill in bills" id="bill_{{bill.bill_id}}">
 					<a href="javascript:void(0);" ng-click="showBillDetail($index)" class="plain-link block-link" title="点击查看账单详情">
 						<i class="uk-icon-minus" ng-if="bill.bill_type==1" title="支出"></i>
 						<i class="uk-icon-plus" ng-if="bill.bill_type==2" title="收入"></i>&nbsp;&nbsp;
@@ -24,11 +24,11 @@
 </div>
 
 <!--查看账单详情-->
-<div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details">
+<!-- <div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details">
     <div class="uk-modal-dialog">
       	<div class="bill-details-view" ui-view="bill_details_view"></div>
     </div>
-</div>
+</div> -->
 
 
 

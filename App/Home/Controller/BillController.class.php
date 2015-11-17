@@ -149,5 +149,37 @@ class BillController extends Controller {
         }
         
     }
+    //根据条件查询账单
+    public function bill_query(){
+        $start_date = I('post.start_date');
+        $end_date = I('post.end_date');
+        $bill_type = I('post.bill_type');
+
+        //$bill_category_id = I('post.bill_category_id');
+        //$bill_account_id = I('post.bill_account_id');
+        if(!empty($start_date) && !empty($end_date) && !empty($bill_type)){
+            if(intval($bill_type)===3)
+                $sql = " AND DATE_FORMAT(bill.bill_time,'%Y-%m-%d') BETWEEN '$start_date' AND '$end_date'";
+            else 
+                $sql = " AND DATE_FORMAT(bill.bill_time,'%Y-%m-%d') BETWEEN '".$start_date."' AND '".$end_date."' AND bill.bill_type=".$bill_type;
+            //$bills = $this->bill_model->where($sql)->select();
+            $bills = $this->bill_model->join("child_account on bill.bill_account_id = child_account.child_account_id")
+            ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")
+            ->where("bill.bill_user_id=".$this->user_id.$sql)->select();
+            if($bills !== false)$this->ajaxReturn(array('error'=>0,'bills'=>$bills));
+            else $this->ajaxReturn(array('error'=>1,'msg'=>'查询失败！'));
+        }else $this->ajaxReturn(array('error'=>1,'msg'=>'查询条件不能为空！'));
+    }
+    //根据id获取账单
+    public function get_bill_by_id(){
+        $bill_id = I('get.bill_id');
+        $cdt = array('bill.bill_user_id'=>$this->user_id,'bill.bill_id'=>$bill_id);
+        $bill = $this->bill_model->join("child_account on bill.bill_account_id = child_account.child_account_id")
+                ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")
+                ->where($cdt)->find();
+        if($bill !== false){
+            $this->ajaxReturn(array('error'=>0,'bill'=>$bill));
+        }else $this->ajaxReturn(array('error'=>1,'msg'=>'账单获取失败！'));
+    }
 
 }

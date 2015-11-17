@@ -5,21 +5,17 @@ var site_prefix = "http://localhost/note2/"
 note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
-		//$log.log('locationChangeStart');  
-        //$log.log(arguments);
         if(!ipCookie('is_logined')){
-        	//除了注册登陆不允许跳转到别的地方
-        	console.log(arguments[2].split('#')[1]);
-        	if(arguments[2].split('#')[1] != "/login" && arguments[2].split('#')[1] != "/register"){
+        	//如果未登录，除了注册登陆不允许跳转到别的地方
+        	console.log(arguments);
+        	console.log(arguments[1].split('#')[1]);
+        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register"){
 				$state.go('login');
 				hMessage("请登录后再操作！");
 			}
 		} 
 	});
 	$state.go('home');
-	//获取用户的账单分类,账户信息
-	/*$rootScope.user_categories = ;
-	$rootScope.user_accounts = ;*/
 });
 //----------------------------------------导航栏------------------------------------------------
 note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){

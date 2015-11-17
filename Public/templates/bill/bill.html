@@ -16,7 +16,15 @@
 	<!--新增账单-->
 	<div class="uk-modal bill-add" id="add-bill-modal" ng-controller="c_bill_add">
 	    <div class="uk-modal-dialog" ng-click="add_bill_modal_click()">
-			<div class="bill-view" ui-view="bill_add_view"></div>
+			<!-- <div class="bill-view" ui-view="bill_add_view"></div> -->
+			<div class="add-bill" ng-include="templates.bill_add"></div>
+	    </div>
+	</div>
+	<!--账单详情-->
+	<div class="uk-modal" id="bill-detail-modal" ng-controller="c_bill_details">
+	    <div class="uk-modal-dialog">
+	      	<!-- <div class="bill-details-view" ui-view="bill_details_view"></div> -->
+	      	<div class="add-bill" ng-include="templates.bill_view"></div>
 	    </div>
 	</div>
 </div>

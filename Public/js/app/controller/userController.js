@@ -1,5 +1,5 @@
 //----------------------用户控制器------------------------
-note.controller('c_user',function($scope,$state,$http,$rootScope){
+note.controller('c_user',function($scope,$state,$rootScope){
 	$state.go('basicInfo');
 	$rootScope.current_user_tab = 'basicInfo';
 	$scope.switchUserTab = function(tab){
@@ -7,11 +7,10 @@ note.controller('c_user',function($scope,$state,$http,$rootScope){
 		$state.go(tab);
 	}
 });
-note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_user_basicInfo',function($scope,$state,$rootScope,ipCookie,User){
 	$rootScope.current_user_tab = 'basicInfo';
 	//获取用户的基本信息
-	$http.get(home_path+"/User/get_user_basic_info.html").success(function(res){
-		console.log(res);
+	User.getBasicInfo().success(function(res){
 		if(res.error === 0){
 			$rootScope.user = {};
 			$rootScope.user.name = res.user.user_name;
@@ -26,7 +25,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$
 	});
 	//注销
 	$scope.logout = function(){
-		$http.get(home_path+"/User/logout.html").success(function(res){
+		User.logout().success(function(res){
 			if(res.error === 0){
 				hMessage("退出登陆成功！",1200);
 				ipCookie('is_logined',0);
@@ -48,7 +47,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$
 	}
 });
 //修改密码
-note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interval,$http){
+note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$timeout,User){
 	$rootScope.current_user_tab = 'modifyPasswd';
 	$scope.old_password = $scope.new_password = $scope.password_confirm = '';
 	$scope.resetPassword = function(){
@@ -66,21 +65,17 @@ note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interva
 			hMessage("新密码与确认密码不相等！");
 			return;
 		}
-		$http({
-	      method:'POST',
-	      url:home_path+"/User/modify_user_password.html",
-	      data:{'old_password':$scope.old_password,'new_password':$scope.new_password,'password_confirm':$scope.password_confirm}
-	    }).success(function(res){
-	    	console.log(res);
+		var passwordInfo = {'old_password':$scope.old_password,'new_password':$scope.new_password,'password_confirm':$scope.password_confirm};
+		User.modifyPassword(passwordInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("密码修改成功，请使用新的密码登陆！",2000);
-				$interval(function(){$state.go('login');},2000);
+				$timeout(function(){$state.go('login');},2000);
 			}else hMessage(res.msg,2000);
 		});
 	}
 });
 //修改用户的基本信息
-note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,ipCookie,User){
 	$scope.avatar_upload_url = "http://localhost/M-Note/index.php/Home/User/upload_user_avatar.html";
 	$scope.user_name = $scope.user_email = "";
 	$scope.uploadAvatarBtn = "上传头像";
@@ -130,11 +125,8 @@ note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$int
 		else if($scope.user_name.length > 0 && !usernameVerify($scope.user_name)){hMessage("用户名只能以英文字母或中文开头,包含数字，下划线，字母，中文！",3000);return;}
 		else if($scope.user_email.length > 0 && !emailVerify($scope.user_email)){hMessage("请输入正确的邮箱格式！");return;}
 		console.log('username:'+$scope.user_name+',email:'+$scope.user_email);
-		$http({
-	      method:'POST',
-	      url:home_path+"/User/modify_user_basic_info.html",
-	      data:{'username':$scope.user_name,'user_email':$scope.user_email}
-	    }).success(function(res){
+		var userInfo = {'username':$scope.user_name,'user_email':$scope.user_email};
+		User.modifyUserInfo(userInfo).success(function(res){
 	    	console.log(res);
 			if(res.error === 0){
 				//这里更新一下页面的用户信息

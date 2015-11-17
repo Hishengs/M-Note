@@ -5,21 +5,17 @@ var site_prefix = "http://localhost/note2/"
 note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
-		//$log.log('locationChangeStart');  
-        //$log.log(arguments);
         if(!ipCookie('is_logined')){
-        	//除了注册登陆不允许跳转到别的地方
-        	console.log(arguments[2].split('#')[1]);
-        	if(arguments[2].split('#')[1] != "/login" && arguments[2].split('#')[1] != "/register"){
+        	//如果未登录，除了注册登陆不允许跳转到别的地方
+        	console.log(arguments);
+        	console.log(arguments[1].split('#')[1]);
+        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register"){
 				$state.go('login');
 				hMessage("请登录后再操作！");
 			}
 		} 
 	});
 	$state.go('home');
-	//获取用户的账单分类,账户信息
-	/*$rootScope.user_categories = ;
-	$rootScope.user_accounts = ;*/
 });
 //----------------------------------------导航栏------------------------------------------------
 note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
@@ -48,7 +44,7 @@ note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 	}
 });
 //-------------------登陆注册控制器----------------------
-note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
+note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
 	$scope.login = function(){
@@ -56,11 +52,8 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 		if($scope.username.length < 1 || $scope.password.length < 1){hMessage("用户名或密码不能为空！",2000);return;}
 		else if($scope.password.length >= 1 && $scope.password.length < 6){hMessage("请输入6位以上的密码！",2000);return;}
 		//post
-		$http({
-          method:'POST',
-          url:home_path+"/User/login.html",
-          data:{'username':$scope.username,'password':$scope.password}
-        }).success(function(res){
+		var loginInfo = {'username':$scope.username,'password':$scope.password};
+		User.login(loginInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
@@ -77,9 +70,6 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 				$rootScope.user.email = "819537918@qq.com";
 				$rootScope.user.id = 1000;
 				$rootScope.user.avatar = "https://dn-lanbaidiao.qbox.me/avatar_1000_a645761e1fc399f5be08308eacead7ce?imageView2/1/w/80/h/80";
-				/*$rootScope.user.email = res.userInfo.email;
-				$rootScope.user.id = res.userInfo.id;
-				$rootScope.user.avatar = res.userInfo.avatar;*/
 
 				setTimeout(function(){$state.go('home');},1500);
 			}else if(res.error === 2){hMessage("该用户不存在！",1500);}
@@ -90,7 +80,7 @@ note.controller('c_login',function($scope,$state,$http,$rootScope,ipCookie){
 		});
 	}
 });
-note.controller('c_register',function($scope,$state,$http){
+note.controller('c_register',function($scope,$state,User){
 	setTitle("随手记-注册");
 	$scope.username = $scope.email = $scope.password = $scope.password_confirm = '';
 	$scope.register = function(){
@@ -108,12 +98,8 @@ note.controller('c_register',function($scope,$state,$http){
 		$("#register-btn").html("注册中...");
 		$("#register-btn").attr("disabled","disabled");
 		//post
-		$http({
-          method:'POST',
-          url:home_path+"/User/register.html",
-          data:{'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm}
-        }).success(function(res){
-        	console.log(res);
+		var registerInfo = {'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm};
+		User.register(registerInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("注册成功，请登陆！",2000);
 				$state.go('login');
@@ -130,6 +116,14 @@ note.controller('c_register',function($scope,$state,$http){
 note.controller('c_bill',function($scope,$rootScope,$state){
 	//默认的state
 	$state.go("today_bills");
+	//模板路径
+	$rootScope.templates = {};
+	//$scope.templates.templates_path = templates_path;
+	$rootScope.templates.bill = templates_path+"/bill";
+	$rootScope.templates.bill_add = $rootScope.templates.bill+"/bill_add_outcome.html";//添加账单的模板路径
+	$rootScope.templates.bill_view = $rootScope.templates.bill+"/bill_details.html";//查看账单的模板路径
+	$rootScope.templates.add_category = $rootScope.templates.bill+"/add_category.html";//添加分类
+	$rootScope.templates.add_account = $rootScope.templates.bill+"/add_account.html";//添加账户
 	//tab选项切换
 	$scope.current_bill_tab = "today_bills"; //当前tab选项
 	$scope.switchBillTab = function(tab){
@@ -149,7 +143,7 @@ note.controller('c_today_bills',function($scope,$rootScope,$state,$http,Bill){
 	//获取当日账单列表，bill_list
 	Bill.getTodayBills().success(function(res){
 		if(res.error === 0){
-			$rootScope.today_bills = res.bills;
+			$rootScope.bills = res.bills;
 			$rootScope.bill_tip_show = false;
 		}
 		else if(res.error === 2){//查询为空
@@ -161,35 +155,20 @@ note.controller('c_today_bills',function($scope,$rootScope,$state,$http,Bill){
 	});
 	//显示新增账单template
 	$scope.vAddBill = function(){
+		$rootScope.templates.bill_add = $rootScope.templates.bill+"/bill_add_outcome.html";
 		$rootScope.current_operation = "add_bill";//当前操作
 		$rootScope.bill_operation_trigger = $rootScope.bill_operation_trigger==0?1:0;//触发
 		//显示modal
 		var add_bill_modal = UIkit.modal("#add-bill-modal");
 		add_bill_modal.show();
-		$("#add-bill-modal").on({
-		    'show.uk.modal': function(){
-		        console.log("Modal is visible.");
-		    },
-		    'hide.uk.modal': function(){
-		        $state.go("today_bills");
-		    }
-		});
-		$state.go('bill_add_outcome');//默认是支出
+		//$state.go('bill_add_outcome');//默认是支出
 	}
 	//显示账单详情模态框
 	$scope.showBillDetail = function(index){
-		$rootScope.current_bill = $rootScope.today_bills[index];//设置当前账单
+		$rootScope.current_bill = $rootScope.bills[index];//设置当前账单
 		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 		bill_detail_modal.show();
-		$("#bill-detail-modal").on({
-		    'show.uk.modal': function(){
-		        console.log("Modal is visible.");
-		    },
-		    'hide.uk.modal': function(){
-		        $state.go("today_bills");
-		    }
-		});
-		$state.go('bill_details',{billId:$rootScope.current_bill.bill_id});
+		//$state.go('bill_details',{billId:$rootScope.current_bill.bill_id});
 	}
 });
 
@@ -221,6 +200,18 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		$scope.bill.time.hour = parseInt(new Date().getHours());
 		$scope.bill.time.minute = parseInt(new Date().getMinutes());
 	});
+
+	//获取账户分类
+	Account.getAccountInfo().success(function(res){
+		console.log(res);
+		$rootScope.account_items = res.account_items;
+		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
+
+		$scope.bill.account = $rootScope.account_items[0].account.account_id;
+		$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
+		
+	});
+
 	//监听触发变量,进而确定是新增还是修改账单
 	$rootScope.$watch('bill_operation_trigger',function(newValue,oldValue){
 		if($rootScope.current_operation == "modify_bill"){//修改操作
@@ -293,16 +284,6 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 
 				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
-			});
-			//获取账户分类
-			Account.getAccountInfo().success(function(res){
-				console.log(res);
-				$rootScope.account_items = res.account_items;
-				$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-
-				$scope.bill.account = $rootScope.account_items[0].account.account_id;
-				$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
-				
 			});
 
 			
@@ -402,7 +383,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				//获取当日账单列表，bill_list
 				Bill.getTodayBills().success(function(res){
 					if(res.error === 0){
-						$rootScope.today_bills = res.bills;
+						$rootScope.bills = res.bills;
 						$rootScope.bill_tip_show = false;
 					}
 					else if(res.error === 2){//查询为空
@@ -433,21 +414,18 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 					var bill_modal = UIkit.modal("#add-bill-modal");
 					bill_modal.hide();
 					hMessage("账单修改成功！",2000);
-					//更新今日账单列表
-					//获取当日账单列表，bill_list
-					Bill.getTodayBills().success(function(res){
-						if(res.error === 0){
-							$rootScope.today_bills = res.bills;
-							$rootScope.bill_tip_show = false;
+					//其实只需要更新修改的那条账单就行，不用全部更新
+					for(var i=0;i<$rootScope.bills.length;i++){
+						if($rootScope.bills[i].bill_id == $rootScope.current_bill.bill_id){
+							//更新
+							Bill.getBillById($rootScope.current_bill.bill_id).success(function(res){
+								if(res.error === 0){
+									$rootScope.bills[i] = res.bill;
+								}else hMessage(res.msg);
+							});
+							break;
 						}
-						else if(res.error === 2){//查询为空
-							$rootScope.bill_tip_show = true;
-							$rootScope.bill_tip = '今天还没有账单信息，快去记一笔吧！';
-						}
-						else console.log(res.msg);
-					}).error(function(data,state){
-						console.log(data);
-					});
+					}
 				}
 				else hMessage(res.msg,2000);
 			});
@@ -477,7 +455,8 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 			});
 			$scope.bill_type = 2;
-			$state.go('bill_add_income');
+			//$state.go('bill_add_income');
+			$rootScope.templates.bill_add = $rootScope.templates.bill+"/bill_add_income.html";
 			$scope.current_bill_view = $rootScope.previous_view = 'income';
 			$scope.bill_type_text = '记账-收入';
 		}
@@ -491,7 +470,8 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 			});
 			$scope.bill_type = 1;
-			$state.go('bill_add_outcome');
+			//$state.go('bill_add_outcome');
+			$rootScope.templates.bill_add = $rootScope.templates.bill+"/bill_add_outcome.html";
 			$scope.current_bill_view = $rootScope.previous_view = 'outcome';
 			$scope.bill_type_text = '记账-支出';
 		}
@@ -500,28 +480,23 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 	$scope.backToDetail = function(){
 		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 		bill_detail_modal.show();
-		$("#bill-detail-modal").on({
-		    'show.uk.modal': function(){
-		        console.log("Modal is visible.");
-		    },
-		    'hide.uk.modal': function(){
-		        $state.go("today_bills");
-		    }
-		});
-		$state.go('bill_details');
+		//$state.go('bill_details');
+		$rootScope.templates.bill_add = $rootScope.templates.bill+"/bill_details.html";
 	}
 	//------------------添加账单分类------------------------------------
 	$scope.vAddCategory = function(previous_view){
 		$rootScope.previous_view = previous_view;
-		$state.go('add_category');
+		//$state.go('add_category');
+		$rootScope.templates.bill_add = $rootScope.templates.add_category;
 	}
 	//------------------添加账户------------------------
 	$scope.vAddAccount = function(){
-		$state.go('add_account');
+		//$state.go('add_account');
+		$rootScope.templates.bill_add = $rootScope.templates.add_account;
 	}
 });
 //添加账单分类
-note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http){
+note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bill){
 	//默认设置
 	$scope.ifAddSelfCategory = false;
 	$scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
@@ -575,7 +550,8 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http){
 		});
 	}
 	$scope.backward = function(){
-		$state.go('bill_add_'+$rootScope.previous_view);
+		//$state.go('bill_add_'+$rootScope.previous_view);
+		$rootScope.templates.bill_add = $rootScope.templates.bill + "/bill_add_"+$rootScope.previous_view+".html";
 	}
 });
 //添加账户
@@ -625,7 +601,8 @@ note.controller('c_add_account',function($scope,$rootScope,$state,$http,Account)
 		});
 	}
 	$scope.backward = function(){
-		$state.go('bill_add_'+$rootScope.previous_view);
+		//$state.go('bill_add_'+$rootScope.previous_view);
+		$rootScope.templates.bill_add = $rootScope.templates.bill + "/bill_add_"+$rootScope.previous_view+".html";
 	}
 });
 
@@ -648,23 +625,42 @@ note.controller('c_bill_details',function($scope,$rootScope,$state,$http,Bill){
 		}else return;
 	}
 	//修改账单
-	$scope.modifyBill = function(){
+	$scope.vModifyBill = function(){
 		var add_bill_modal = UIkit.modal("#add-bill-modal");
 		add_bill_modal.show();
-		$("#add-bill-modal").on({
-		    'show.uk.modal': function(){
-		        console.log("Modal is visible.");
-		    },
-		    'hide.uk.modal': function(){
-		        $state.go("today_bills");
-		    }
-		});
-		$state.go('bill_add_outcome');//默认是支出
+		//$state.go('bill_add_outcome');//默认是支出
+		$rootScope.templates.bill_add = $rootScope.templates.bill + "/bill_add_outcome.html";
 		$rootScope.current_operation = "modify_bill";
 		$rootScope.bill_operation_trigger = $rootScope.bill_operation_trigger==0?1:0;//触发器
 	}
 });
-
+//账单查询
+note.controller('c_bill_query',function($scope,$rootScope,$state,$http,Bill){
+	$scope.bill_query_tip_show = false;
+	$scope.bill_query_tip = "查询不到符合条件的记录！";
+	$scope.bill_type = 3;
+	$scope.start_date = $scope.end_date = null;
+	$rootScope.bills = {};
+	//查询
+	$scope.query = function(){
+		var queryCdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'bill_type':$scope.bill_type};
+		console.log(queryCdt);
+		Bill.query(queryCdt).success(function(res){
+			console.log(res);
+			if(res.error === 0){
+				$rootScope.bills = res.bills;
+				if(!$rootScope.bills.length)$scope.bill_query_tip_show = true;
+				else $scope.bill_query_tip_show = false;
+			}else hMessage(res.msg);
+		});
+	}
+	//查看账单
+	$scope.billView = function(index){
+		$rootScope.current_bill = $rootScope.bills[index];
+		var bill_detail_modal = UIkit.modal("#bill-detail-modal");
+		bill_detail_modal.show();
+	}
+});
 //---------------------账户控制器-------------------------
 //----------------------------------------账户页面----------------------------------------------
 //---+c_accounts
@@ -736,7 +732,7 @@ note.controller('c_account',function($scope,$rootScope,$state,$http){
 	//
 });
 //----------------------用户控制器------------------------
-note.controller('c_user',function($scope,$state,$http,$rootScope){
+note.controller('c_user',function($scope,$state,$rootScope){
 	$state.go('basicInfo');
 	$rootScope.current_user_tab = 'basicInfo';
 	$scope.switchUserTab = function(tab){
@@ -744,11 +740,10 @@ note.controller('c_user',function($scope,$state,$http,$rootScope){
 		$state.go(tab);
 	}
 });
-note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_user_basicInfo',function($scope,$state,$rootScope,ipCookie,User){
 	$rootScope.current_user_tab = 'basicInfo';
 	//获取用户的基本信息
-	$http.get(home_path+"/User/get_user_basic_info.html").success(function(res){
-		console.log(res);
+	User.getBasicInfo().success(function(res){
 		if(res.error === 0){
 			$rootScope.user = {};
 			$rootScope.user.name = res.user.user_name;
@@ -763,7 +758,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$
 	});
 	//注销
 	$scope.logout = function(){
-		$http.get(home_path+"/User/logout.html").success(function(res){
+		User.logout().success(function(res){
 			if(res.error === 0){
 				hMessage("退出登陆成功！",1200);
 				ipCookie('is_logined',0);
@@ -785,7 +780,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,$interval,$
 	}
 });
 //修改密码
-note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interval,$http){
+note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$timeout,User){
 	$rootScope.current_user_tab = 'modifyPasswd';
 	$scope.old_password = $scope.new_password = $scope.password_confirm = '';
 	$scope.resetPassword = function(){
@@ -803,21 +798,17 @@ note.controller('c_user_modifyPasswd',function($scope,$state,$rootScope,$interva
 			hMessage("新密码与确认密码不相等！");
 			return;
 		}
-		$http({
-	      method:'POST',
-	      url:home_path+"/User/modify_user_password.html",
-	      data:{'old_password':$scope.old_password,'new_password':$scope.new_password,'password_confirm':$scope.password_confirm}
-	    }).success(function(res){
-	    	console.log(res);
+		var passwordInfo = {'old_password':$scope.old_password,'new_password':$scope.new_password,'password_confirm':$scope.password_confirm};
+		User.modifyPassword(passwordInfo).success(function(res){
 			if(res.error === 0){
 				hMessage("密码修改成功，请使用新的密码登陆！",2000);
-				$interval(function(){$state.go('login');},2000);
+				$timeout(function(){$state.go('login');},2000);
 			}else hMessage(res.msg,2000);
 		});
 	}
 });
 //修改用户的基本信息
-note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,$http,ipCookie){
+note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$interval,ipCookie,User){
 	$scope.avatar_upload_url = "http://localhost/M-Note/index.php/Home/User/upload_user_avatar.html";
 	$scope.user_name = $scope.user_email = "";
 	$scope.uploadAvatarBtn = "上传头像";
@@ -867,11 +858,8 @@ note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$int
 		else if($scope.user_name.length > 0 && !usernameVerify($scope.user_name)){hMessage("用户名只能以英文字母或中文开头,包含数字，下划线，字母，中文！",3000);return;}
 		else if($scope.user_email.length > 0 && !emailVerify($scope.user_email)){hMessage("请输入正确的邮箱格式！");return;}
 		console.log('username:'+$scope.user_name+',email:'+$scope.user_email);
-		$http({
-	      method:'POST',
-	      url:home_path+"/User/modify_user_basic_info.html",
-	      data:{'username':$scope.user_name,'user_email':$scope.user_email}
-	    }).success(function(res){
+		var userInfo = {'username':$scope.user_name,'user_email':$scope.user_email};
+		User.modifyUserInfo(userInfo).success(function(res){
 	    	console.log(res);
 			if(res.error === 0){
 				//这里更新一下页面的用户信息

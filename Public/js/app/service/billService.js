@@ -43,6 +43,13 @@ note.service('Bill',function($http){
 			url:home_path+"/Bill/get_today_bills.html",
 		});
 	}
+	//根据id获取账单
+	this.getBillById = function(bill_id){
+		return $http({
+			method:'GET',
+			url:home_path+"/Bill/get_bill_by_id.html?bill_id="+bill_id,
+		});
+	}
 	//查看账单详情
 	this.view = function(billId){
 		//
