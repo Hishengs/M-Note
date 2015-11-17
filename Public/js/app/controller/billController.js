@@ -554,6 +554,10 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 	$scope.is_self_defined = false;
 	$scope.toggle_type = "off";
 	$scope.bill_category = "";
+	$scope.current_bill_category = {};
+	$scope.current_child_bill_category = {};//当前二级分类
+	$scope.modified_bill_category = $scope.modified_child_bill_category_name = 
+	$scope.modified_child_bill_category_balance = $scope.modified_child_bill_category_remarks = "";
 
 	Bill.getCategoryInfo(1).success(function(res){
 		if(res.error === 0){
@@ -587,17 +591,62 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 		}
 		$scope.is_self_defined = $scope.is_self_defined?false:true;
 	}
-	
+	//监听二级分类选择变化
+	$scope.childCategorySelectChange = function(){
+		//
+	}
 	//修改一级分类
-	$scope.modifyBillCategory = function(index){}
+	$scope.modifyBillCategory = function(index){
+		$scope.current_bill_category = $scope.bill_category_items[index].bill_category.bill_category_name;
+		UIkit.modal("#bill_category_modify_modal").show();
+	}
 	//删除一级分类
-	$scope.deleteBillCategory = function(id){
-		return confirm("你确定要删除该一级分类-"+id+"(该分类下的所有二级分类也将被删除！！)??");
+	$scope.deleteBillCategory = function(bill_category_id){
+		if(confirm("你确定要删除该一级分类-"+bill_category_id+"(该分类下的所有二级分类和所有账单也将被删除！！)??")){
+			Bill.deleteCategory(bill_category_id).success(function(res){
+				if(res.error === 0){
+					//更新一下分类信息
+					Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
+						if(res.error === 0){
+							$scope.bill_category_items = res.bill_category_items;
+							$scope.bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+						}
+					});
+					hMessage("删除分类成功！");
+				}else hMessage(res.msg);
+			});
+		}
 	}
 	//修改二级分类
-	$scope.modifyChildBillCategory = function(){}
+	$scope.modifyChildBillCategory = function(index){
+		var current_child_bill_category_select = document.querySelector("#bill_category_item_"+index+" select");
+		var current_child_bill_category_id = current_child_bill_category_select.options[current_child_bill_category_select.selectedIndex].value.split(":")[1];
+		
+		for(var i=0;i<$scope.bill_category_items[index].child_bill_categories.length;i++){
+			if($scope.bill_category_items[index].child_bill_categories[i].child_bill_category_id == current_child_bill_category_id){
+				$scope.current_child_bill_category = $scope.bill_category_items[index].child_bill_categories[i];
+			}
+		}
+		UIkit.modal("#child_bill_category_modify_modal").show();
+	}
 	//删除二级分类
-	$scope.deleteChildBillCategory = function(){
-		return confirm("你确定要删除该二级分类??");
+	$scope.deleteChildBillCategory = function(index){
+		if(confirm("你确定要删除该二级分类(属于该分类的账单也会被一并删除！)??")){
+			var current_child_bill_category_select = document.querySelector("#bill_category_item_"+index+" select");
+			var current_child_bill_category_id = current_child_bill_category_select.options[current_child_bill_category_select.selectedIndex].value.split(":")[1];
+
+			Bill.deleteChildCategory(current_child_bill_category_id).success(function(res){
+				if(res.error === 0){
+					//更新一下分类信息
+					Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
+						if(res.error === 0){
+							$scope.bill_category_items = res.bill_category_items;
+							$scope.bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+						}
+					});
+					hMessage("删除分类成功！");
+				}else hMessage(res.msg);
+			});
+		}
 	}
 });

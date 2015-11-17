@@ -18,7 +18,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="bill_category_item in bill_category_items">
+					<tr ng-repeat="bill_category_item in bill_category_items" id="bill_category_item_{{$index}}">
 						<td>
 						{{bill_category_item.bill_category.bill_category_name}}
 						<span class="f-right">
@@ -33,10 +33,10 @@
 						<td><!-- 二级分类 -->
 							<select class="uk-select" name="child_bill_category" ng-model="bill_category_item.child_bill_categories[0].child_bill_category_id" ng-options="child_bill_category.child_bill_category_id as child_bill_category.child_bill_category_name for child_bill_category in bill_category_item.child_bill_categories"></select>
 							<span class="f-right">
-								<button class="uk-button uk-button-primary uk-button-small" title="修改二级分类" ng-click="modifyChildBillCategory()">
+								<button class="uk-button uk-button-primary uk-button-small" title="修改二级分类" ng-click="modifyChildBillCategory($index)">
 								<i class="uk-icon-edit"></i>
 								</button>
-								<button class="uk-button uk-button-danger uk-button-small" title="删除二级分类" ng-click="deleteChildBillCategory()">
+								<button class="uk-button uk-button-danger uk-button-small" title="删除二级分类" ng-click="deleteChildBillCategory($index)">
 								<i class="uk-icon-trash"></i>
 								</button>
 							</span>
@@ -55,28 +55,27 @@
 		<span class="f-right">
 		</span>
 	</div>
+	<form class="uk-form">
+	<ul class="uk-list uk-list-striped">
+		<li>
+			<label>一级分类</label>
+			
+			<span class="bill_category f-right">
+	        <select class="uk-select" style="width:425px;" ng-model="bill_category" ng-show="!is_self_defined" ng-options="bill_category_item.bill_category.bill_category_id as bill_category_item.bill_category.bill_category_name for bill_category_item in bill_category_items">
+	        </select>
+	        
+	        <input type="text" class="uk-input" style="width:425px;" placeholder="自定义一级分类" ng-show="is_self_defined" ng-model="bill_category">
 
-	<form class="uk-form add-category">
-		<ul class="uk-list uk-list-striped">
-			<li>
-				<label>一级分类</label>
-				
-				<span class="bill_category f-right">
-		        <select class="uk-select" style="width:425px;" ng-model="bill_category" ng-show="!is_self_defined" ng-options="bill_category_item.bill_category.bill_category_id as bill_category_item.bill_category.bill_category_name for bill_category_item in bill_category_items">
-		        </select>
-		        
-		        <input type="text" class="uk-input" style="width:425px;" placeholder="自定义一级分类" ng-show="is_self_defined" ng-model="bill_category">
-
-		        <button type="button" class="uk-button uk-button-small" title="添加自定义一级分类" ng-click="switchAddSelfCategory()">
-		        	<i class="uk-icon-medium uk-icon-toggle-{{toggle_type}}"></i>
-		        </button>
-		      </span>
-			</li>
-			<li>
-				<label>二级分类</label>
-				<input type="text" class="uk-input f-right" style="width:480px;" ng-model="child_bill_category" placeholder="二级分类名称">
-			</li>
-		</ul>
+	        <button type="button" class="uk-button uk-button-small" title="添加自定义一级分类" ng-click="switchAddSelfCategory()">
+	        	<i class="uk-icon-medium uk-icon-toggle-{{toggle_type}}"></i>
+	        </button>
+	      </span>
+		</li>
+		<li>
+			<label>二级分类</label>
+			<input type="text" class="uk-input f-right" style="width:480px;" ng-model="child_bill_category" placeholder="二级分类名称">
+		</li>
+	</ul>
 	</form>
 
 	<div class="uk-modal-footer">
@@ -86,5 +85,33 @@
 	</div>
 	</div>
 	<!-- 修改一级分类 -->
+	<div class="uk-modal" id="bill_category_modify_modal">
+		<div class="uk-modal-dialog">
+			<div class="uk-modal-header">修改一级分类</div>
+			<form class="uk-form">
+			<label>一级分类</label>
+			<span class="f-right">
+			<input type="text" class="uk-input" style="width:425px;" ng-model="current_bill_category" placeholder="一级分类名称">
+			</span>
+			</form>
+			<div class="uk-modal-footer">
+				<button class="uk-button uk-button-primary">保存</button>
+			</div>
+		</div>
+	</div>
 	<!-- 修改二级分类 -->
+	<div class="uk-modal" id="child_bill_category_modify_modal">
+		<div class="uk-modal-dialog">
+			<div class="uk-modal-header">修改二级分类</div>
+			<form class="uk-form">
+			<label>二级分类</label>
+			<span class="f-right">
+			<input type="text" class="uk-input" style="width:425px;" ng-model="current_child_bill_category.child_bill_category_name" placeholder="二级分类名称">
+			</span>
+			</form>
+			<div class="uk-modal-footer">
+				<button class="uk-button uk-button-primary">保存</button>
+			</div>
+		</div>
+	</div>
 </div>

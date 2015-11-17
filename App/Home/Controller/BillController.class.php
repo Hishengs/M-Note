@@ -182,5 +182,25 @@ class BillController extends Controller {
             $this->ajaxReturn(array('error'=>0,'bill'=>$bill));
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'账单获取失败！'));
     }
-
+    //删除一级分类
+    public function delete_bill_category(){
+        $bill_category_id = I("post.bill_category_id");
+        $cdt = array('bill_category_id'=>$bill_category_id,'child_bill_category_user_id'=>$this->user_id);
+        $cdt2 = array('bill_category_id'=>$bill_category_id,'bill_category_user_id'=>$this->user_id);
+        //先删除属于该一级分类的二级分类
+        if($this->child_bill_category_model->where($cdt)->delete()){
+            if($this->bill_category_model->where($cdt2)->delete())
+                $this->ajaxReturn(array('error'=>0,'msg'=>'删除成功！'));
+            else $this->ajaxReturn(array('error'=>1,'msg'=>'删除失败！'));
+        }else $this->ajaxReturn(array('error'=>1,'msg'=>'删除失败！'));
+        
+    }
+    //删除二级分类
+    public function delete_child_bill_category(){
+        $child_bill_category_id = I("post.child_bill_category_id");
+        $cdt = array('child_bill_category_id'=>$child_bill_category_id,'child_bill_category_user_id'=>$this->user_id);
+        if($this->child_bill_category_model->where($cdt)->delete())
+            $this->ajaxReturn(array('error'=>0,'msg'=>'删除成功！'));
+        else $this->ajaxReturn(array('error'=>1,'msg'=>'删除失败！'));
+    }
 }

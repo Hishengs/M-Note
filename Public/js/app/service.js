@@ -150,6 +150,38 @@ note.service('Bill',function($http){
 			data:categoryItem
 		});
 	}
+	//删除一级分类
+	this.deleteCategory = function(bill_category_id){
+		return $http({
+			method:'POST',
+			url:home_path+"/Bill/delete_bill_category.html",
+			data:{bill_category_id:bill_category_id}
+		});
+	}
+	//删除二级分类
+	this.deleteChildCategory = function(child_bill_category_id){
+		return $http({
+			method:'POST',
+			url:home_path+"/Bill/delete_child_bill_category.html",
+			data:{child_bill_category_id:child_bill_category_id}
+		});
+	}
+	//修改一级分类
+	this.modifyCategory = function(bill_category_name){
+		return $http({
+			method:'POST',
+			url:home_path+"/Bill/modify_bill_category.html",
+			data:{bill_category_name:bill_category_name}
+		});
+	}
+	//修改二级分类
+	this.modifyChildCategory = function(child_bill_category_name){
+		return $http({
+			method:'POST',
+			url:home_path+"/Bill/modify_child_bill_category.html",
+			data:{child_bill_category_name:child_bill_category_name}
+		});
+	}
 });
 
 /*账户信息
