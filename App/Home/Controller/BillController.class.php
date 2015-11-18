@@ -203,4 +203,24 @@ class BillController extends Controller {
             $this->ajaxReturn(array('error'=>0,'msg'=>'删除成功！'));
         else $this->ajaxReturn(array('error'=>1,'msg'=>'删除失败！'));
     }
+    //修改一级分类
+    public function modify_bill_category(){
+        $bill_category_id = I("post.bill_category_id");
+        $bill_category_name = I("post.bill_category_name");
+        $cdt = array('bill_category_id'=>$bill_category_id,'bill_category_user_id'=>$this->user_id);
+        $data = array('bill_category_name'=>$bill_category_name);
+        if($this->bill_category_model->where($cdt)->save($data))$this->ajaxReturn(array('error'=>0,'msg'=>'修改成功！'));
+        else $this->ajaxReturn(array('error'=>1,'msg'=>'修改失败！'));
+    }
+    //修改二级分类
+    public function modify_child_bill_category(){
+        $child_bill_category_id = I("post.child_bill_category_id");
+        $child_bill_category_name = I("post.child_bill_category_name");
+        if(empty($child_bill_category_id) || empty($child_bill_category_name))
+            $this->ajaxReturn(array('error'=>1,'msg'=>'请提交完整的信息!','data'=>array('child_bill_category_id'=>$child_bill_category_id,'child_bill_category_name'=>$child_bill_category_name)));
+        $cdt = array('child_bill_category_id'=>$child_bill_category_id,'child_bill_category_user_id'=>$this->user_id);
+        $data = array('child_bill_category_name'=>$child_bill_category_name);
+        if($this->child_bill_category_model->where($cdt)->save($data))$this->ajaxReturn(array('error'=>0,'msg'=>'修改成功！'));
+        else $this->ajaxReturn(array('error'=>1,'msg'=>'修改失败！'));
+    }
 }

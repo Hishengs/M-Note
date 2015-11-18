@@ -15,7 +15,7 @@
 						<i class="uk-icon-minus" ng-if="bill.bill_type==1" title="支出"></i>
 						<i class="uk-icon-plus" ng-if="bill.bill_type==2" title="收入"></i>&nbsp;&nbsp;
 						{{bill.child_bill_category_name}} {{"[" + bill.bill_remarks + "]"}}
-						<span style="float:right;" class="bill-count">￥ {{bill.bill_sum}}</span>
+						<span style="float:right;" class="bill-count"><i class="uk-icon-yen"></i> {{bill.bill_sum}}</span>
 					</a>
 				</li>
 			</ul>

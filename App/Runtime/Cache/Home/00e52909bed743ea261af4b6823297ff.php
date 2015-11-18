@@ -14,7 +14,6 @@
     	var templates_path = "/M-Note/Public"+"/templates";
     	var home_path = "/M-Note/index.php/Home";
     	var public_path = "/M-Note/Public";
-    	console.log(home_path);
     </script>
 	<script type="text/javascript" src="/M-Note/Public/js/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="/M-Note/Public/js/index.js"></script>

@@ -86,19 +86,19 @@ note.service('Bill',function($http){
 		});
 	}
 	//修改一级分类
-	this.modifyCategory = function(bill_category_name){
+	this.modifyCategory = function(bill_category_id,bill_category_name){
 		return $http({
 			method:'POST',
 			url:home_path+"/Bill/modify_bill_category.html",
-			data:{bill_category_name:bill_category_name}
+			data:{'bill_category_id':bill_category_id,'bill_category_name':bill_category_name}
 		});
 	}
 	//修改二级分类
-	this.modifyChildCategory = function(child_bill_category_name){
+	this.modifyChildCategory = function(child_bill_category_id,child_bill_category_name){
 		return $http({
 			method:'POST',
 			url:home_path+"/Bill/modify_child_bill_category.html",
-			data:{child_bill_category_name:child_bill_category_name}
+			data:{'child_bill_category_id':child_bill_category_id,'child_bill_category_name':child_bill_category_name}
 		});
 	}
 });
