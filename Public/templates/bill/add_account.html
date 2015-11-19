@@ -11,7 +11,7 @@
 <form class="uk-form">
   <ul class="uk-list uk-list-striped">
     <li>
-      <label>类型</label>
+      <label>一级账户</label>
       <span class="bill_account f-right">
 
         <select class="uk-select" style="width:446px;" name="added_account" ng-model="added_account" ng-show="!ifAddSelfAccount" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items">
@@ -25,16 +25,16 @@
       </span>
     </li>
     <li>
-      <label>名称</label>
-      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_name" ng-model="added_child_account_name" placeholder="账户名称">
+      <label>账户名称</label>
+      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_name" ng-model="added_child_account_name" placeholder="二级账户名称">
     </li>
     <li>
-      <label>余额</label>
-      <input type="number" class="uk-input uk-form-width-large f-right" name="added_child_account_balance" placeholder="余额" ng-model="added_child_account_balance">
+      <label>初始金额</label>
+      <input type="number" class="uk-input uk-form-width-large f-right" name="added_child_account_balance" placeholder="二级账户初始余额" ng-model="added_child_account_balance">
     </li>
     <li>
-      <label>备注</label>
-      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_remarks" placeholder="备注" ng-model="added_child_account_remarks">
+      <label>账户备注</label>
+      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_remarks" placeholder="二级账户备注" ng-model="added_child_account_remarks">
     </li>
   </ul>
 </form>

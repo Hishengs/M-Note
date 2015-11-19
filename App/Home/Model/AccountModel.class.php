@@ -1,6 +1,12 @@
 <?php
 namespace Home\Model;
-use Think\Model;
-class AccountModel extends Model {
-    //
+use Think\Model\RelationModel;
+class AccountModel extends RelationModel {
+    protected $_link = array(
+        'ChildAccount'=> array(
+        	'mapping_type' => self::HAS_MANY,
+        	'mapping_name' => 'child_accounts',
+        	'foreign_key' => 'account_id'
+        	)
+     );
 }

@@ -1,22 +1,24 @@
-<div class="cash uk-animation-slide-right" ng-controller="c_account">
+<div class="cash uk-animation-slide-right" ng-controller="c_account_view">
 	<!--总账户详情-->
 	<div class="account-details">
 		<div class="uk-panel uk-panel-header">
-			<div class="uk-panel-title">账户[{{account.account_name}}]详情<button type="button" class="uk-button f-right" ng-click="modifyAccount()">编辑账户</button></div>
+			<div class="uk-panel-title">{{current_account.account.child_account_name}}
+			<button type="button" class="uk-button f-right" ng-click="backward()">返回</button></div>
 		</div>
 		<table class="uk-table cash-tabel">
 		    <thead>
 		        <tr>
 		        	<th>余额</th>
-		            <th>总流入</th>
-		            <th>总流出</th>
+		            <th>流入</th>
+		            <th>流出</th>
 		        </tr>
 		    </thead>
 		    <tbody>
 		        <tr>
-		            <td>{{account.account_balance}}</td>
-		            <td>+{{account.account_flow_out}}</td>
-		            <td>-{{account.account_flow_in}}</td>
+		            <td ng-if="current_account.balance >= 0"><i class="uk-icon-plus"></i> {{current_account.balance}}</td>
+		            <td ng-if="current_account.balance < 0"><i class="uk-icon-minus"></i> {{ -current_account.balance}}</td>
+		            <td><i class="uk-icon-plus"></i> {{current_account.flow_in}}</td>
+		            <td><i class="uk-icon-minus"></i> {{current_account.flow_out}}</td>
 		        </tr>
 		    </tbody>
 		</table>
@@ -29,6 +31,16 @@
 		<div class="uk-panel uk-panel-header">
 			<div class="uk-panel-title">该账户下的账单</div>
 		</div>
-		<div class="uk-alert">该账户下暂无账单！</div>
+		<div class="uk-alert" ng-show="account_bills_tip_show"><i class="uk-icon-warning"></i> 该账户下暂无账单！</div>
+		<ul class="uk-list uk-list-line uk-list-striped">
+			<li ng-repeat="bill in current_account.account.bills" id="bill_{{bill.bill_id}}">
+				<a href="javascript:void(0);" ng-click="showBillDetail($index)" class="plain-link block-link" title="点击查看账单详情">
+					<i class="uk-icon-minus" ng-if="bill.bill_type==1" title="支出"></i>
+					<i class="uk-icon-plus" ng-if="bill.bill_type==2" title="收入"></i>&nbsp;&nbsp;
+					{{bill.child_bill_category_name}} {{"[" + bill.bill_remarks + "]"}}
+					<span style="float:right;" class="bill-count"><i class="uk-icon-yen"></i> {{bill.bill_sum}}</span>
+				</a>
+			</li>
+		</ul>
 	</div>
 </div>

@@ -86,6 +86,10 @@ note.config(['$stateProvider',function($stateProvider){
 		url:'/account',
 		parent:'accounts',
 		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account.html'}}
+	}).state('account_manage',{ //账户-账户管理
+		url:'/accountManage',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account_manage.html'}}
 	});
 }]);
 //----------------------------------用户中心-----------------------------------------------------

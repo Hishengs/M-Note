@@ -1,0 +1,162 @@
+<div class="account_manage" ng-controller="c_account_manage">
+	<div class="uk-panel">
+		<div class="uk-panel-header">
+			<div class="uk-panel-title">
+				账户管理
+				<span style="float:right;">
+					<button class="uk-button uk-button-primary" ng-click="vAddAccount()">添加账户</button>
+				</span>
+			</div>
+		</div>
+		<div class="uk-panel-content">
+			<table class="account_items uk-table uk-table-striped">
+				<thead>
+					<tr>
+						<th>一级账户</th>
+						<th>二级账户</th>
+						<th>余额</th>
+						<th>流入</th>
+						<th>流出</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="account_item in account_items" id="account_item_{{$index}}">
+					<tr ng-repeat="child_account in account_item.child_accounts">
+						<td ng-show="$first">
+						{{account_item.account_name}}
+						<!-- <button class="uk-button uk-button-danger" title="删除一级账户" ng-click="deleteAccount(account_item.account_id)">
+						<i class="uk-icon-trash"></i>
+						</button> -->
+						</td>
+						<td ng-hide="$first"></td>
+						<td>{{child_account.child_account_name}}</td>
+						<td>{{-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out}}</td>
+						<td>{{child_account.flow_in}}</td>
+						<td>{{child_account.flow_out}}</td>
+						<td>
+							
+							<button class="uk-button uk-button-primary uk-button-small" ng-click="vModifyChildAccount(child_account)" title="编辑二级账户">
+							<i class="uk-icon-edit"></i>-2
+							</button>
+							<button class="uk-button uk-button-danger uk-button-small" title="删除二级账户" ng-click="deleteChildAccount(child_account.child_account_id)">
+							<i class="uk-icon-trash"></i>-2
+							</button>
+							<button class="uk-button uk-button-danger uk-button-small" title="删除一级账户" ng-click="deleteAccount(account_item.account_id)" ng-show="$first">
+							<i class="uk-icon-trash"></i>-1
+							</button>
+							<button class="uk-button uk-button-primary uk-button-small" ng-click="vModifyAccount(account_item)" title="编辑一级账户" ng-show="$first">
+								<i class="uk-icon-edit"></i>-1
+							</button>
+							<button class="uk-button uk-button-primary uk-button-small" title="查看二级账户" ng-click="viewChildAccount(child_account.child_account_id)">
+							<i class="uk-icon-eye"></i>
+							</button>
+							
+						</td>
+					</tr> 
+				</tbody>
+				<tbody>
+					<tr>
+						<td><b>总计</b></td>
+						<td></td>
+						<td><b>{{sum.balance}}</b></td>
+						<td><b>{{sum.flow_in}}</b></td>
+						<td><b>{{sum.flow_out}}</b></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 添加账户 -->
+	<div class="uk-modal" id="account_add_modal">
+	<div class="uk-modal-dialog">
+
+	<div class="uk-modal-header">
+		<h3 style="display:inline-block;">添加账户</h3>
+		<span class="f-right">
+		</span>
+	</div>
+	<form class="uk-form">
+	<ul class="uk-list uk-list-striped">
+		<li>
+			<label>一级账户</label>
+			
+			<span class="bill_category f-right">
+	        <select class="uk-select" style="width:425px;" ng-model="added_account" ng-show="!is_self_defined" ng-options="account_item.account_id as account_item.account_name for account_item in account_items">
+	        </select>
+	        
+	        <input type="text" class="uk-input" style="width:425px;" placeholder="自定义一级账户" ng-show="is_self_defined" ng-model="added_account">
+
+	        <button type="button" class="uk-button uk-button-small" title="添加自定义一级账户" ng-click="switchAddSelfAccount()">
+	        	<i class="uk-icon-medium uk-icon-toggle-{{toggle_type}}"></i>
+	        </button>
+	      </span>
+		</li>
+		<li>
+			<label>二级账户</label>
+			<input type="text" class="uk-input f-right" style="width:480px;" ng-model="added_child_account.name" placeholder="二级账户名称">
+		</li>
+		<li>
+			<label>初始金额</label>
+			<input type="number" class="uk-input f-right" style="width:480px;" ng-model="added_child_account.default_balance" placeholder="二级账户初始金额">
+		</li>
+		<li>
+			<label>账户备注</label>
+			<input type="text" class="uk-input f-right" style="width:480px;" ng-model="added_child_account.remarks" placeholder="二级账户备注">
+		</li>
+	</ul>
+	</form>
+
+	<div class="uk-modal-footer">
+		<button class="uk-button uk-button-primary" ng-click="addAccount()">保存</button>
+	</div>
+
+	</div>
+	</div>
+	<!-- 修改一级账户 -->
+	<div class="uk-modal" id="account_modify_modal">
+		<div class="uk-modal-dialog">
+			<div class="uk-modal-header">修改一级账户</div>
+			<form class="uk-form">
+			<label>一级账户</label>
+			<span class="f-right">
+			<input type="text" class="uk-input" style="width:425px;" ng-model="modified_account.account_name" placeholder="一级账户名称">
+			</span>
+			</form>
+			<div class="uk-modal-footer">
+				<button class="uk-button uk-button-primary" ng-click="modifyAccount()">保存</button>
+			</div>
+		</div>
+	</div>
+	<!-- 修改二级账户 -->
+	<div class="uk-modal" id="child_account_modify_modal">
+		<div class="uk-modal-dialog">
+			<div class="uk-modal-header">修改二级账户</div>
+			<form class="uk-form">
+			<ul class="uk-list uk-list-striped">
+			<li>
+				<label>二级账户</label>
+				<span class="f-right">
+				<input type="text" class="uk-input" style="width:425px;" ng-model="modified_child_account.child_account_name" placeholder="二级账户名称">
+				</span>
+			</li>
+			<li>
+				<label>账户余额</label>
+				<span class="f-right">
+				<input type="number" class="uk-input" style="width:425px;" ng-model="modified_child_account.balance" placeholder="二级账户余额">
+				</span>
+			</li>
+			<li>
+				<label>账户备注</label>
+				<span class="f-right">
+				<input type="text" class="uk-input" style="width:425px;" ng-model="modified_child_account.child_account_remarks" placeholder="二级账户备注">
+				</span>
+			</li>
+			</ul>
+			</form>
+			<div class="uk-modal-footer">
+				<button class="uk-button uk-button-primary" ng-click="modifyChildAccount()">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
