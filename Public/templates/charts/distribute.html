@@ -5,6 +5,11 @@
 			<span class="f-right">
 				<!-- 条件选择 -->
 				<form class="uk-form display-inline-block">
+					<label>分布</label>
+					<select name="distribute_option" ng-model="distribute_option" class="uk-select distribute_option">
+						<option value="0">账户</option>
+						<option value="1">账单分类</option>
+					</select>
 					<label>开始日期</label>
 					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
 					<label>结束日期</label>

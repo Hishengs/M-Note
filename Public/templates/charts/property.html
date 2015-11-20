@@ -1,7 +1,7 @@
-<div class="charts-compare" ng-controller="c_charts_compare">
+<div class="property-trend" ng-controller="c_property_trend">
 	<div class="uk-panel">
 		<div class="uk-panel-header">
-			<span style="font-size:18px;">对比图</span>
+			<span style="font-size:18px;">资产趋势图</span>
 			<span class="f-right">
 				<!-- 条件选择 -->
 				<form class="uk-form display-inline-block">
@@ -15,9 +15,9 @@
 			<hr>
 		</div>
 		<div class="uk-panel-content display-inline-block">
-			<div class="uk-alert" ng-bind-html="charts_compare_tip | trustHtml" ng-show="charts_compare_tip"></div>
-			<!-- 收支对比图 -->
-			<div class="charts-compare-line margin-top-40 display-inline-block" id="charts-compare-pie" style="width:600px;height:500px;"></div>
+			<div class="uk-alert" ng-bind-html="charts_property_trend_tip | trustHtml" ng-show="charts_property_trend_tip"></div>
+			<!-- 资产趋势图 -->
+			<div class="charts-property-trend-line margin-top-40 display-inline-block" id="charts-property-trend-line" style="width:400px;height:500px;"></div>
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>

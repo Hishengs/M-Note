@@ -15,5 +15,9 @@ note.config(['$stateProvider',function($stateProvider){
 		url:'/trend',
 		parent:'charts',
 		views:{'charts_view':{templateUrl:templates_path+'/charts/trend.html'}}
+	}).state('property',{ //报表-资产趋势图
+		url:'/property',
+		parent:'charts',
+		views:{'charts_view':{templateUrl:templates_path+'/charts/property.html'}}
 	});
 }]);

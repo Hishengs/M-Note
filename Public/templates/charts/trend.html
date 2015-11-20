@@ -1,3 +1,32 @@
 <div class="charts-trend" ng-controller="c_charts_trend">
-	趋势图
+	<div class="uk-panel">
+		<div class="uk-panel-header">
+			<span style="font-size:18px;">趋势图</span>
+			<span class="f-right">
+				<!-- 条件选择 -->
+				<form class="uk-form display-inline-block">
+					<label>单位</label>
+					<select name="time_gap" ng-model="time_gap" class="uk-select time_gap">
+						<option value="0">天</option>
+						<option value="1">月</option>
+						<option value="2">年</option>
+					</select>
+					<label>开始日期</label>
+					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+					<label>结束日期</label>
+					<input type="text" name="end_date" ng-model="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+				</form>
+				<button class="uk-button uk-button-promary" ng-click="query()">查询</button>
+			</span>
+			<hr>
+		</div>
+		<div class="uk-panel-content display-inline-block">
+			<div class="uk-alert" ng-bind-html="charts_trend_tip | trustHtml" ng-show="charts_trend_tip"></div>
+			<!-- 支出趋势图 -->
+			<div class="charts-trend-line margin-top-40 display-inline-block" id="charts-trend-line-outcome" style="width:400px;height:500px;"></div>
+			<!-- 收入趋势图 -->
+			<div class="charts-trend-line margin-top-40 display-inline-block" id="charts-trend-line-income" style="width:400px;height:500px;"></div>
+		</div>
+		<div class="uk-panel-footer"></div>
+	</div>
 </div>

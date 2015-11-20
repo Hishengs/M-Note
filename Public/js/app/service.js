@@ -280,4 +280,20 @@ note.service('Charts',function($http){
 			data:{'cdt':cdt}
 		});
 	}
+	//获取收支趋势数据
+	this.getTrendData = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/get_trend_data.html",
+			data:{'cdt':cdt}
+		});
+	}
+	//资产趋势数据
+	this.getPropertyTrendData = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/get_property_trend_data.html",
+			data:{'cdt':cdt}
+		});
+	}
 });
