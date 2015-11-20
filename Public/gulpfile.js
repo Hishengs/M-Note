@@ -23,7 +23,7 @@ gulp.task('angular', function() {
 //合并Controller
 gulp.task('controller-concat',function(){
 	gulp.src(['./js/app/controller/commonController.js','./js/app/controller/loginRegisterController.js',
-		'./js/app/controller/billController.js','./js/app/controller/accountController.js',
+		'./js/app/controller/billController.js','./js/app/controller/accountController.js','./js/app/controller/chartsController.js',
     './js/app/controller/userController.js','./js/app/controller/routerController.js'])
 	.pipe(concat('controller.js'))
 	.pipe(gulp.dest('./js/app/'));
@@ -39,7 +39,7 @@ gulp.task('state-concat',function(){
 //合并Service
 gulp.task('service-concat',function(){
     gulp.src(['./js/app/service/validatorService.js','./js/app/service/userService.js','./js/app/service/billService.js',
-        './js/app/service/accountService.js'])
+        './js/app/service/accountService.js','./js/app/service/chartsService.js'])
     .pipe(concat('service.js'))
     .pipe(gulp.dest('./js/app/'));
 });

@@ -1,0 +1,24 @@
+<div class="charts-compare" ng-controller="c_charts_compare">
+	<div class="uk-panel">
+		<div class="uk-panel-header">
+			<span style="font-size:18px;">对比图</span>
+			<span class="f-right">
+				<!-- 条件选择 -->
+				<form class="uk-form display-inline-block">
+					<label>开始日期</label>
+					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+					<label>结束日期</label>
+					<input type="text" name="end_date" ng-model="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+				</form>
+				<button class="uk-button uk-button-promary" ng-click="query()">查询</button>
+			</span>
+			<hr>
+		</div>
+		<div class="uk-panel-content display-inline-block">
+			<div class="uk-alert" ng-bind-html="charts_compare_tip | trustHtml" ng-show="charts_compare_tip"></div>
+			<!-- 收支对比图 -->
+			<div class="charts-compare-line margin-top-40 display-inline-block" id="charts-compare-line" style="width:600px;height:500px;"></div>
+		</div>
+		<div class="uk-panel-footer"></div>
+	</div>
+</div>

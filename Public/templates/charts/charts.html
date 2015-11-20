@@ -1,13 +1,13 @@
-<div class="charts uk-animation-slide-right uk-grid" ng-controller="c_charts">
+<div class="charts uk-grid" ng-controller="c_charts">
 <div class="uk-width-1-6">
 	<ul class="uk-tab uk-tab-left">
 	    <li ng-class="{'uk-active': current_charts_tab=='budget'}" ng-click="switchChartsTab('budget')"><a href="javascript:void(0);" class="plain-link">本月预算</a></li>
 	    <li ng-class="{'uk-active': current_charts_tab=='bill_query'}" ng-click="switchChartsTab('bill_query')"><a href="javascript:void(0);" class="plain-link">账单查询</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='budget1'}" ng-click="switchChartsTab('budget1')"><a href="javascript:void(0);" class="plain-link">收支趋势图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='budget2'}" ng-click="switchChartsTab('budget2')"><a href="javascript:void(0);" class="plain-link">收支分布图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='budget3'}" ng-click="switchChartsTab('budget3')"><a href="javascript:void(0);" class="plain-link">收支对比图</a></li>
+	    <li ng-class="{'uk-active': current_charts_tab=='trend'}" ng-click="switchChartsTab('trend')"><a href="javascript:void(0);" class="plain-link">收支趋势图</a></li>
+	    <li ng-class="{'uk-active': current_charts_tab=='distribute'}" ng-click="switchChartsTab('distribute')"><a href="javascript:void(0);" class="plain-link">收支分布图</a></li>
+	    <li ng-class="{'uk-active': current_charts_tab=='compare'}" ng-click="switchChartsTab('compare')"><a href="javascript:void(0);" class="plain-link">收支对比图</a></li>
 	    <li ng-class="{'uk-active': current_charts_tab=='budget4'}" ng-click="switchChartsTab('budget4')"><a href="javascript:void(0);" class="plain-link">资产趋势图</a></li>
 	</ul>
 </div>
-<div class="accounts_view uk-width-5-6" ui-view="charts_view"></div>
+<div class="charts_view uk-width-5-6" ui-view="charts_view"></div>
 </div>

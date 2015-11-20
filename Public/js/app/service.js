@@ -199,6 +199,9 @@ note.service('Account',function($http){
 		});
 	}
 	//删 type1删除一级账户,type2删除二级账户
+	/**
+	如果删除的二级账户所属的一级账户仅有该二级账户，则连一级账户也一并删除
+	*/
 	this.delete = function(account_id,type){
 		return $http({
 			method:'POST',
@@ -251,6 +254,30 @@ note.service('Account',function($http){
 		return $http({
 			method:'GET',
 			url:home_path+"/Account/get_account_list.html"
+		});
+	}
+});
+
+/*报表信息
+增删查改
+by Hisheng
+at 2015-11-19
+**/
+note.service('Charts',function($http){
+	//获取分布图数据
+	this.getDistributeData = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/get_distribute_data.html",
+			data:{'cdt':cdt}
+		});
+	}
+	//获取收支对比数据
+	this.getCompareData = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/get_compare_data.html",
+			data:{'cdt':cdt}
 		});
 	}
 });
