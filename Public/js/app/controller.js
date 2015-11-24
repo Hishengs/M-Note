@@ -282,6 +282,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 
 			//获取账单分类(默认是支出分类)
 			Bill.getCategoryInfo(1).success(function(res){
+				console.log(res);
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
@@ -442,6 +443,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		if($scope.current_bill_view == 'outcome'){
 			//获取账单分类
 			Bill.getCategoryInfo(2).success(function(res){
+				console.log(res);
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
@@ -457,6 +459,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		else {
 			//获取账单分类
 			Bill.getCategoryInfo(1).success(function(res){
+				console.log(res);
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
@@ -524,6 +527,7 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 				//获取用户账单分类-默认outcome支出
 				if($rootScope.previous_view == 'outcome'){
 					$rootScope.bill_category_items = Bill.getCategoryInfo(1).success(function(res){
+						console.log(res);
 						$rootScope.bill_category_items = res.bill_category_items;
 						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
@@ -532,6 +536,7 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 					});
 				}else{
 					$rootScope.bill_category_items = Bill.getCategoryInfo(2).success(function(res){
+						console.log(res);
 						$rootScope.bill_category_items = res.bill_category_items;
 						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
@@ -675,6 +680,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 	$scope.modified_child_bill_category_balance = $scope.modified_child_bill_category_remarks = "";
 
 	Bill.getCategoryInfo(1).success(function(res){
+		console.log(res);
 		if(res.error === 0){
 			$scope.bill_category_items = res.bill_category_items;
 			$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
@@ -685,6 +691,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 		$scope.bill_category_type = $scope.bill_category_type==1?2:1;
 		$scope.bill_category_title =  $scope.bill_category_title=="支出分类"?"收入分类":"支出分类";
 		Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
+			console.log(res);
 			if(res.error === 0){
 				$scope.bill_category_items = res.bill_category_items;
 				$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
@@ -694,6 +701,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 	//更新分类信息
 	$scope.updateCategory = function(){
 		Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
+			console.log(res);
 			if(res.error === 0){
 				$scope.bill_category_items = res.bill_category_items;
 				$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;

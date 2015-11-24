@@ -53,7 +53,7 @@ class BillController extends Controller {
             }
         }
         $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));*/
-        $cdt  = array('bill_type'=>$type,'bill_category_user_id'=>$user_id);
+        $cdt  = array('bill_type'=>1,'bill_category_user_id'=>$user_id);
         $bill_category_items = $this->bill_category_model->where($cdt)->relation('child_bill_categories')->select();
         $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));
     }
