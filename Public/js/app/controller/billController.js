@@ -95,7 +95,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		$rootScope.account_items = res.account_items;
 		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
 
-		$scope.bill.account = $rootScope.account_items[0].account.account_id;
+		$scope.bill.account = $rootScope.account_items[0].account_id;
 		$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
 		
 	});
@@ -118,7 +118,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 					console.log(res);
 					$rootScope.bill_category_items = res.bill_category_items;
 					for(var i=0;i<$rootScope.bill_category_items.length;i++){
-						if($rootScope.bill_category_items[i].bill_category.bill_category_id == $rootScope.current_bill.bill_category_id)break;
+						if($rootScope.bill_category_items[i].bill_category_id == $rootScope.current_bill.bill_category_id)break;
 					}
 					$rootScope.child_bill_categories = $rootScope.bill_category_items[i].child_bill_categories;
 				});
@@ -128,7 +128,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 					$rootScope.bill_category_items = res.bill_category_items;
 					//$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 					for(var i=0;i<$rootScope.bill_category_items.length;i++){
-						if($rootScope.bill_category_items[i].bill_category.bill_category_id == $rootScope.current_bill.bill_category_id)break;
+						if($rootScope.bill_category_items[i].bill_category_id == $rootScope.current_bill.bill_category_id)break;
 					}
 					$rootScope.child_bill_categories = $rootScope.bill_category_items[i].child_bill_categories;
 				});
@@ -149,7 +149,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 
 			//更新账户分类
 			for(var i=0;i<$rootScope.account_items.length;i++){
-				if($rootScope.account_items[i].account.account_id == $rootScope.current_bill.account_id)break;
+				if($rootScope.account_items[i].account_id == $rootScope.current_bill.account_id)break;
 			}
 			$rootScope.child_accounts = $rootScope.account_items[i].child_accounts;
 			$scope.bill.account = $rootScope.current_bill.account_id;
@@ -172,7 +172,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+				$scope.bill.category = $rootScope.bill_category_items[0].bill_category_id;
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 			});
 
@@ -200,7 +200,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		//遍历获取当前一级分类的数组下标
 		var index = 0;
 		for (var i=0; i<$rootScope.account_items.length; i++) {
-			if($scope.bill.account == $rootScope.account_items[i].account.account_id){
+			if($scope.bill.account == $rootScope.account_items[i].account_id){
 				index = i;
 				break;
 			}
@@ -214,7 +214,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		//遍历获取当前一级分类的数组下标
 		var index = 0;
 		for (var i=0; i<$rootScope.bill_category_items.length; i++) {
-			if($scope.bill.category == $rootScope.bill_category_items[i].bill_category.bill_category_id){
+			if($scope.bill.category == $rootScope.bill_category_items[i].bill_category_id){
 				index = i;
 				break;
 			}
@@ -323,7 +323,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 		
 		//重置账户选项
 		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-		$scope.bill.account = $rootScope.account_items[0].account.account_id;
+		$scope.bill.account = $rootScope.account_items[0].account_id;
 		$scope.bill.child_account = $rootScope.child_accounts[0].child_account_id;
 		//更新并重置账单分类选项
 		if($scope.current_bill_view == 'outcome'){
@@ -332,7 +332,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+				$scope.bill.category = $rootScope.bill_category_items[0].bill_category_id;
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 			});
 			$scope.bill_type = 2;
@@ -347,7 +347,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				$rootScope.bill_category_items = res.bill_category_items;
 				$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
 
-				$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+				$scope.bill.category = $rootScope.bill_category_items[0].bill_category_id;
 				$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 			});
 			$scope.bill_type = 1;
@@ -384,7 +384,7 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 	if($rootScope.previous_view == 'outcome')
 		$scope.add_category_title = "支出";
 	else $scope.add_category_title = "收入";
-	$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+	$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
 	//添加自定义一级分类
 	$scope.switchAddSelfCategory = function(){
 		$scope.ifAddSelfCategory = $scope.ifAddSelfCategory?false:true;
@@ -393,7 +393,7 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 			$scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-on uk-icon-medium"></i>';
 		}
 		else{
-			$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+			$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
 			$scope.add_self_category_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 		}
 	}
@@ -413,16 +413,16 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 					$rootScope.bill_category_items = Bill.getCategoryInfo(1).success(function(res){
 						$rootScope.bill_category_items = res.bill_category_items;
 						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
+						$scope.bill.category = $rootScope.bill_category_items[0].bill_category_id;
 						$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 					});
 				}else{
 					$rootScope.bill_category_items = Bill.getCategoryInfo(2).success(function(res){
 						$rootScope.bill_category_items = res.bill_category_items;
 						$rootScope.child_bill_categories = $rootScope.bill_category_items[0].child_bill_categories;
-						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
-						$scope.bill.category = $rootScope.bill_category_items[0].bill_category.bill_category_id;
+						$scope.bill_category.bill_category = $rootScope.bill_category_items[0].bill_category_id;
+						$scope.bill.category = $rootScope.bill_category_items[0].bill_category_id;
 						$scope.bill.child_category = $rootScope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
 					});
 				}
@@ -438,7 +438,7 @@ note.controller('c_add_bill_category',function($scope,$rootScope,$state,$http,Bi
 //添加账户
 note.controller('c_add_account',function($scope,$rootScope,$state,$http,Account){
 	//设置添加账户的默认值
-	$scope.added_account = $rootScope.account_items[0].account.account_id;
+	$scope.added_account = $rootScope.account_items[0].account_id;
 	$scope.added_child_account_name = "";
 	$scope.added_child_account_balance = $scope.added_child_account_remarks = "";
 	$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
@@ -452,7 +452,7 @@ note.controller('c_add_account',function($scope,$rootScope,$state,$http,Account)
 			$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-on uk-icon-medium"></i>';
 		}
 		else{
-			$scope.added_account = $rootScope.account_items[0].account.account_id;
+			$scope.added_account = $rootScope.account_items[0].account_id;
 			$scope.add_self_account_btn_icon = '<i class="uk-icon-toggle-off uk-icon-medium"></i>';
 		}
 	}
@@ -473,8 +473,8 @@ note.controller('c_add_account',function($scope,$rootScope,$state,$http,Account)
 				Account.getAccounts().success(function(res){
 					$rootScope.account_items = res.account_items;
 					$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
-					$scope.added_account = $rootScope.account_items[0].account.account_id;
-					$scope.bill.account = $rootScope.account_items[0].account.account_id;
+					$scope.added_account = $rootScope.account_items[0].account_id;
+					$scope.bill.account = $rootScope.account_items[0].account_id;
 					$scope.bill.child_account = $rootScope.account_items[0].child_accounts[0].child_account_id;
 				});
 				hMessage("添加成功！");
@@ -564,7 +564,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 	Bill.getCategoryInfo(1).success(function(res){
 		if(res.error === 0){
 			$scope.bill_category_items = res.bill_category_items;
-			$scope.added_bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+			$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
 		}
 	});
 	//切换分类
@@ -574,7 +574,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 		Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
 			if(res.error === 0){
 				$scope.bill_category_items = res.bill_category_items;
-				$scope.added_bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+				$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
 			}
 		});
 	}
@@ -583,7 +583,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 		Bill.getCategoryInfo($scope.bill_category_type).success(function(res){
 			if(res.error === 0){
 				$scope.bill_category_items = res.bill_category_items;
-				$scope.added_bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+				$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
 			}
 		});
 	}

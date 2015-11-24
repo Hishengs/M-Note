@@ -37,7 +37,7 @@ class BillController extends Controller {
         $type = I('get.type');
         //$type = $type=='outcome'?1:2;
         $user_id = session('user_id');
-        $bill_category_items = array();
+        /*$bill_category_items = array();
         //选择所有的账户一级分类
         $sql = "SELECT * FROM bill_category WHERE bill_type=".$type." AND bill_category_user_id=".$user_id;
         $bill_categories = $this->bill_category_model->query($sql);
@@ -52,6 +52,9 @@ class BillController extends Controller {
                 array_push($bill_category_items, $bill_category_item);
             }
         }
+        $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));*/
+        $cdt  = array('bill_type'=>$type,'bill_category_user_id'=>$user_id);
+        $bill_category_items = $this->bill_category_model->where($cdt)->relation('child_bill_categories')->select();
         $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));
     }
     //新增账单

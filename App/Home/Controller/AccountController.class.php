@@ -17,7 +17,7 @@ class AccountController extends Controller {
     //获取用户相关的账户信息
     public function get_user_accounts(){
         $user_id = session('user_id');
-        $account_items = array();
+        /*$account_items = array();
         //选择所有的账户类型
         $sql = "SELECT * FROM account WHERE account_user_id=".$user_id;
         $accounts = $this->account_model->query($sql);
@@ -31,6 +31,9 @@ class AccountController extends Controller {
         		array_push($account_items, $account_item);
         	}
         }
+        $this->ajaxReturn(array('error'=>0,'account_items'=>$account_items));*/
+        $cdt = array('account_user_id'=>$user_id);
+        $account_items = $this->account_model->where($cdt)->relation('child_accounts')->select();
         $this->ajaxReturn(array('error'=>0,'account_items'=>$account_items));
     }
     //获取单个账户的信息，联表查询流入流出信息

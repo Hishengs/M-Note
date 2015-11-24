@@ -13,7 +13,7 @@
 		<label>分类</label>
 		<span class="bill_category f-right">
 			<!-- 一级选项 -->
-			<select class="uk-select" name="category" style="width:229px;" ng-model="bill.category" ng-change="billCategoryTypeChange()" ng-options="bill_category_item.bill_category.bill_category_id as bill_category_item.bill_category.bill_category_name for bill_category_item in bill_category_items"></select>
+			<select class="uk-select" name="category" style="width:229px;" ng-model="bill.category" ng-change="billCategoryTypeChange()" ng-options="bill_category_item.bill_category_id as bill_category_item.bill_category_name for bill_category_item in bill_category_items"></select>
 				
 			<!-- 二级选项 -->
 			<select class="uk-select" name="child_category" style="width:230px;" ng-model="bill.child_category" ng-options="child_bill_category.child_bill_category_id as child_bill_category.child_bill_category_name for child_bill_category in child_bill_categories"></select>
@@ -25,7 +25,7 @@
 		<label>账户</label>
 		<span class="bill_account f-right">
 			<!-- 一级账户 -->
-			<select class="uk-select" name="account" style="width:229px;" ng-model="bill.account" ng-change="billAccountTypeChange()" ng-options="account_item.account.account_id as account_item.account.account_name for account_item in account_items"></select>
+			<select class="uk-select" name="account" style="width:229px;" ng-model="bill.account" ng-change="billAccountTypeChange()" ng-options="account_item.account_id as account_item.account_name for account_item in account_items"></select>
 
 			<!-- 二级账户 -->
 			<select class="uk-select" name="child_account" style="width:230px;" ng-model="bill.child_account" ng-options="child_account.child_account_id as child_account.child_account_name for child_account in child_accounts"></select>

@@ -21,7 +21,7 @@ gulp.task('angular', function() {
     .pipe(gulp.dest('./js/dist/'));
 });
 //合并Controller
-gulp.task('controller-concat',function(){
+gulp.task('ng-controller',function(){
 	gulp.src(['./js/app/controller/commonController.js','./js/app/controller/loginRegisterController.js',
 		'./js/app/controller/billController.js','./js/app/controller/accountController.js','./js/app/controller/chartsController.js',
     './js/app/controller/userController.js','./js/app/controller/routerController.js'])
@@ -29,7 +29,7 @@ gulp.task('controller-concat',function(){
 	.pipe(gulp.dest('./js/app/'));
 });
 //合并State
-gulp.task('state-concat',function(){
+gulp.task('ng-state',function(){
     gulp.src(['./js/app/state/homeState.js','./js/app/state/billState.js',
         './js/app/state/chartsState.js','./js/app/state/accountState.js',
     './js/app/state/userState.js'])
@@ -37,7 +37,7 @@ gulp.task('state-concat',function(){
     .pipe(gulp.dest('./js/app/'));
 });
 //合并Service
-gulp.task('service-concat',function(){
+gulp.task('ng-service',function(){
     gulp.src(['./js/app/service/validatorService.js','./js/app/service/userService.js','./js/app/service/billService.js',
         './js/app/service/accountService.js','./js/app/service/chartsService.js'])
     .pipe(concat('service.js'))
