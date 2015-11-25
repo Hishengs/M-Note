@@ -15,23 +15,8 @@ class AccountController extends Controller {
     }
 
     //获取用户相关的账户信息
-    public function get_user_accounts(){
+    public function get_basic_account_items(){
         $user_id = session('user_id');
-        /*$account_items = array();
-        //选择所有的账户类型
-        $sql = "SELECT * FROM account WHERE account_user_id=".$user_id;
-        $accounts = $this->account_model->query($sql);
-        //根据账户类型遍历子账户
-        foreach ($accounts as $key => $account) {
-        	$cdt['account_id'] = $account['account_id'];
-        	$cdt['account_user_id'] = $user_id;
-        	$child_accounts = $this->child_account_model->where($cdt)->select();
-        	if($child_accounts){
-        		$account_item = array('account'=>$account,'child_accounts'=>$child_accounts);
-        		array_push($account_items, $account_item);
-        	}
-        }
-        $this->ajaxReturn(array('error'=>0,'account_items'=>$account_items));*/
         $cdt = array('account_user_id'=>$user_id);
         $account_items = $this->account_model->where($cdt)->relation('child_accounts')->select();
         $this->ajaxReturn(array('error'=>0,'account_items'=>$account_items));
@@ -83,7 +68,7 @@ class AccountController extends Controller {
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'已存在同名的二级账户！'));
     }
     //获取账户列表
-    public function get_account_list(){
+    public function get_detailed_account_items(){
         $cdt = array('account_user_id'=>$this->user_id);
         $accounts = $this->account_model->relation('child_accounts')->where($cdt)->select();
         foreach ($accounts as $key => $account) {
