@@ -234,11 +234,18 @@ note.service('Account',function($http){
 			'child_account_balance':modified_child_account.child_account_balance,'child_account_remarks':modified_child_account.child_account_remarks}
 		});
 	}
-	//获取用户的账户信息
-	this.getAccounts = function(){
+	//获取基本的用户账户信息[一二级账户]，不包括余额，流入流出
+	this.getBasicAccountItems = function(){
 		return $http({
-			method:'POST',
-			url:home_path+"/Account/get_user_accounts.html"
+			method:'GET',
+			url:home_path+"/Account/get_basic_account_items.html"
+		});
+	}
+	//获取详细的账户信息[一二级账户]，包括余额，流入流出 
+	this.getDetailedAccountItems = function(){
+		return $http({
+			method:'GET',
+			url:home_path+"/Account/get_detailed_account_items.html"
 		});
 	}
 	//获取单个账户的信息，包括余额，流入，流出(联表查询)
@@ -249,13 +256,7 @@ note.service('Account',function($http){
 			data:{'account_id':account_id}
 		});
 	}
-	//获取账户列表
-	this.getAccountList = function(){
-		return $http({
-			method:'GET',
-			url:home_path+"/Account/get_account_list.html"
-		});
-	}
+	
 });
 
 /*报表信息

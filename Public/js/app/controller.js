@@ -203,7 +203,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 	});
 
 	//获取账户分类
-	Account.getAccounts().success(function(res){
+	Account.getBasicAccountItems().success(function(res){
 		console.log(res);
 		$rootScope.account_items = res.account_items;
 		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
@@ -588,7 +588,7 @@ note.controller('c_add_account',function($scope,$rootScope,$state,$http,Account)
 		}).success(function(res){
 			if(res.error === 0){
 				//刷新账户分类信息
-				Account.getAccounts().success(function(res){
+				Account.getBasicAccountItems().success(function(res){
 					$rootScope.account_items = res.account_items;
 					$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
 					$scope.added_account = $rootScope.account_items[0].account_id;
@@ -819,7 +819,7 @@ note.controller('c_accounts',function($scope,$rootScope,$state,Account){
 	$scope.current_account = {};
 	
 	//获取账户分类
-	Account.getAccounts().success(function(res){
+	Account.getBasicAccountItems().success(function(res){
 		$rootScope.account_items = res.account_items;
 		$rootScope.child_accounts = $rootScope.account_items[0].child_accounts;
 	});
@@ -881,7 +881,7 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 
 	$scope.updateAccountList = function(){
 		//获取账户列表
-		Account.getAccountList().success(function(res){
+		Account.getDetailedAccountItems().success(function(res){
 			console.log(res);
 			if(res.error === 0){
 				$scope.account_items = res.account_list;
