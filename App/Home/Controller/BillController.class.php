@@ -37,23 +37,7 @@ class BillController extends Controller {
         $type = I('get.type');
         //$type = $type=='outcome'?1:2;
         $user_id = session('user_id');
-        /*$bill_category_items = array();
-        //选择所有的账户一级分类
-        $sql = "SELECT * FROM bill_category WHERE bill_type=".$type." AND bill_category_user_id=".$user_id;
-        $bill_categories = $this->bill_category_model->query($sql);
-        //根据一级分类遍历二级分类
-        foreach ($bill_categories as $key => $bill_category) {
-            $cdt['bill_category_id'] = $bill_category['bill_category_id'];
-            $cdt['bill_category_user_id'] = $user_id;
-            $cdt['bill_type'] = $type;
-            $child_bill_categories = $this->child_bill_category_model->where($cdt)->select();
-            if($child_bill_categories){
-                $bill_category_item = array('bill_category'=>$bill_category,'child_bill_categories'=>$child_bill_categories);
-                array_push($bill_category_items, $bill_category_item);
-            }
-        }
-        $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));*/
-        $cdt  = array('bill_type'=>1,'bill_category_user_id'=>$user_id);
+        $cdt  = array('bill_type'=>$type,'bill_category_user_id'=>$user_id);
         $bill_category_items = $this->bill_category_model->where($cdt)->relation('child_bill_categories')->select();
         $this->ajaxReturn(array('error'=>0,'bill_category_items'=>$bill_category_items));
     }
@@ -158,15 +142,15 @@ class BillController extends Controller {
         $start_date = I('post.start_date');
         $end_date = I('post.end_date');
         $bill_type = I('post.bill_type');
-
-        //$bill_category_id = I('post.bill_category_id');
-        //$bill_account_id = I('post.bill_account_id');
+        $bill_category_id = I('post.bill_category');
+        $bill_account_id = I('post.bill_account');
         if(!empty($start_date) && !empty($end_date) && !empty($bill_type)){
             if(intval($bill_type)===3)
                 $sql = " AND DATE_FORMAT(bill.bill_time,'%Y-%m-%d') BETWEEN '$start_date' AND '$end_date'";
             else 
                 $sql = " AND DATE_FORMAT(bill.bill_time,'%Y-%m-%d') BETWEEN '".$start_date."' AND '".$end_date."' AND bill.bill_type=".$bill_type;
-            //$bills = $this->bill_model->where($sql)->select();
+            if(!empty($bill_category_id))$sql = $sql." AND bill.bill_category_id=".$bill_category_id;
+            if(!empty($bill_account_id))$sql = $sql." AND bill.bill_account_id=".$bill_account_id;
             $bills = $this->bill_model->join("child_account on bill.bill_account_id = child_account.child_account_id")
             ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")
             ->where("bill.bill_user_id=".$this->user_id.$sql)->select();

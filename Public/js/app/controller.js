@@ -634,17 +634,82 @@ note.controller('c_bill_details',function($scope,$rootScope,$state,$http,Bill){
 	}
 });
 //账单查询
-note.controller('c_bill_query',function($scope,$rootScope,$state,Bill){
+note.controller('c_bill_query',function($scope,$rootScope,$state,Bill,Account){
 	$scope.bill_query_tip_show = false;
 	$scope.bill_query_tip = "";
 	$scope.bill_type = 3;
 	$scope.start_date = $scope.end_date = null;
+	$scope.bill_account = {account:0,child_account:0};
+	$scope.bill_account_selected = false;
+	$scope.bill_category_selected = false;
+	$scope.bill_category = {category:0,child_category:0};
 	$rootScope.bills = {};
+	//获取账户分类
+	Account.getBasicAccountItems().success(function(res){
+		$scope.account_items = res.account_items;
+		$scope.child_accounts = $scope.account_items[0].child_accounts;
+
+		$scope.bill_account.account = $scope.account_items[0].account_id;
+		$scope.bill_account.child_account = $scope.account_items[0].child_accounts[0].child_account_id;
+		
+	});
+	//获取账单分类(默认是支出分类)
+	Bill.getCategoryInfo(1).success(function(res){
+		console.log(res);
+		$scope.bill_category_items = res.bill_category_items;
+		$scope.child_bill_categories = $scope.bill_category_items[0].child_bill_categories;
+
+		$scope.bill_category.category = $scope.bill_category_items[0].bill_category_id;
+		$scope.bill_category.child_category = $scope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
+	});
+	//监听账单类型
+	$scope.$watch('bill_type',function(newValue,oldValue){
+		console.log("bill type changed:"+newValue);
+		if(newValue%2 !== 0){
+			Bill.getCategoryInfo(1).success(function(res){
+				console.log(res);
+				$scope.bill_category_items = res.bill_category_items;
+				$scope.child_bill_categories = $scope.bill_category_items[0].child_bill_categories;
+
+				$scope.bill_category.category = $scope.bill_category_items[0].bill_category_id;
+				$scope.bill_category.child_category = $scope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
+			});
+		}else{
+			Bill.getCategoryInfo(2).success(function(res){
+				console.log(res);
+				$scope.bill_category_items = res.bill_category_items;
+				$scope.child_bill_categories = $scope.bill_category_items[0].child_bill_categories;
+
+				$scope.bill_category.category = $scope.bill_category_items[0].bill_category_id;
+				$scope.bill_category.child_category = $scope.bill_category_items[0].child_bill_categories[0].child_bill_category_id;
+			});
+		}
+	});
+	//监听一级账户变化
+	$scope.$watch('bill_account.account',function(newValue,oldValue){
+		for(var i=0;i<$scope.account_items.length;i++){
+			if(newValue == $scope.account_items[i].account_id){
+				$scope.child_accounts = $scope.account_items[i].child_accounts;
+				$scope.bill_account.child_account = $scope.account_items[i].child_accounts[0].child_account_id;
+			}
+		}
+	});
+	//监听一级分类变化
+	$scope.$watch('bill_category.category',function(newValue,oldValue){
+		for(var i=0;i<$scope.bill_category_items.length;i++){
+			if(newValue == $scope.bill_category_items[i].bill_category_id){
+				$scope.child_bill_categories = $scope.bill_category_items[i].child_bill_categories;
+				$scope.bill_category.child_category = $scope.bill_category_items[i].child_bill_categories[0].child_bill_category_id;
+			}
+		}
+	});
 	//查询
 	$scope.query = function(){
 		$scope.bill_query_tip_show = true;
 		$scope.bill_query_tip = "<i class='uk-icon-spinner'></i> 拼命查询中...";
-		var queryCdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'bill_type':$scope.bill_type};
+		var queryCdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'bill_type':$scope.bill_type,
+		'bill_account':$scope.bill_account_selected?$scope.bill_account.child_account:null,
+		'bill_category':$scope.bill_category_selected&&$scope.bill_type!==3?$scope.bill_category.child_category:null};
 		console.log(queryCdt);
 		Bill.query(queryCdt).success(function(res){
 			console.log(res);
