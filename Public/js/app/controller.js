@@ -882,6 +882,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 //c_accounts
 note.controller('c_accounts',function($scope,$rootScope,$state,Account){
 	$scope.current_account = {};
+	$scope.current_accounts_tab = 'account_manage';
 	
 	//获取账户分类
 	Account.getBasicAccountItems().success(function(res){
@@ -1057,6 +1058,51 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 		$rootScope.current_account_id = account_id;
 		console.log("account_id:"+account_id);
 		$state.go('account');
+	}
+});
+//转账
+note.controller('c_account_transfer',function($scope,$rootScope,$state,Account){
+	$scope.out_account = {items:{},child_accounts:{},account:null,child_account:null};
+	$scope.in_account = {items:{},child_accounts:{},account:null,child_account:null};
+	$scope.transfer_num = null;
+	$scope.transfer_remarks = null;
+	//获取账户分类
+	Account.getBasicAccountItems().success(function(res){
+		$scope.out_account.account_items = $scope.in_account.account_items = res.account_items;
+		$scope.out_account.child_accounts = $scope.in_account.child_accounts = res.account_items[0].child_accounts;
+		$scope.out_account.account = $scope.in_account.account = $rootScope.account_items[0].account_id;
+		$scope.out_account.child_account = $scope.in_account.child_account = $rootScope.child_accounts[0].child_account_id;
+		//Listener
+		$scope.$watch('out_account.account',function(newV,oldV){
+			for(var i=0;i<$scope.out_account.account_items.length;i++){
+				if(newV === $scope.out_account.account_items[i].account_id){
+					$scope.out_account.child_accounts = $scope.out_account.account_items[i].child_accounts;
+					$scope.out_account.child_account = $scope.out_account.child_accounts[0].child_account_id;
+				}
+			}
+		});
+		$scope.$watch('in_account.account',function(newV,oldV){
+			for(var i=0;i<$scope.in_account.account_items.length;i++){
+				if(newV === $scope.in_account.account_items[i].account_id){
+					$scope.in_account.child_accounts = $scope.in_account.account_items[i].child_accounts;
+					$scope.in_account.child_account = $scope.in_account.child_accounts[0].child_account_id;
+				}
+			}
+		});
+	});
+	$scope.transfer = function(){
+		var cdt = {out_account:$scope.out_account.child_account,in_account:$scope.in_account.child_account,transfer_num:$scope.transfer_num,transfer_remarks:$scope.transfer_remarks};
+		if(cdt.out_account === cdt.in_account){hMessage('不能在同一个账户上进行转账！');return;}
+		if(typeof cdt.transfer_num !== "number"){hMessage('金额只能为数字！');return;}
+		if(cdt.transfer_num <= 0){hMessage('金额只能为正数！');return;}
+		
+		console.log(cdt);
+		Account.transfer(cdt).success(function(res){
+			console.log(res);
+			if(res.error === 0){
+				hMessage('转账成功！');
+			}else hMessage(res.msg);
+		});
 	}
 });
 //----------------报表控制器--------------------

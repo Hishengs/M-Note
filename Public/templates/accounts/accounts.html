@@ -13,8 +13,14 @@
             </ul>
         </div>
       </li> -->
-      <li>
-        <a href="javascript:void(0);" ui-sref="account_manage" class="plain-link" ng-class="{'uk-active': current_accounts_tab=='account_manage'}" ng-click="switchAccountsTab('account_manage')">账户管理</a>
+      <li ng-class="{'uk-active': current_accounts_tab=='account_manage'}" ng-click="switchAccountsTab('account_manage')">
+        <a href="javascript:void(0);" ui-sref="account_manage" class="plain-link" >账户管理</a>
+      </li>
+      <li ng-class="{'uk-active': current_accounts_tab=='account_transfer'}" ng-click="switchAccountsTab('account_transfer')">
+        <a href="javascript:void(0);" class="plain-link">转账</a>
+      </li>
+      <li ng-class="{'uk-active': current_accounts_tab=='account_transfer_query'}" ng-click="switchAccountsTab('account_transfer_query')">
+        <a href="javascript:void(0);" class="plain-link">转账查询</a>
       </li>
 	</ul>
 </div>

@@ -12,8 +12,16 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'accounts',
 		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account.html'}}
 	}).state('account_manage',{ //账户-账户管理
-		url:'/accountManage',
+		url:'/manage',
 		parent:'accounts',
-		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account_manage.html'}}
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/manage.html'}}
+	}).state('account_transfer',{ //账户-转账
+		url:'/transfer',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/transfer.html'}}
+	}).state('account_transfer_query',{ //账户-转账查询
+		url:'/transfer/query',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/transfer_query.html'}}
 	});
 }]);

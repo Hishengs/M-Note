@@ -1,0 +1,41 @@
+<!-- 转账 -->
+<div class="account_transfer" ng-controller="c_account_transfer">
+	<div class="uk-panel">
+		<div class="uk-panel uk-panel-header">
+			<div class="uk-panel-title">转账</div>
+		</div>
+		<div class="uk-panel uk-panel-content">
+			<form class="uk-form">
+			<ul class="uk-list uk-list-line uk-list-striped">
+				<li>
+					<label>转出账户</label>
+					<span class="">
+						<select class="uk-select" ng-model="out_account.account" ng-options="account_item.account_id as account_item.account_name for account_item in out_account.account_items"></select>
+						<select class="uk-select" ng-model="out_account.child_account" ng-options="child_account.child_account_id as child_account.child_account_name for child_account in out_account.child_accounts"></select>
+					</span>
+				</li>
+				<li>
+					<label>转入账户</label>
+					<span class="">
+						<select class="uk-select" ng-model="in_account.account" ng-options="account_item.account_id as account_item.account_name for account_item in in_account.account_items"></select>
+						<select class="uk-select" ng-model="in_account.child_account" ng-options="child_account.child_account_id as child_account.child_account_name for child_account in in_account.child_accounts"></select>
+					</span>
+				</li>
+				<li>
+					<label>转入金额</label>
+					<span class="">
+						<input type="number" ng-model="transfer_num" name="transfer_num">
+					</span>
+				</li>
+				<li>
+					<label>转账备注</label>
+					<span class="">
+						<input type="text" ng-model="transfer_remarks" name="transfer_remarks">
+					</span>
+				</li>
+			</ul>
+			</form>
+			<button class="uk-button uk-button-primary m-top-20" ng-click="transfer()">转账</button>
+		</div>
+	</div>
+</div>

@@ -12,6 +12,7 @@ class AccountController extends Controller {
         $this->child_account_model = D('ChildAccount');
         $this->account_model = D('Account');
         $this->user_id = session('user_id');
+        $this->transfer_model = D('Transfer');
     }
 
     //获取用户相关的账户信息
@@ -29,10 +30,37 @@ class AccountController extends Controller {
     **/
     public function get_account(){
     	$account_id = I('post.account_id');
+        //$account_id = 1;
         $cdt = array('child_account_user_id'=>$this->user_id,'child_account_id'=>$account_id);
         $child_account = $this->child_account_model->relation('bills')->where($cdt)->find();
-    	if($child_account !== false)$this->ajaxReturn(array('error'=>0,'account'=>$child_account));
+    	if($child_account !== false){
+            //计算流入流出
+            $child_account['flow_out'] = 0;
+            $child_account['flow_in'] = 0;
+            foreach($child_account['bills'] as $i => $bill){
+                if($bill['bill_type'] == 1){
+                    $child_account['flow_out'] += $bill['bill_sum'];
+                }else  $child_account['flow_in'] += $bill['bill_sum'];
+            }
+            $this->ajaxReturn(array('error'=>0,'account'=>$child_account));
+        }
     	else $this->ajaxReturn(array('error'=>1,'msg'=>'账户信息获取失败！'));
+    }
+    protected function _get_account($account_id){
+        $cdt = array('child_account_user_id'=>$this->user_id,'child_account_id'=>$account_id);
+        $child_account = $this->child_account_model->relation('bills')->where($cdt)->find();
+        if($child_account !== false){
+            //计算流入流出
+            $child_account['flow_out'] = 0;
+            $child_account['flow_in'] = 0;
+            foreach($child_account['bills'] as $i => $bill){
+                if($bill['bill_type'] == 1){
+                    $child_account['flow_out'] += $bill['bill_sum'];
+                }else  $child_account['flow_in'] += $bill['bill_sum'];
+            }
+            return $child_account;
+        }
+        else return false;
     }
     //添加账户
     public function add_account(){
@@ -125,6 +153,42 @@ class AccountController extends Controller {
             $cdt = array('child_account_id'=>$account_id,'child_account_user_id'=>$this->user_id);
             if($this->child_account_model->where($cdt)->delete())$this->ajaxReturn(array('error'=>0,'msg'=>'二级账户删除成功！'));
             else $this->ajaxReturn(array('error'=>1,'msg'=>'二级账户删除失败！'));
+        }
+    }
+    //转账
+    public function transfer(){
+        $out_account_id = I('post.out_account');
+        $in_account_id = I('post.in_account');
+        $transfer_num = I('post.transfer_num');//转账的数目
+        $transfer_remarks = I('post.transfer_remarks');//转账备注
+        //先判断是否有足够的转账余额
+        $account = $this->_get_account($out_account_id);
+        $balance = $account['balance'] + $account['flow_in'] - $account['flow_out'];
+        if(empty($account) || $balance < $transfer_num)
+            $this->ajaxReturn(array('error'=>1,'msg'=>'当前余额为 '.$balance.' 元，没有足够的转账余额！','balance'=>$balance,'transfer_num'=>$transfer_num));
+        else{
+            /*$cdt = array('child_account_user_id'=>$this->user_id,'child_account_id'=>$in_account_id);//转入
+            $res1 = $this->child_account_model->where($cdt)->setInc('child_account_balance',$transfer_num);
+            $cdt = array('child_account_user_id'=>$this->user_id,'child_account_id'=>$out_account_id);//转出
+            $res2 = $this->child_account_model->where($cdt)->setDec('child_account_balance',$transfer_num);*/
+            //生成2條賬單，1條是支出賬單，1條是收入賬單
+            $bill_time = date("Y-m-d H:i:s");
+            $bill_model = D('Bill');
+            $outcome_bill = array('bill_user_id'=>$this->user_id,'bill_type'=>1,'bill_category_id'=>-1,
+            'bill_account_id'=>$out_account_id,'bill_time'=>$bill_time,
+            'bill_location'=>'','bill_sum'=>$transfer_num,
+            'bill_remarks'=>$transfer_remarks);
+            $res1 = $bill_model->add($outcome_bill);
+            $income_bill = array('bill_user_id'=>$this->user_id,'bill_type'=>2,'bill_category_id'=>-2,
+            'bill_account_id'=>$in_account_id,'bill_time'=>$bill_time,
+            'bill_location'=>'','bill_sum'=>$transfer_num,
+            'bill_remarks'=>$transfer_remarks);
+            $res2 = $bill_model->add($income_bill);
+            //同时生成一条轉賬記錄插入
+            $transfer = array('out_account_id'=>$out_account_id,'in_account_id'=>$in_account_id,'transfer_num'=>$transfer_num,'transfer_remarks'=>$transfer_remarks);
+            $this->transfer_model->add($transfer);
+            if($res1 && $res2)$this->ajaxReturn(array('error'=>0,'msg'=>'转账成功！','balance'=>$balance,'transfer_num'=>$transfer_num));
+            else $this->ajaxReturn(array('error'=>1,'msg'=>'转账失败！'));
         }
     }
 }

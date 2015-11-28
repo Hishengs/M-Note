@@ -70,5 +70,12 @@ note.service('Account',function($http){
 			data:{'account_id':account_id}
 		});
 	}
-	
+	//转账
+	this.transfer = function(condition){
+		return $http({
+			method:'POST',
+			url:home_path+"/Account/transfer.html",
+			data:condition
+		});
+	}
 });

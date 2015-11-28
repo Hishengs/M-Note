@@ -21,11 +21,11 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/today_bills.html'}}
 	}).state('bill_query',{ //记账-账单查询
-		url:'/bill_query',
+		url:'/query',
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_query.html'}}
 	}).state('bill_category',{ //记账-账单分类
-		url:'/bill_category',
+		url:'/category',
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_category.html'}}
 	}).state('bill_details',{ //记账-账单详情
@@ -33,7 +33,7 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/bill_details.html'}}
 	}).state('modify_bill',{ //记账-账单修改
-		url:'/modify_bill',
+		url:'/modify',
 		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/modify_bill.html'}}
 	}).state('modify_bill_outcome',{ //记账-账单修改-outcome
@@ -53,11 +53,11 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'bill',
 		views:{'bill_add_view':{templateUrl:templates_path+'/bill/bill_add_income.html'}}
 	}).state('add_category',{ //添加分类
-		url:'/add_category',
+		url:'/add/category',
 		parent:'bill',
 		views:{'bill_add_view':{templateUrl:templates_path+'/bill/add_category.html'}}
 	}).state('add_account',{ //添加账户
-		url:'/add_account',
+		url:'/add/account',
 		parent:'bill',
 		views:{'bill_add_view':{templateUrl:templates_path+'/bill/add_account.html'}}
 	});
@@ -79,6 +79,10 @@ note.config(['$stateProvider',function($stateProvider){
 		url:'/trend',
 		parent:'charts',
 		views:{'charts_view':{templateUrl:templates_path+'/charts/trend.html'}}
+	}).state('property',{ //报表-资产趋势图
+		url:'/property',
+		parent:'charts',
+		views:{'charts_view':{templateUrl:templates_path+'/charts/property.html'}}
 	});
 }]);
 //----------------------------------账户-----------------------------------------------------
@@ -95,9 +99,17 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'accounts',
 		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account.html'}}
 	}).state('account_manage',{ //账户-账户管理
-		url:'/accountManage',
+		url:'/manage',
 		parent:'accounts',
-		views:{'accounts_view':{templateUrl:templates_path+'/accounts/account_manage.html'}}
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/manage.html'}}
+	}).state('account_transfer',{ //账户-转账
+		url:'/transfer',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/transfer.html'}}
+	}).state('account_transfer_query',{ //账户-转账查询
+		url:'/transfer/query',
+		parent:'accounts',
+		views:{'accounts_view':{templateUrl:templates_path+'/accounts/transfer_query.html'}}
 	});
 }]);
 //----------------------------------用户中心-----------------------------------------------------
