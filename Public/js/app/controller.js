@@ -1364,6 +1364,80 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 		});
 	}
 });
+//资产分布图+负债分布图
+note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,$state){
+	//初始化图表
+	$scope.end_date = "";
+	$scope.charts_property_distribute_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
+
+	//初始化图表
+	$scope.property_distribute_chart = echarts.init(document.getElementById('charts-property-distribute-pie'));//
+	$scope.liabilities_distribute_chart = echarts.init(document.getElementById('charts-liabilities-distribute-pie'));//负债
+	
+	//查询
+	$scope.query = function(){
+		$scope.property_distribute_chart.clear();$scope.liabilities_distribute_chart.clear();
+		$scope.property_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//待装载的数据
+		$scope.liabilities_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//负债
+
+		$scope.property_distribute_chart_options.title.text = "资产分布图";
+		$scope.liabilities_distribute_chart_options.title.text = "负债分布图";
+		
+		$scope.property_distribute_chart_options.legend.data = [];
+		$scope.property_distribute_chart_options.series[0] = {};
+		$scope.property_distribute_chart_options.series[0].name = '账户资产';
+		$scope.property_distribute_chart_options.series[0].type = 'pie';
+		$scope.property_distribute_chart_options.series[0].data = [];
+		//$scope.property_distribute_chart_options.series[0].radius = [0,70];
+
+		/*$scope.property_distribute_chart_options.series[1] = {};
+		$scope.property_distribute_chart_options.series[1].name = '二级账户资产';
+		$scope.property_distribute_chart_options.series[1].type = 'pie';
+		$scope.property_distribute_chart_options.series[1].data = [];
+		$scope.property_distribute_chart_options.series[1].radius = [100,140];*/
+		//负债资产部分
+		$scope.liabilities_distribute_chart_options.legend.data = [];
+		$scope.liabilities_distribute_chart_options.series[0] = {};
+		$scope.liabilities_distribute_chart_options.series[0].name = '账户负债';
+		$scope.liabilities_distribute_chart_options.series[0].type = 'pie';
+		$scope.liabilities_distribute_chart_options.series[0].data = [];
+		//$scope.liabilities_distribute_chart_options.series[0].radius = [0,70];
+
+		/*$scope.liabilities_distribute_chart_options.series[1] = {};
+		$scope.liabilities_distribute_chart_options.series[1].name = '二级账户负债';
+		$scope.liabilities_distribute_chart_options.series[1].type = 'pie';
+		$scope.liabilities_distribute_chart_options.series[1].data = [];
+		$scope.liabilities_distribute_chart_options.series[1].radius = [100,140];*/
+		//获取数据
+		var cdt = {'end_date':$scope.end_date};
+		Charts.getPropertyDistributeData(cdt).success(function(res){
+			console.log(res);
+			if(res.error === 0){
+				var count1 = count2 = 0;
+				for(var i=0,ilen=res.account_items.length;i<ilen;i++){
+					for(var j=0,jlen=res.account_items[i].child_accounts.length;j<jlen;j++){
+						var balance = parseInt(res.account_items[i].child_accounts[j].child_account_balance)+res.account_items[i].child_accounts[j].flow_in-res.account_items[i].child_accounts[j].flow_out;
+						console.log('balance:'+balance);
+						var name = res.account_items[i].child_accounts[j].child_account_name;
+						if(balance > 0){
+							$scope.property_distribute_chart_options.legend.data[count1++] = name;
+							$scope.property_distribute_chart_options.series[0].data.push({value:Math.abs(balance),name:name});
+						}else if(balance < 0){//负债
+							$scope.liabilities_distribute_chart_options.legend.data[count2++] = name;
+							$scope.liabilities_distribute_chart_options.series[0].data.push({value:Math.abs(balance),name:name});
+						}
+					}
+				}
+				if(!i)$scope.charts_property_distribute_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';
+				else $scope.charts_property_distribute_tip = '';
+
+				$scope.property_distribute_chart.setOption($scope.property_distribute_chart_options); 
+				$scope.liabilities_distribute_chart.setOption($scope.liabilities_distribute_chart_options); 
+
+			}else hMessage(res.msg);
+		});
+	}
+});
 //资产趋势图
 note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表

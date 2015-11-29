@@ -79,10 +79,14 @@ note.config(['$stateProvider',function($stateProvider){
 		url:'/trend',
 		parent:'charts',
 		views:{'charts_view':{templateUrl:templates_path+'/charts/trend.html'}}
-	}).state('property',{ //报表-资产趋势图
-		url:'/property',
+	}).state('property_distribute',{ //报表-资产分布图
+		url:'/property/distribute',
 		parent:'charts',
-		views:{'charts_view':{templateUrl:templates_path+'/charts/property.html'}}
+		views:{'charts_view':{templateUrl:templates_path+'/charts/property_distribute.html'}}
+	}).state('property_trend',{ //报表-资产趋势图
+		url:'/property/trend',
+		parent:'charts',
+		views:{'charts_view':{templateUrl:templates_path+'/charts/property_trend.html'}}
 	});
 }]);
 //----------------------------------账户-----------------------------------------------------

@@ -28,6 +28,14 @@ note.service('Charts',function($http){
 			data:{'cdt':cdt}
 		});
 	}
+	//资产分布的数据
+	this.getPropertyDistributeData = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/get_property_distribute_data.html",
+			data:cdt
+		});
+	}
 	//资产趋势数据
 	this.getPropertyTrendData = function(cdt){
 		return $http({

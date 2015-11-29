@@ -96,12 +96,16 @@ class AccountController extends Controller {
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'已存在同名的二级账户！'));
     }
     //获取账户列表
-    public function get_detailed_account_items(){
+    public function get_detailed_account_items($param_date=null){
         //$start_date = I('post.start_date');
-        $end_date = I('post.end_date');
+        $post_end_date = I('post.end_date');
+        if(!empty($post_end_date))$end_date = $post_end_date;
+        else if(!empty($param_date))$end_date = $param_date;
+        
         $cdt = array('account_user_id'=>$this->user_id);
         $accounts = $this->account_model->relation('child_accounts')->where($cdt)->select();
         foreach ($accounts as $key => $account) {
+            $accounts[$key]['account_balance'] = $accounts[$key]['flow_out'] = $accounts[$key]['flow_in'] = 0;
             foreach ($account['child_accounts'] as $key2 => $child_account) {
                 $cdt = array('child_account_user_id'=>$this->user_id,'child_account_id'=>$child_account['child_account_id']);
                 $child_account_bills = $this->child_account_model->relation('bills')->where($cdt)->find()['bills'];
@@ -125,9 +129,15 @@ class AccountController extends Controller {
                 
                 $accounts[$key]['child_accounts'][$key2]['flow_out'] = $out;
                 $accounts[$key]['child_accounts'][$key2]['flow_in'] = $in;
+                //计算父账户的余额，流入流出
+                $accounts[$key]['account_balance'] += $accounts[$key]['child_accounts'][$key2]['child_account_balance'];
+                $accounts[$key]['flow_out'] += $accounts[$key]['child_accounts'][$key2]['flow_out'];
+                $accounts[$key]['flow_in'] += $accounts[$key]['child_accounts'][$key2]['flow_in'];
             }
         }
-        $this->ajaxReturn(array('error'=>0,'account_list'=>$accounts));
+        if($param_date!==null)return $accounts;
+        else
+            $this->ajaxReturn(array('error'=>0,'account_list'=>$accounts));
     }
     //修改一级账户
     public function modify_account(){

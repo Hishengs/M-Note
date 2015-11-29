@@ -6,12 +6,16 @@ class ChartsController extends Controller {
 	private $bill_model;
     private $child_bill_category_model;
     private $bill_category_model;
+    private $account_model;
+    private $child_account_model;
 
     function __construct(){
         parent::__construct();
         $this->bill_model = D('Bill');
         $this->child_bill_category_model = D('ChildBillCategory');
         $this->bill_category_model = D('BillCategory');
+        $this->account_model = D('Account');
+        $this->child_account_model = D('ChildAccount');
         $this->user_id = session('user_id');
     }
 
@@ -80,5 +84,12 @@ class ChartsController extends Controller {
     	if($bills!==false)
     		$this->ajaxReturn(array('error'=>0,'outcome_bills'=>$outcome_bills,'income_bills'=>$income_bills));
     	else $this->ajaxReturn(array('error'=>1,'msg'=>'查询失败！'));
+    }
+    //获取资产分布数据
+    public function get_property_distribute_data(){
+        $end_date = I('post.end_date');
+        if($accounts = A('Account')->get_detailed_account_items($end_date))
+            $this->ajaxReturn(array('error'=>0,'account_items'=>$accounts,'end_date'=>$end_date));
+        else $this->ajaxReturn(array('error'=>1,'msg'=>'资产分布数据获取失败！'));
     }
 }
