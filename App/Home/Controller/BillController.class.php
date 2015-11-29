@@ -65,6 +65,10 @@ class BillController extends Controller {
             $this->ajaxReturn(array('error'=>0,'bill'=>$bill));
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'账单添加失败！'));
     }
+    protected function _add_bill($bill){
+        $result = $this->bill_model->add($bill);
+        return $result;
+    }
     //修改账单
     public function modify_bill(){
         $user_id = session('user_id');
@@ -77,6 +81,8 @@ class BillController extends Controller {
         $bill_location = I('post.bill_location');
         $bill_sum = I('post.bill_sum');
         $bill_remarks = I('post.bill_remarks');
+        $is_transfer = $this->bill_model->where('bill_id='.$bill_id)->find()['bill_category_id'];
+        if($is_transfer == -1 || $is_transfer == -2){$this->ajaxReturn(array('error'=>1,'msg'=>'这是一笔系统转账，不可修改！'));}
         //判空
         if(empty($bill_category_id) || empty($bill_account_id) || empty($bill_time) || empty($bill_sum))
             $this->ajaxReturn(array('error'=>1,'msg'=>'请填写完整的账单信息！'));

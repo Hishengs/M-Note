@@ -16,7 +16,6 @@ note.controller('c_accounts',function($scope,$rootScope,$state,Account){
 	});
 	setTitle("随手记-账户");
 	$state.go('account_manage');
-	$scope.current_accounts_tab = '';
 	
 	//切换账户
 	$scope.switchAccountsTab = function(tab){
@@ -61,6 +60,7 @@ note.controller('c_account_view',function($scope,$rootScope,$state,Account){
 })
 //账户管理
 note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
+	$scope.start_date = $scope.end_date = null;
 	$scope.account_items = {};
 	$scope.is_self_defined = false;
 	$scope.toggle_type = "off";
@@ -70,9 +70,10 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 	$scope.added_child_account = {};
 	$scope.sum = {};
 
-	$scope.updateAccountList = function(){
-		//获取账户列表
-		Account.getDetailedAccountItems().success(function(res){
+	$scope.updateAccountList = function(end_date){
+		if(end_date)var cdt = {'end_date':end_date};
+		//更新账户列表
+		Account.getDetailedAccountItems(cdt).success(function(res){
 			console.log(res);
 			if(res.error === 0){
 				$scope.account_items = res.account_list;
@@ -94,6 +95,11 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 			}
 		}
 		$scope.sum.balance += $scope.sum.flow_in - $scope.sum.flow_out;
+	}
+	//按時間查詢賬戶詳情
+	$scope.query = function(){
+		console.log('end_date:'+$scope.end_date);
+		$scope.updateAccountList($scope.end_date);
 	}
 	//添加账户
 	$scope.vAddAccount = function(){

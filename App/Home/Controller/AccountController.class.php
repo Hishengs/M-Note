@@ -97,6 +97,8 @@ class AccountController extends Controller {
     }
     //获取账户列表
     public function get_detailed_account_items(){
+        //$start_date = I('post.start_date');
+        $end_date = I('post.end_date');
         $cdt = array('account_user_id'=>$this->user_id);
         $accounts = $this->account_model->relation('child_accounts')->where($cdt)->select();
         foreach ($accounts as $key => $account) {
@@ -105,11 +107,22 @@ class AccountController extends Controller {
                 $child_account_bills = $this->child_account_model->relation('bills')->where($cdt)->find()['bills'];
                 //计算该账户的流入流出
                 $out = $in = 0;
-                foreach ($child_account_bills as $key3 => $child_account_bill) {
-                    if($child_account_bill['bill_type'] == 1){//支出
-                        $out += $child_account_bill['bill_sum'];
-                    }else $in += $child_account_bill['bill_sum'];
+                if($end_date){//如果有時間限制
+                    foreach ($child_account_bills as $key3 => $child_account_bill) {
+                        if($child_account_bill['bill_time'] <= $end_date){
+                            if($child_account_bill['bill_type'] == 1){//支出
+                                $out += $child_account_bill['bill_sum'];
+                            }else $in += $child_account_bill['bill_sum'];
+                        }else continue;
+                    }
+                }else{
+                    foreach ($child_account_bills as $key3 => $child_account_bill) {
+                        if($child_account_bill['bill_type'] == 1){//支出
+                            $out += $child_account_bill['bill_sum'];
+                        }else $in += $child_account_bill['bill_sum'];
+                    }
                 }
+                
                 $accounts[$key]['child_accounts'][$key2]['flow_out'] = $out;
                 $accounts[$key]['child_accounts'][$key2]['flow_in'] = $in;
             }

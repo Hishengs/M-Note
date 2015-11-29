@@ -70,12 +70,12 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 		$scope.income_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//待装载的数据
 		$scope.income_distribute_chart_options.title.text = "收入分布图";
 		$scope.income_distribute_chart_options.title.subtext = $scope.distribute_option=='0'?'账户':'分类';
-		$scope.income_distribute_chart_options.series[0].name = "账户";
+		$scope.income_distribute_chart_options.series[0].name = $scope.distribute_option=='0'?'账户':'分类';
 		
 		$scope.outcome_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//待装载的数据
 		$scope.outcome_distribute_chart_options.title.text = "支出分布图";
 		$scope.outcome_distribute_chart_options.title.subtext = $scope.distribute_option=='0'?'账户':'分类';
-		$scope.outcome_distribute_chart_options.series[0].name = "账户";
+		$scope.outcome_distribute_chart_options.series[0].name = $scope.distribute_option=='0'?'账户':'分类';
 
 		$scope.outcome_distribute_chart_options.legend.data = [];
 		$scope.outcome_distribute_chart_options.series[0].data = [];
@@ -169,7 +169,7 @@ note.controller('c_charts_compare',function($scope,$rootScope,$http,Charts,$stat
 //趋势图
 note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表
-	$scope.time_gap = '0';
+	$scope.time_unit = '1';
 	$scope.start_date = $scope.end_date = "";
 	$scope.charts_trend_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
@@ -185,6 +185,23 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 
 		$scope.outcome_trend_chart_options.title.text = "支出趋势图";
 		$scope.income_trend_chart_options.title.text = "收入趋势图";
+
+		switch(parseInt($scope.time_unit)){
+			case 1:
+				$scope.outcome_trend_chart_options.title.subtext = '单位:天';
+				$scope.income_trend_chart_options.title.subtext = '单位:天';
+				break;
+			case 2:
+				$scope.outcome_trend_chart_options.title.subtext = '单位:月';
+				$scope.income_trend_chart_options.title.subtext = '单位:月';
+				break;
+			case 3:
+				$scope.outcome_trend_chart_options.title.subtext = '单位:年';
+				$scope.income_trend_chart_options.title.subtext = '单位:年';
+				break;
+			default:
+				break;
+		}
 		
 		$scope.outcome_trend_chart_options.legend.data = ['支出'];
 		$scope.outcome_trend_chart_options.xAxis[0].data = [];
@@ -196,22 +213,22 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 		$scope.income_trend_chart_options.legend.data = ['收入'];
 		$scope.income_trend_chart_options.xAxis[0].data = [];
 		$scope.income_trend_chart_options.series[0] = {};
-		$scope.income_trend_chart_options.series[0].name = '支出';
+		$scope.income_trend_chart_options.series[0].name = '收入';
 		$scope.income_trend_chart_options.series[0].type = 'line';
 		$scope.income_trend_chart_options.series[0].data = [];
 		
-		//获取数据
-		var cdt = {'start_date':$scope.start_date,'end_date':$scope.end_date};
+		//获取数据，默认单位是天
+		var cdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'time_unit':$scope.time_unit};
 		Charts.getTrendData(cdt).success(function(res){
 			console.log(res);
 			if(res.error === 0){
 				for(var i=0;i<res.outcome_bills.length;i++){
 					//var date = new Date(res.outcome_bills[i].bill_time);
-					$scope.outcome_trend_chart_options.xAxis[0].data.push(res.outcome_bills[i].bill_time);
+					$scope.outcome_trend_chart_options.xAxis[0].data.push(res.outcome_bills[i].time_unit);
 					$scope.outcome_trend_chart_options.series[0].data.push(res.outcome_bills[i].bill_sum);
 				}
 				for(var j=0;j<res.income_bills.length;j++){
-					$scope.income_trend_chart_options.xAxis[0].data.push(res.income_bills[j].bill_time);
+					$scope.income_trend_chart_options.xAxis[0].data.push(res.income_bills[j].time_unit);
 					$scope.income_trend_chart_options.series[0].data.push(res.income_bills[j].bill_sum);
 				}
 				if(!i&&!j)$scope.charts_trend_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';

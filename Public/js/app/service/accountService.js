@@ -56,10 +56,11 @@ note.service('Account',function($http){
 		});
 	}
 	//获取详细的账户信息[一二级账户]，包括余额，流入流出 
-	this.getDetailedAccountItems = function(){
+	this.getDetailedAccountItems = function(condition){
 		return $http({
-			method:'GET',
-			url:home_path+"/Account/get_detailed_account_items.html"
+			method:'POST',
+			url:home_path+"/Account/get_detailed_account_items.html",
+			data:condition
 		});
 	}
 	//获取单个账户的信息，包括余额，流入，流出(联表查询)

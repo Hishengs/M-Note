@@ -14,6 +14,7 @@ class UserController extends Controller {
     public function index(){
         echo "Hello World!";
         echo "My id is ".session('user_id');
+        //echo getdate(strtotime('2015-11-29'))['year'];
     } 
     //登陆
     public function login(){

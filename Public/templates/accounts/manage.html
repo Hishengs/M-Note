@@ -4,7 +4,12 @@
 			<div class="uk-panel-title">
 				账户管理
 				<span style="float:right;">
-					<button class="uk-button uk-button-primary" ng-click="vAddAccount()">添加账户</button>
+					<!-- <label>开始日期</label>
+					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}"> -->
+					<label>截止日期</label>
+					<input type="text" name="end_date" ng-model="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD',startDate:maxDate,maxDate:maxDate}">
+					<button class="uk-button uk-button-default" ng-click="query()">查询</button>
+					<button class="uk-button uk-button-default" ng-click="vAddAccount()">添加账户</button>
 				</span>
 			</div>
 		</div>
@@ -30,9 +35,11 @@
 						</td>
 						<td ng-hide="$first"></td>
 						<td>{{child_account.child_account_name}}</td>
-						<td>{{-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out}}</td>
-						<td>{{child_account.flow_in}}</td>
-						<td>{{child_account.flow_out}}</td>
+						<td style="color:{{(-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out)<0?'red':'black'}}">
+						{{(-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out) | subFloat:2}}
+						</td>
+						<td>{{child_account.flow_in | subFloat:2}}</td>
+						<td>{{child_account.flow_out | subFloat:2}}</td>
 						<td>
 							
 							<button class="uk-button uk-button-primary uk-button-small" ng-click="vModifyChildAccount(child_account)" title="编辑二级账户">
@@ -58,9 +65,9 @@
 					<tr>
 						<td><b>总计</b></td>
 						<td></td>
-						<td><b>{{sum.balance}}</b></td>
-						<td><b>{{sum.flow_in}}</b></td>
-						<td><b>{{sum.flow_out}}</b></td>
+						<td><b style="color:{{sum.balance<0?'red':'black'}}">{{sum.balance | subFloat:2}}</b></td>
+						<td><b>{{sum.flow_in | subFloat:2}}</b></td>
+						<td><b>{{sum.flow_out | subFloat:2}}</b></td>
 						<td></td>
 					</tr>
 				</tbody>
