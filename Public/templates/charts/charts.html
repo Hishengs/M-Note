@@ -3,11 +3,21 @@
 	<ul class="uk-tab uk-tab-left">
 	    <!-- <li ng-class="{'uk-active': current_charts_tab=='budget'}" ng-click="switchChartsTab('budget')"><a href="javascript:void(0);" class="plain-link">本月预算</a></li>
 	    <li ng-class="{'uk-active': current_charts_tab=='bill_query'}" ng-click="switchChartsTab('bill_query')"><a href="javascript:void(0);" class="plain-link">账单查询</a></li> -->
-	    <li ng-class="{'uk-active': current_charts_tab=='compare'}" ng-click="switchChartsTab('compare')"><a href="javascript:void(0);" class="plain-link">收支对比图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='distribute'}" ng-click="switchChartsTab('distribute')"><a href="javascript:void(0);" class="plain-link">收支分布图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='trend'}" ng-click="switchChartsTab('trend')"><a href="javascript:void(0);" class="plain-link">收支趋势图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='property_distribute'}" ng-click="switchChartsTab('property_distribute')"><a href="javascript:void(0);" class="plain-link">资产分布图</a></li>
-	    <li ng-class="{'uk-active': current_charts_tab=='property_trend'}" ng-click="switchChartsTab('property_trend')"><a href="javascript:void(0);" class="plain-link">资产趋势图</a></li>
+	    <li ng-class="{'uk-active': current_charts_tab=='compare'}" ng-click="switchChartsTab('compare')">
+	    	<a href="javascript:void(0);" class="plain-link"><i class="uk-icon-pie-chart"></i> 收支对比图</a>
+	    </li>
+	    <li ng-class="{'uk-active': current_charts_tab=='distribute'}" ng-click="switchChartsTab('distribute')">
+	    	<a href="javascript:void(0);" class="plain-link"><i class="uk-icon-area-chart"></i> 收支分布图</a>
+	    </li>
+	    <li ng-class="{'uk-active': current_charts_tab=='trend'}" ng-click="switchChartsTab('trend')">
+	    	<a href="javascript:void(0);" class="plain-link"><i class="uk-icon-line-chart"></i> 收支趋势图</a>
+	    </li>
+	    <li ng-class="{'uk-active': current_charts_tab=='property_distribute'}" ng-click="switchChartsTab('property_distribute')">
+	    	<a href="javascript:void(0);" class="plain-link"><i class="uk-icon-area-chart"></i> 资产负债图</a>
+	    </li>
+	    <li ng-class="{'uk-active': current_charts_tab=='property_trend'}" ng-click="switchChartsTab('property_trend')">
+	    	<a href="javascript:void(0);" class="plain-link"><i class="uk-icon-line-chart"></i> 资产趋势图</a>
+	    </li>
 	</ul>
 </div>
 <div class="charts_view uk-width-5-6" ui-view="charts_view"></div>

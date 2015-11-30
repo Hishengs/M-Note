@@ -41,7 +41,7 @@ note.controller('c_charts',function($scope,$rootScope,$http,Charts,$state){
 	$rootScope.pie_options.calculable = true;
 	$rootScope.pie_options.tooltip = {trigger:'item',formatter: "{a} <br/>{b} : {c} ({d}%)"};
 	$rootScope.pie_options.series = [{name:"",type:"pie",radius:"55%",center:['50%','60%'],data:[]}];
-	//条形图
+	//折线图
 	$rootScope.line_options = {};
 	$rootScope.line_options.title= {text:"",subtext:""};
 	$rootScope.line_options.tooltip = {trigger: 'axis'};
@@ -328,7 +328,7 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 //资产趋势图
 note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表
-	$scope.start_date = $scope.end_date = "";
+	$scope.end_date = "";
 	$scope.charts_property_trend_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
 	//初始化图表
@@ -336,33 +336,55 @@ note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$stat
 	
 	//查询
 	$scope.query = function(){
+
+		$scope.charts_property_trend_tip = '<i class="uk-icon-spinner"></i> 正在获取数据...';
+
 		$scope.property_trend_chart.clear();
 		$scope.property_trend_chart_options = $rootScope.clone($rootScope.line_options);//待装载的数据
 
 		$scope.property_trend_chart_options.title.text = "资产趋势图";
-		
-		$scope.property_trend_chart_options.legend.data = ['资产'];
+		$scope.property_trend_chart_options.title.subtext = "单位:月";
+		//有三条线，总资产，负债资产，净资产
+		$scope.property_trend_chart_options.legend.data = ['总资产','负债资产','净资产'];
 		$scope.property_trend_chart_options.xAxis[0].data = [];
+
 		$scope.property_trend_chart_options.series[0] = {};
-		$scope.property_trend_chart_options.series[0].name = '资产';
+		$scope.property_trend_chart_options.series[0].name = '总资产';
 		$scope.property_trend_chart_options.series[0].type = 'line';
 		$scope.property_trend_chart_options.series[0].data = [];
+		$scope.property_trend_chart_options.series[1] = {};
+		$scope.property_trend_chart_options.series[1].name = '负债资产';
+		$scope.property_trend_chart_options.series[1].type = 'line';
+		$scope.property_trend_chart_options.series[1].data = [];
+		$scope.property_trend_chart_options.series[2] = {};
+		$scope.property_trend_chart_options.series[2].name = '净资产';
+		$scope.property_trend_chart_options.series[2].type = 'line';
+		$scope.property_trend_chart_options.series[2].data = [];
 		
-		//获取数据
-		var cdt = {'start_date':$scope.start_date,'end_date':$scope.end_date};
+		var cdt = {'end_date':$scope.end_date};
 		Charts.getPropertyTrendData(cdt).success(function(res){
 			console.log(res);
 			if(res.error === 0){
-				for(var i=0;i<res.outcome_bills.length;i++){
-					//var date = new Date(res.outcome_bills[i].bill_time);
-					$scope.property_trend_chart_options.xAxis[0].data.push(res.outcome_bills[i].bill_time);
-					$scope.property_trend_chart_options.series[0].data.push(res.outcome_bills[i].bill_sum);
+				for(var i=res.datas.length-1;i>=0;i--){
+					var net_asset = liabilities = property = 0;
+					for(var j=0,jlen=res.datas[i].length;j<jlen;j++){
+						var balance = parseInt(res.datas[i][j].account_balance)+res.datas[i][j].flow_in-res.datas[i][j].flow_out;
+						if(balance > 0)//总资产
+							property += parseInt(balance);
+						else if(balance < 0)liabilities += balance;
+					}
+					net_asset = (property+liabilities);
+					
+					$scope.property_trend_chart_options.series[0].data.push(property);
+					$scope.property_trend_chart_options.series[1].data.push(liabilities);//负债资产
+					$scope.property_trend_chart_options.series[2].data.push(net_asset);//净资产
+					$scope.property_trend_chart_options.xAxis[0].data.push(res.dates[i].slice(0,res.dates[i].lastIndexOf('-')));
 				}
-				if(!i)$scope.charts_property_trend_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';
-				else $scope.charts_property_trend_tip = '';
-
-				$scope.property_trend_chart.setOption($scope.property_trend_chart_options); 
-			}else hMessage(res.msg);
+				
+				$scope.charts_property_trend_tip = '';
+				$scope.property_trend_chart.setOption($scope.property_trend_chart_options);
+			}else ;
 		});
+		
 	}
 });

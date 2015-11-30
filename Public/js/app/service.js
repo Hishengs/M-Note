@@ -308,9 +308,9 @@ note.service('Charts',function($http){
 	//资产趋势数据
 	this.getPropertyTrendData = function(cdt){
 		return $http({
-			method:'POST',
-			url:home_path+"/Charts/get_property_trend_data.html",
-			data:{'cdt':cdt}
+			method:'GET',
+			url:home_path+"/Charts/get_property_trend_data.html?end_date="+cdt['end_date'],
+			/*data:cdt*/
 		});
 	}
 });

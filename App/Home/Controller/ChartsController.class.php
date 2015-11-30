@@ -92,4 +92,23 @@ class ChartsController extends Controller {
             $this->ajaxReturn(array('error'=>0,'account_items'=>$accounts,'end_date'=>$end_date));
         else $this->ajaxReturn(array('error'=>1,'msg'=>'资产分布数据获取失败！'));
     }
+    //获取资产趋势图数据
+    public function get_property_trend_data(){
+        $end_date = I('get.end_date');
+        //$end_date = "2015-11-30";
+        $datas = $dates = [];
+        $get_date = getdate(strtotime($end_date));
+        $mon = $get_date['mon'] + 1;
+        for($i=1;$i<=12;$i++){
+            if($mon > $i)array_push($dates, $get_date['year']."-".($mon-$i)."-".$get_date['mday']);
+            else array_push($dates, ($get_date['year']-1)."-".($mon+12-$i)."-".$get_date['mday']);
+        }
+        foreach($dates as $i => $date){
+            $accounts = array();
+            $accounts = A('Account')->get_detailed_account_items($date);
+            //$accounts['date'] = $date;
+            if($accounts)array_push($datas, $accounts);
+        }
+        $this->ajaxReturn(array('error'=>0,'dates'=>$dates,'datas'=>$datas,'end_date'=>$end_date));
+    }
 }

@@ -5,8 +5,8 @@
 			<span class="f-right">
 				<!-- 条件选择 -->
 				<form class="uk-form display-inline-block">
-					<label>开始日期</label>
-					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+					<!-- <label>开始日期</label>
+					<input type="text" name="start_date" ng-model="start_date" placeholder="开始日期" data-uk-datepicker="{format:'YYYY-MM-DD'}"> -->
 					<label>结束日期</label>
 					<input type="text" name="end_date" ng-model="end_date" placeholder="结束日期" data-uk-datepicker="{format:'YYYY-MM-DD'}">
 				</form>
@@ -17,7 +17,7 @@
 		<div class="uk-panel-content display-inline-block">
 			<div class="uk-alert" ng-bind-html="charts_property_trend_tip | trustHtml" ng-show="charts_property_trend_tip"></div>
 			<!-- 资产趋势图 -->
-			<div class="charts-property-trend-line margin-top-40 display-inline-block" id="charts-property-trend-line" style="width:400px;height:500px;"></div>
+			<div class="charts-property-trend-line margin-top-40 display-inline-block" id="charts-property-trend-line" style="width:800px;height:500px;"></div>
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>
