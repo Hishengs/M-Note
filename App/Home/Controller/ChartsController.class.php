@@ -114,6 +114,7 @@ class ChartsController extends Controller {
     //新建(本月)预算
     protected function add_budget($budget_num){
         $budget = array('budget_user_id'=>$this->user_id,'budget_date'=>date('Y-n-j'),'budget_num'=>$budget_num);
+        $budget_model = D('budget');
         $budget_model->add($budget);
     }
     //获取预算数据
@@ -127,7 +128,7 @@ class ChartsController extends Controller {
         if(!$budget){
             //新建预算
             $budget_num = 1000;
-            $budget_id = $this->add_budget();
+            $budget_id = $this->add_budget($budget_num);
         }
         //获取支出数array('bill_user_id'=>$this->user_id,'bill_type'=>1);
         $cdt = "DATE_FORMAT(bill_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') AND bill_user_id=".$this->user_id." AND bill_type=1";

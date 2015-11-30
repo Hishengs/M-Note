@@ -34,7 +34,7 @@ note.controller('c_today_bills',function($scope,$rootScope,$state,$http,Bill){
 			$rootScope.bill_tip_show = false;
 		}
 		else if(res.error === 2){//查询为空
-			$rootScope.bills = {};
+			$rootScope.bills = [];
 			$rootScope.bill_tip_show = true;
 		}
 		else hMessage(res.msg);
@@ -274,6 +274,8 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				Bill.getBillById(res.bill.bill_id).success(function(result){
 					if(result.error === 0){
 						$rootScope.bills.push(result.bill);
+						$rootScope.bill_tip = "";
+						$rootScope.bill_tip_show = false;
 					}else hMessage(result.msg);
 				});
 			}

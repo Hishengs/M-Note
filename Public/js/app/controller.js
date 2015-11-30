@@ -3,19 +3,70 @@ var site_prefix = "http://localhost/note2/"
 //var controller_path = '';
 //----------------------------------------主页------------------------------------------------
 note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
+	$state.go('home');
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
         if(!ipCookie('is_logined')){
         	//如果未登录，除了注册登陆不允许跳转到别的地方
         	console.log(arguments);
         	console.log(arguments[1].split('#')[1]);
-        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register"){
-				$state.go('login');
-				hMessage("请登录后再操作！");
+        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register" && arguments[1].split('#')[1] != "/welcome"){
+				$state.go('welcome');
+				//$state.go('login');
+				//hMessage("请登录后再操作！");
 			}
 		} 
 	});
-	$state.go('home');
+
+	//拷贝对象
+	$rootScope.clone = function clone(obj) {
+	    if (null == obj || "object" != typeof obj) return obj;
+	    // Handle Date
+	    if (obj instanceof Date) {
+	        var copy = new Date();
+	        copy.setTime(obj.getTime());
+	        return copy;
+	    }
+	    // Handle Array
+	    if (obj instanceof Array) {
+	        var copy = [];
+	        for (var i = 0; i < obj.length; ++i) {
+	            copy[i] = $scope.clone(obj[i]);
+	        }
+	        return copy;
+	    }
+	    // Handle Object
+	    if (obj instanceof Object) {
+	        var copy = {};
+	        for (var attr in obj) {
+	            if (obj.hasOwnProperty(attr)) copy[attr] = $scope.clone(obj[attr]);
+	        }
+	        return copy;
+	    }
+	    throw new Error("Unable to copy obj! Its type isn't supported.");
+	}
+	//设置图表选项的默认值
+	//饼图
+	$rootScope.pie_options = {};
+	$rootScope.pie_options.title= {text:"",subtext:"",x:"center"};
+	$rootScope.pie_options.legend = {orient:"vertical",x:"left",data:[]};
+	$rootScope.pie_options.calculable = true;
+	$rootScope.pie_options.tooltip = {trigger:'item',formatter: "{a} <br/>{b} : {c} ({d}%)"};
+	$rootScope.pie_options.series = [{name:"",type:"pie",radius:"55%",center:['50%','60%'],data:[]}];
+	//折线图
+	$rootScope.line_options = {};
+	$rootScope.line_options.title= {text:"",subtext:""};
+	$rootScope.line_options.tooltip = {trigger: 'axis'};
+	$rootScope.line_options.legend = {data:[]};
+	$rootScope.line_options.calculable = true;
+	$rootScope.line_options.xAxis = [{type : 'category',boundaryGap : false,data:[]}];
+	$rootScope.line_options.yAxis = [{type : 'value',axisLabel:{formatter:'{value}'}}];
+	$rootScope.line_options.series = [];
+
+	var date = new Date();
+	var last_day = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
+	$rootScope.sdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-1";//一个月的第一天
+	$rootScope.edate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+last_day;//一个月的最后一天
 });
 //----------------------------------------导航栏------------------------------------------------
 note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
@@ -147,7 +198,7 @@ note.controller('c_today_bills',function($scope,$rootScope,$state,$http,Bill){
 			$rootScope.bill_tip_show = false;
 		}
 		else if(res.error === 2){//查询为空
-			$rootScope.bills = {};
+			$rootScope.bills = [];
 			$rootScope.bill_tip_show = true;
 		}
 		else hMessage(res.msg);
@@ -387,6 +438,8 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 				Bill.getBillById(res.bill.bill_id).success(function(result){
 					if(result.error === 0){
 						$rootScope.bills.push(result.bill);
+						$rootScope.bill_tip = "";
+						$rootScope.bill_tip_show = false;
 					}else hMessage(result.msg);
 				});
 			}
@@ -1120,60 +1173,15 @@ note.controller('c_charts',function($scope,$rootScope,$http,Charts,$state){
 		$scope.current_charts_tab = tab;
 		$state.go(tab);
 	}
-	//拷贝对象
-	$rootScope.clone = function clone(obj) {
-	    if (null == obj || "object" != typeof obj) return obj;
-	    // Handle Date
-	    if (obj instanceof Date) {
-	        var copy = new Date();
-	        copy.setTime(obj.getTime());
-	        return copy;
-	    }
-	    // Handle Array
-	    if (obj instanceof Array) {
-	        var copy = [];
-	        for (var i = 0; i < obj.length; ++i) {
-	            copy[i] = $scope.clone(obj[i]);
-	        }
-	        return copy;
-	    }
-	    // Handle Object
-	    if (obj instanceof Object) {
-	        var copy = {};
-	        for (var attr in obj) {
-	            if (obj.hasOwnProperty(attr)) copy[attr] = $scope.clone(obj[attr]);
-	        }
-	        return copy;
-	    }
-	    throw new Error("Unable to copy obj! Its type isn't supported.");
-	}
-	//设置图表选项的默认值
-	//饼图
-	$rootScope.pie_options = {};
-	$rootScope.pie_options.title= {text:"",subtext:"",x:"center"};
-	$rootScope.pie_options.legend = {orient:"vertical",x:"left",data:[]};
-	$rootScope.pie_options.calculable = true;
-	$rootScope.pie_options.tooltip = {trigger:'item',formatter: "{a} <br/>{b} : {c} ({d}%)"};
-	$rootScope.pie_options.series = [{name:"",type:"pie",radius:"55%",center:['50%','60%'],data:[]}];
-	//折线图
-	$rootScope.line_options = {};
-	$rootScope.line_options.title= {text:"",subtext:""};
-	$rootScope.line_options.tooltip = {trigger: 'axis'};
-	$rootScope.line_options.legend = {data:[]};
-	$rootScope.line_options.calculable = true;
-	$rootScope.line_options.xAxis = [{type : 'category',boundaryGap : false,data:[]}];
-	$rootScope.line_options.yAxis = [{type : 'value',axisLabel:{formatter:'{value}'}}];
-	$rootScope.line_options.series = [];
 });
 //分布图
 note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$state){
 	$scope.distribute_option = '0';
-	$scope.start_date = $scope.end_date = "";
+	
+	$scope.start_date = $rootScope.sdate;
+	$scope.end_date = $rootScope.edate;
 	$scope.charts_distribute_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 	
-	$scope.initCharts = function(){
-		//
-	}
 	//初始化图表
 	$scope.income_distribute_chart = echarts.init(document.getElementById('charts-distribute-pie-income'));//收入分布图
 	$scope.outcome_distribute_chart = echarts.init(document.getElementById('charts-distribute-pie-outcome'));//支出分布图
@@ -1237,10 +1245,13 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 			}else hMessage(res.msg);
 		});
 	}
+
+	$scope.query();
 });
 //对比图
 note.controller('c_charts_compare',function($scope,$rootScope,$http,Charts,$state){
-	$scope.start_date = $scope.end_date = "";
+	$scope.start_date = $rootScope.sdate;
+	$scope.end_date = $rootScope.edate;
 	$scope.charts_compare_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
 	//初始化图表
@@ -1279,18 +1290,20 @@ note.controller('c_charts_compare',function($scope,$rootScope,$http,Charts,$stat
 			}else hMessage(res.msg);
 		});
 	}
+
+	$scope.query();
 });
 //趋势图
 note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表
 	$scope.time_unit = '1';
-	$scope.start_date = $scope.end_date = "";
+	$scope.start_date = $rootScope.sdate;
+	$scope.end_date = $rootScope.edate;
 	$scope.charts_trend_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
 	//初始化图表
 	$scope.outcome_trend_chart = echarts.init(document.getElementById('charts-trend-line-outcome'));//支出
 	$scope.income_trend_chart = echarts.init(document.getElementById('charts-trend-line-income'));//收入
-	//$scope.inout_trend_chart = echarts.init(document.getElementById('charts-trend-line-inout-compare'));
 	
 	//查询
 	$scope.query = function(){
@@ -1331,19 +1344,6 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 		$scope.income_trend_chart_options.series[0].type = 'line';
 		$scope.income_trend_chart_options.series[0].data = [];
 		
-		//对比
-		/*$scope.inout_trend_chart_options.title.text = "收支趋势对比图";
-		$scope.inout_trend_chart_options.legend.data = ['收入','支出'];
-		$scope.inout_trend_chart_options.xAxis[0].data = [];
-		$scope.inout_trend_chart_options.series[0] = {};
-		$scope.inout_trend_chart_options.series[0].name = '收入';
-		$scope.inout_trend_chart_options.series[0].type = 'line';
-		$scope.inout_trend_chart_options.series[0].data = [];
-		$scope.inout_trend_chart_options.series[1] = {};
-		$scope.inout_trend_chart_options.series[1].name = '支出';
-		$scope.inout_trend_chart_options.series[1].type = 'line';
-		$scope.inout_trend_chart_options.series[1].data = [];*/
-		
 		//获取数据，默认单位是天
 		var cdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'time_unit':$scope.time_unit};
 		Charts.getTrendData(cdt).success(function(res){
@@ -1368,11 +1368,13 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 			}else hMessage(res.msg);
 		});
 	}
+
+	$scope.query();
 });
 //资产分布图+负债分布图
 note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表
-	$scope.end_date = "";
+	$scope.end_date = $rootScope.edate;
 	$scope.charts_property_distribute_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
 	//初始化图表
@@ -1393,26 +1395,14 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 		$scope.property_distribute_chart_options.series[0].name = '账户资产';
 		$scope.property_distribute_chart_options.series[0].type = 'pie';
 		$scope.property_distribute_chart_options.series[0].data = [];
-		//$scope.property_distribute_chart_options.series[0].radius = [0,70];
-
-		/*$scope.property_distribute_chart_options.series[1] = {};
-		$scope.property_distribute_chart_options.series[1].name = '二级账户资产';
-		$scope.property_distribute_chart_options.series[1].type = 'pie';
-		$scope.property_distribute_chart_options.series[1].data = [];
-		$scope.property_distribute_chart_options.series[1].radius = [100,140];*/
+		
 		//负债资产部分
 		$scope.liabilities_distribute_chart_options.legend.data = [];
 		$scope.liabilities_distribute_chart_options.series[0] = {};
 		$scope.liabilities_distribute_chart_options.series[0].name = '账户负债';
 		$scope.liabilities_distribute_chart_options.series[0].type = 'pie';
 		$scope.liabilities_distribute_chart_options.series[0].data = [];
-		//$scope.liabilities_distribute_chart_options.series[0].radius = [0,70];
-
-		/*$scope.liabilities_distribute_chart_options.series[1] = {};
-		$scope.liabilities_distribute_chart_options.series[1].name = '二级账户负债';
-		$scope.liabilities_distribute_chart_options.series[1].type = 'pie';
-		$scope.liabilities_distribute_chart_options.series[1].data = [];
-		$scope.liabilities_distribute_chart_options.series[1].radius = [100,140];*/
+		
 		//获取数据
 		var cdt = {'end_date':$scope.end_date};
 		Charts.getPropertyDistributeData(cdt).success(function(res){
@@ -1442,11 +1432,13 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 			}else hMessage(res.msg);
 		});
 	}
+
+	$scope.query();
 });
 //资产趋势图
 note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$state){
 	//初始化图表
-	$scope.end_date = "";
+	$scope.end_date = $rootScope.edate;
 	$scope.charts_property_trend_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
 
 	//初始化图表
@@ -1505,6 +1497,8 @@ note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$stat
 		});
 		
 	}
+
+	$scope.query();
 });
 //本月预算图
 note.controller('c_chart_budget',function($scope,$rootScope,$http,Charts,$state){
@@ -1526,6 +1520,8 @@ note.controller('c_chart_budget',function($scope,$rootScope,$http,Charts,$state)
 				$scope.proportion = $scope.budget.outcome_num*100/$scope.budget.budget_num;
 				$scope.charts_budget_tip = "";
 			}else $scope.charts_budget_tip = res.msg;
+		}).error(function(data,state){
+			console.log(data);
 		});
 	}
 

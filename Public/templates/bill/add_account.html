@@ -14,10 +14,10 @@
       <label>一级账户</label>
       <span class="bill_account f-right">
 
-        <select class="uk-select" style="width:446px;" name="added_account" ng-model="added_account" ng-show="!ifAddSelfAccount" ng-options="account_item.account_id as account_item.account_name for account_item in account_items">
+        <select class="uk-select" style="width:425px;" name="added_account" ng-model="added_account" ng-show="!ifAddSelfAccount" ng-options="account_item.account_id as account_item.account_name for account_item in account_items">
           </select>
 
-        <input type="text" class="uk-input" name="added_account" style="width:446px;" placeholder="自定义账户类型" ng-model="added_account" ng-show="ifAddSelfAccount">
+        <input type="text" class="uk-input" name="added_account" style="width:425px;" placeholder="自定义账户类型" ng-model="added_account" ng-show="ifAddSelfAccount">
 
         <button type="button" class="uk-button uk-button-small" title="添加自定义类型" ng-click="switchSelfAccount()" ng-bind-html="add_self_account_btn_icon | trustHtml">
         </button>
@@ -26,15 +26,15 @@
     </li>
     <li>
       <label>账户名称</label>
-      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_name" ng-model="added_child_account_name" placeholder="二级账户名称">
+      <input type="text" class="uk-input f-right" style="width:425px;" name="added_child_account_name" ng-model="added_child_account_name" placeholder="二级账户名称">
     </li>
     <li>
       <label>初始金额</label>
-      <input type="number" class="uk-input uk-form-width-large f-right" name="added_child_account_balance" placeholder="二级账户初始余额" ng-model="added_child_account_balance">
+      <input type="number" class="uk-input f-right" style="width:425px;" name="added_child_account_balance" placeholder="二级账户初始余额" ng-model="added_child_account_balance">
     </li>
     <li>
       <label>账户备注</label>
-      <input type="text" class="uk-input uk-form-width-large f-right" name="added_child_account_remarks" placeholder="二级账户备注" ng-model="added_child_account_remarks">
+      <input type="text" class="uk-input f-right" style="width:425px;" name="added_child_account_remarks" placeholder="二级账户备注" ng-model="added_child_account_remarks">
     </li>
   </ul>
 </form>

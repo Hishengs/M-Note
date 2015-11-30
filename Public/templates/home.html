@@ -1,27 +1,30 @@
 <!-- 简报 -->
-<div class="balance-briefing uk-animation-slide-left">
+<div class="balance-briefing uk-animation-slide-left" ng-controller="c_chart_budget">
 	<div class="uk-panel">
 		<div class="uk-panel uk-panel-header">
 			<div class="uk-panel-title">
-			本月简报
+			本月预算
 			<span class="f-right">
-				<a class="uk-button uk-button-primary" href="javascript:void(0);">修改预算</a>
+				
 			</span>
 			</div>
 		</div>
-		<div class="uk-panel-content">本月预算支出 ¥6,000.00 元, 已消费 ¥1,100.00 元， 还剩 ¥-4,900.00 可以消费。</div>
+		<div class="uk-panel-content">
+		<div class="uk-alert" ng-bind-html="charts_budget_tip | trustHtml" ng-show="charts_budget_tip"></div>
+			本月预算支出 ¥ {{budget.budget_num | subFloat:2}} 元, 已消费 ¥ {{budget.outcome_num | subFloat:2}} 元， 还剩 ¥ {{(budget.budget_num-budget.outcome_num) | subFloat:2}} 可以消费。
+		</div>
 		<div class="uk-progress"><!-- 进度条 -->
-		    <div class="uk-progress-bar" style="width: 18.3%;">18.3%</div>
+		    <div class="uk-progress-bar" style="width: {{proportion}}%;">{{proportion | subFloat:2}}%</div>
 		</div>
 	</div>
 </div>
 <!-- 收支表 -->
-<div class="balance-table uk-animation-slide-right">
+<!-- <div class="balance-table uk-animation-slide-right">
 	<div class="uk-panel uk-panel-header">
 		<div class="uk-panel-title">本月收支表(单位：元)<span class="balance-table-header-right">2015年10月份</span></div>
 	</div>
 	<table class="uk-table">
-	    <!-- <caption>收支表(单位：元)</caption> -->
+	    <caption>收支表(单位：元)</caption>
 	    <thead>
 	        <tr>
 	        	<th>类型</th>
@@ -48,20 +51,24 @@
 	        </tr>
 	    </tbody>
 	</table>
-</div>
-<!-- 收支图 -->
-<div class="balance-chart uk-animation-slide-left">
-	<div class="uk-panel uk-panel-header">
-		<div class="uk-panel-title">本月收支图</div>
+</div> -->
+
+<div class="charts-distribute balance-chart uk-animation-slide-left" ng-controller="c_charts_distribute">
+	<div class="uk-panel">
+		<div class="uk-panel-header">
+			<span style="font-size:18px;">本月收支分布图</span>
+			<span class="f-right">
+				从{{start_date}}到{{end_date}}
+			</span>
+			<hr>
+		</div>
+		<div class="uk-panel-content display-inline-block">
+			<div class="uk-alert" ng-bind-html="charts_distribute_tip | trustHtml" ng-show="charts_distribute_tip"></div>
+			<!-- 收入分布图 -->
+			<div class="charts-distribute-pie margin-top-40 display-inline-block" id="charts-distribute-pie-income" style="width:480px;height:500px;"></div>
+			<!-- 支出分布图 -->
+			<div class="charts-distribute-pie margin-top-40 display-inline-block" id="charts-distribute-pie-outcome" style="width:480px;height:500px;"></div>
+		</div>
+		<div class="uk-panel-footer"></div>
 	</div>
-	<div class="balance-chart-bar" id="balance-chart-bar"></div>
-	<div class="balance-chart-pip" id="balance-chart-pip"></div>
-	<script type="text/javascript">
-    // 基于准备好的dom，初始化echarts图表
-    var bar_chart = echarts.init(document.getElementById('balance-chart-bar')); 
-    var pip_chart = echarts.init(document.getElementById('balance-chart-pip')); 
-    // 为echarts对象加载数据 
-    bar_chart.setOption(bar_option); 
-    pip_chart.setOption(pip_option); 
-    </script>
 </div>

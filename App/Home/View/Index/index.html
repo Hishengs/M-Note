@@ -4,7 +4,7 @@
 	<base href="/M-Note/">
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/uikit.gradient.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/uikit.almost-flat.min.css">
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/datepicker.min.css"><!-- 日期选择控件样式 -->
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/form-select.min.css">
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/progress.min.css"><!-- 进度条样式 -->
@@ -39,7 +39,10 @@
 <div class="nav-wrapper" ng-controller="c_nav">
 	<nav class="nav uk-navbar">
 		<ul class="nav-items uk-navbar-nav">
-	        <li ng-class="{'uk-active': current_tab=='home'}" ng-click="switchTab('home')"><a href="javascript:void(0);">随手记</a></li>
+	        <li ng-class="{'uk-active': current_tab=='home'}" ng-click="switchTab('home')">
+		        <a href="javascript:void(0);">
+		        M-NOTE
+		        </a></li>
 	        <li ng-class="{'uk-active': current_tab=='bill'}" ng-click="switchTab('bill')"><a href="javascript:void(0);">记账</a></li>
 	        <li ng-class="{'uk-active': current_tab=='charts'}" ng-click="switchTab('charts')"><a href="javascript:void(0);">报表</a></li>
 	        <li ng-class="{'uk-active': current_tab=='accounts'}" ng-click="switchTab('accounts')"><a href="javascript:void(0);">账户</a></li>
@@ -69,7 +72,7 @@
 		<div class="footer">
 			<hr>
 			<div class="site-info">
-				<p>随手记 @ 2015 Theme By Hisheng</p>
+				<p>M-Note @ 2015 Design By Hisheng</p>
 			</div>
 		</div> 
 	</div>
