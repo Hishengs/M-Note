@@ -153,6 +153,7 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 		//修正余额
 		var added_num = $scope.modified_child_account.balance-(parseFloat($scope.modified_child_account.child_account_balance)+($scope.modified_child_account.flow_in - $scope.modified_child_account.flow_out));
 		$scope.modified_child_account.child_account_balance = parseFloat($scope.modified_child_account.child_account_balance) + added_num;
+		console.log('added_num'+added_num);
 		Account.modifyChildAccount($scope.modified_child_account).success(function(res){
 			if(res.error === 0){
 				$scope.updateAccountList();

@@ -1028,6 +1028,7 @@ note.controller('c_account_manage',function($scope,$rootScope,$state,Account){
 		//修正余额
 		var added_num = $scope.modified_child_account.balance-(parseFloat($scope.modified_child_account.child_account_balance)+($scope.modified_child_account.flow_in - $scope.modified_child_account.flow_out));
 		$scope.modified_child_account.child_account_balance = parseFloat($scope.modified_child_account.child_account_balance) + added_num;
+		console.log('added_num'+added_num);
 		Account.modifyChildAccount($scope.modified_child_account).success(function(res){
 			if(res.error === 0){
 				$scope.updateAccountList();
@@ -1289,15 +1290,14 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 	//初始化图表
 	$scope.outcome_trend_chart = echarts.init(document.getElementById('charts-trend-line-outcome'));//支出
 	$scope.income_trend_chart = echarts.init(document.getElementById('charts-trend-line-income'));//收入
+	//$scope.inout_trend_chart = echarts.init(document.getElementById('charts-trend-line-inout-compare'));
 	
 	//查询
 	$scope.query = function(){
-		$scope.outcome_trend_chart.clear();$scope.income_trend_chart.clear();
+		$scope.outcome_trend_chart.clear();$scope.income_trend_chart.clear();//$scope.inout_trend_chart.clear();
 		$scope.outcome_trend_chart_options = $rootScope.clone($rootScope.line_options);//待装载的数据
 		$scope.income_trend_chart_options = $rootScope.clone($rootScope.line_options);//待装载的数据
-
-		$scope.outcome_trend_chart_options.title.text = "支出趋势图";
-		$scope.income_trend_chart_options.title.text = "收入趋势图";
+		$scope.inout_trend_chart_options = $rootScope.clone($rootScope.line_options);
 
 		switch(parseInt($scope.time_unit)){
 			case 1:
@@ -1315,7 +1315,7 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 			default:
 				break;
 		}
-		
+		$scope.outcome_trend_chart_options.title.text = "支出趋势图";
 		$scope.outcome_trend_chart_options.legend.data = ['支出'];
 		$scope.outcome_trend_chart_options.xAxis[0].data = [];
 		$scope.outcome_trend_chart_options.series[0] = {};
@@ -1323,12 +1323,26 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 		$scope.outcome_trend_chart_options.series[0].type = 'line';
 		$scope.outcome_trend_chart_options.series[0].data = [];
 
+		$scope.income_trend_chart_options.title.text = "收入趋势图";
 		$scope.income_trend_chart_options.legend.data = ['收入'];
 		$scope.income_trend_chart_options.xAxis[0].data = [];
 		$scope.income_trend_chart_options.series[0] = {};
 		$scope.income_trend_chart_options.series[0].name = '收入';
 		$scope.income_trend_chart_options.series[0].type = 'line';
 		$scope.income_trend_chart_options.series[0].data = [];
+		
+		//对比
+		/*$scope.inout_trend_chart_options.title.text = "收支趋势对比图";
+		$scope.inout_trend_chart_options.legend.data = ['收入','支出'];
+		$scope.inout_trend_chart_options.xAxis[0].data = [];
+		$scope.inout_trend_chart_options.series[0] = {};
+		$scope.inout_trend_chart_options.series[0].name = '收入';
+		$scope.inout_trend_chart_options.series[0].type = 'line';
+		$scope.inout_trend_chart_options.series[0].data = [];
+		$scope.inout_trend_chart_options.series[1] = {};
+		$scope.inout_trend_chart_options.series[1].name = '支出';
+		$scope.inout_trend_chart_options.series[1].type = 'line';
+		$scope.inout_trend_chart_options.series[1].data = [];*/
 		
 		//获取数据，默认单位是天
 		var cdt = {'start_date':$scope.start_date,'end_date':$scope.end_date,'time_unit':$scope.time_unit};
@@ -1337,26 +1351,17 @@ note.controller('c_charts_trend',function($scope,$rootScope,$http,Charts,$state)
 			if(res.error === 0){
 				for(var i=0;i<res.outcome_bills.length;i++){
 					//var date = new Date(res.outcome_bills[i].bill_time);
-					$scope.outcome_trend_chart_options.xAxis[0].data.push(res.outcome_bills[i].time_unit);
+					$scope.outcome_trend_chart_options.xAxis[0].data.push(res.outcome_bills[i].bill_time);
 					$scope.outcome_trend_chart_options.series[0].data.push(res.outcome_bills[i].bill_sum);
 				}
 				for(var j=0;j<res.income_bills.length;j++){
-					$scope.income_trend_chart_options.xAxis[0].data.push(res.income_bills[j].time_unit);
+					$scope.income_trend_chart_options.xAxis[0].data.push(res.income_bills[j].bill_time);
 					$scope.income_trend_chart_options.series[0].data.push(res.income_bills[j].bill_sum);
 				}
+
 				if(!i&&!j)$scope.charts_trend_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';
 				else $scope.charts_trend_tip = '';
-				/*if(!i&&!j){
-					$scope.charts_trend_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';
-				}else if(i){
-					$scope.charts_trend_tip = '';
-					$scope.outcome_trend_chart.dispose();
-					$scope.outcome_trend_chart_options = echarts.init(document.getElementById('charts-trend-line-outcome'));//支出
-				}else if(j){
-					$scope.charts_trend_tip = '';
-					$scope.income_trend_chart.dispose();
-					$scope.income_trend_chart = echarts.init(document.getElementById('charts-trend-line-income'));//收入
-				}*/
+				
 
 				$scope.outcome_trend_chart.setOption($scope.outcome_trend_chart_options); 
 				$scope.income_trend_chart.setOption($scope.income_trend_chart_options); 

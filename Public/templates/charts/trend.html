@@ -1,7 +1,7 @@
 <div class="charts-trend" ng-controller="c_charts_trend">
 	<div class="uk-panel">
 		<div class="uk-panel-header">
-			<span style="font-size:18px;">趋势图</span>
+			<span style="font-size:18px;">收支趋势图</span>
 			<span class="f-right">
 				<!-- 条件选择 -->
 				<form class="uk-form display-inline-block">
@@ -23,9 +23,11 @@
 		<div class="uk-panel-content display-inline-block">
 			<div class="uk-alert" ng-bind-html="charts_trend_tip | trustHtml" ng-show="charts_trend_tip"></div>
 			<!-- 支出趋势图 -->
-			<div class="charts-trend-line margin-top-40 display-inline-block" id="charts-trend-line-outcome" style="width:400px;height:500px;"></div>
+			<div class="charts-trend-line margin-top-40" id="charts-trend-line-outcome" style="width:800px;height:350px;"></div>
 			<!-- 收入趋势图 -->
-			<div class="charts-trend-line margin-top-40 display-inline-block" id="charts-trend-line-income" style="width:400px;height:500px;"></div>
+			<div class="charts-trend-line margin-top-40" id="charts-trend-line-income" style="width:800px;height:350px;"></div>
+			<!-- 对比图 -->
+			<!-- <div class="charts-trend-line margin-top-40" id="charts-trend-line-inout-compare" style="width:800px;height:500px;"></div> -->
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>

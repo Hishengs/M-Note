@@ -152,11 +152,18 @@ class AccountController extends Controller {
     public function modify_child_account(){
         $child_account_name = I('post.child_account_name');
         $child_account_id = I('post.child_account_id');
-        $child_account_balance = I('post.child_account_balance');
         $child_account_remarks = I('post.child_account_remarks');
-        $account = array('child_account_name'=>$child_account_name,'child_account_balance'=>$child_account_balance,'child_account_remarks'=>$child_account_remarks);
+        $child_account_balance = I('post.child_account_balance');//这一部分应该是新增一条账单
+        $bill_type = $child_account_balance<0?1:2;
+        $bill = array('bill_user_id'=>$this->user_id,'bill_type'=>$bill_type,'bill_category_id'=>-$bill_type,
+        'bill_account_id'=>$child_account_id,'bill_time'=>date("Y-m-d H:i:s"),
+        'bill_location'=>'系统','bill_sum'=>abs($child_account_balance),
+        'bill_remarks'=>$child_account_remarks);
+        $bill_model = D('Bill');
+        $res = $bill_model->add($bill);
+        $account = array('child_account_name'=>$child_account_name,'child_account_remarks'=>$child_account_remarks);
         $cdt['child_account_id'] = $child_account_id;
-        if($this->child_account_model->where($cdt)->save($account))$this->ajaxReturn(array('error'=>0,'msg'=>'账户修改成功！'));
+        if($this->child_account_model->where($cdt)->save($account) && $res)$this->ajaxReturn(array('error'=>0,'msg'=>'账户修改成功！'));
         else $this->ajaxReturn(array('error'=>1,'msg'=>'账户修改失败！'));
     }
     //删除账户
@@ -199,12 +206,12 @@ class AccountController extends Controller {
             $bill_model = D('Bill');
             $outcome_bill = array('bill_user_id'=>$this->user_id,'bill_type'=>1,'bill_category_id'=>-1,
             'bill_account_id'=>$out_account_id,'bill_time'=>$bill_time,
-            'bill_location'=>'','bill_sum'=>$transfer_num,
+            'bill_location'=>'系统','bill_sum'=>$transfer_num,
             'bill_remarks'=>$transfer_remarks);
             $res1 = $bill_model->add($outcome_bill);
             $income_bill = array('bill_user_id'=>$this->user_id,'bill_type'=>2,'bill_category_id'=>-2,
             'bill_account_id'=>$in_account_id,'bill_time'=>$bill_time,
-            'bill_location'=>'','bill_sum'=>$transfer_num,
+            'bill_location'=>'系统','bill_sum'=>$transfer_num,
             'bill_remarks'=>$transfer_remarks);
             $res2 = $bill_model->add($income_bill);
             //同时生成一条轉賬記錄插入
