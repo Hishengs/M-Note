@@ -1114,8 +1114,8 @@ note.controller('c_account_transfer',function($scope,$rootScope,$state,Account){
 });
 //----------------报表控制器--------------------
 note.controller('c_charts',function($scope,$rootScope,$http,Charts,$state){
-	$state.go('compare');
-	$scope.current_charts_tab = "compare";
+	$state.go('budget');
+	$scope.current_charts_tab = "budget";
 	$scope.switchChartsTab = function(tab){
 		$scope.current_charts_tab = tab;
 		$state.go(tab);
@@ -1504,6 +1504,46 @@ note.controller('c_property_trend',function($scope,$rootScope,$http,Charts,$stat
 			}else ;
 		});
 		
+	}
+});
+//本月预算图
+note.controller('c_chart_budget',function($scope,$rootScope,$http,Charts,$state){
+	$scope.budget_num = null;
+	$scope.budget = {budget_num:0,outcome_num:0,budget_id:null};
+	$scope.modified_budget_num = 0;
+	$scope.proportion = 0;
+	$scope.charts_budget_tip = "";
+
+	$scope.updateBudget =  function(){
+		$scope.charts_budget_tip = '<i class="uk-icon-spinner"></i> 正在获取数据...';
+		//获取数据
+		Charts.getBudgetData().success(function(res){
+			console.log(res);
+			if(res.error === 0){
+				$scope.budget.budget_num = parseFloat(res.budget_num);
+				$scope.budget.outcome_num = parseFloat(res.outcome_num);
+				$scope.budget.budget_id = res.budget_id;
+				$scope.proportion = $scope.budget.outcome_num*100/$scope.budget.budget_num;
+				$scope.charts_budget_tip = "";
+			}else $scope.charts_budget_tip = res.msg;
+		});
+	}
+
+	$scope.updateBudget();
+	//修改预算
+	$scope.modifyBudget = function(){
+		if($scope.modified_budget_num > 0){
+			var cdt = {'budget_id':$scope.budget.budget_id,'budget_num':$scope.modified_budget_num}
+			console.log(cdt);
+			Charts.modifyBudget(cdt).success(function(res){
+				console.log(res);
+				if(res.error === 0){
+					hMessage('修改成功！');
+					//更新预算
+					$scope.updateBudget();
+				}else hMessage(res.msg);
+			});
+		}else hMessage("预算数目必须为正数！");
 	}
 });
 //----------------------用户控制器------------------------

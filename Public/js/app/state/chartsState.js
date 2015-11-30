@@ -3,6 +3,10 @@ note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('charts',{ 
 		url:'/charts',
 		views:{'content':{templateUrl:templates_path+'/charts/charts.html'}}
+	}).state('budget',{ //报表-预算图
+		url:'/budget',
+		parent:'charts',
+		views:{'charts_view':{templateUrl:templates_path+'/charts/budget.html'}}
 	}).state('distribute',{ //报表-分布图
 		url:'/distribute',
 		parent:'charts',

@@ -313,4 +313,19 @@ note.service('Charts',function($http){
 			/*data:cdt*/
 		});
 	}
+	//获取预算数据
+	this.getBudgetData = function(){
+		return $http({
+			method:'GET',
+			url:home_path+"/Charts/get_budget_data.html"
+		});
+	}
+	//修改预算
+	this.modifyBudget = function(cdt){
+		return $http({
+			method:'POST',
+			url:home_path+"/Charts/modify_budget.html",
+			data:cdt
+		});
+	}
 });

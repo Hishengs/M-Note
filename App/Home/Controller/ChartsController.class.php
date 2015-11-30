@@ -111,4 +111,42 @@ class ChartsController extends Controller {
         }
         $this->ajaxReturn(array('error'=>0,'dates'=>$dates,'datas'=>$datas,'end_date'=>$end_date));
     }
+    //新建(本月)预算
+    protected function add_budget($budget_num){
+        $budget = array('budget_user_id'=>$this->user_id,'budget_date'=>date('Y-n-j'),'budget_num'=>$budget_num);
+        $budget_model->add($budget);
+    }
+    //获取预算数据
+    public function get_budget_data(){
+        //获取本月预算,如果没有则新建一个预算为0
+        $cdt = "DATE_FORMAT(budget_date,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') AND budget_user_id=".$this->user_id;
+        $budget_model = D('budget');
+        $budget = $budget_model->where($cdt)->find();
+        $budget_num = $budget['budget_num'];
+        $budget_id = $budget['budget_id'];
+        if(!$budget){
+            //新建预算
+            $budget_num = 1000;
+            $budget_id = $this->add_budget();
+        }
+        //获取支出数array('bill_user_id'=>$this->user_id,'bill_type'=>1);
+        $cdt = "DATE_FORMAT(bill_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') AND bill_user_id=".$this->user_id." AND bill_type=1";
+        $outcome_num = $this->bill_model->field('SUM(bill_sum) as outcome_num')->where($cdt)->find()['outcome_num'];
+        if($outcome_num !== false){
+            if($outcome_num === NULL)$this->ajaxReturn(array('error'=>0,'budget_num'=>$budget_num,'outcome_num'=>0));
+            else $this->ajaxReturn(array('error'=>0,'budget_num'=>$budget_num,'outcome_num'=>$outcome_num,'budget_id'=>$budget_id));
+        }else $this->ajaxReturn(array('error'=>1,'msg'=>'数据获取失败！'));
+    }
+    //修改预算
+    public function modify_budget(){
+        $budget_num = I('post.budget_num');
+        $budget_id = I('post.budget_id');
+        if(!empty($budget_num) && !empty($budget_id)){
+            $budget_model = D('budget');
+            $cdt = array('budget_id'=>$budget_id,'budget_user_id'=>$this->user_id);
+            $budget = array('budget_num'=>$budget_num);
+            if($budget_model->where($cdt)->save($budget))$this->ajaxReturn(array('error'=>0,'msg'=>'修改成功！'));
+            else $this->ajaxReturn(array('error'=>1,'msg'=>'修改失败！','budget'=>$budget));
+        }else $this->ajaxReturn(array('error'=>1,'msg'=>'请提交有效的数据！'));
+    }
 }

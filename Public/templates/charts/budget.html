@@ -1,24 +1,23 @@
-<div class="budget uk-animation-slide-right" ng-controller="c_budget">
-	<!--本月预算-->
-	<div class="budget-month-details">
-		<div class="uk-panel uk-panel-header">
-			<div class="uk-panel-title">本月预算</div>
+<div class="budget-chart" ng-controller="c_chart_budget">
+	<div class="uk-panel">
+		<div class="uk-panel-header">
+			<span style="font-size:18px;">本月预算图</span>
+			<span class="f-right">
+				<!-- 条件选择 -->
+				<form class="uk-form display-inline-block">
+					<input type="number" name="modified_budget_num" ng-model="modified_budget_num" placeholder="预算">
+				</form>
+				<button class="uk-button uk-button-promary" ng-click="modifyBudget()">修改预算</button>
+			</span>
+			<hr>
 		</div>
-		<table class="uk-table cash-tabel">
-		    <thead>
-		        <tr>
-		        	<th>预算</th>
-		            <th>支出</th>
-		            <th>收入</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <tr>
-		            <td>3000</td>
-		            <td>-2870</td>
-		            <td>+1200</td>
-		        </tr>
-		    </tbody>
-		</table>
+		<div class="uk-panel-content">
+			<div class="uk-alert" ng-bind-html="charts_budget_tip | trustHtml" ng-show="charts_budget_tip"></div>
+			本月预算支出 ¥ {{budget.budget_num | subFloat:2}} 元, 已消费 ¥ {{budget.outcome_num | subFloat:2}} 元， 还剩 ¥ {{(budget.budget_num-budget.outcome_num) | subFloat:2}} 可以消费。
+			<div class="uk-progress"><!-- 进度条 -->
+			    <div class="uk-progress-bar" style="width: {{proportion}}%;">{{proportion | subFloat:2}}%</div>
+			</div>
+		</div>
+		<div class="uk-panel-footer"></div>
 	</div>
 </div>
