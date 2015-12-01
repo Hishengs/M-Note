@@ -4,34 +4,15 @@
 	<base href="/M-Note/">
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/uikit.almost-flat.min.css">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/datepicker.min.css"><!-- 日期选择控件样式 -->
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/form-select.min.css">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/progress.min.css"><!-- 进度条样式 -->
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/uikit/css/components/notify.min.css"><!-- 顶部通知样式 -->
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css">
 	<script type="text/javascript">
     	var templates_path = "__PUBLIC__"+"/templates";
     	var home_path = "__MODULE__";
     	var public_path = "__PUBLIC__";
     </script>
-	<script type="text/javascript" src="__PUBLIC__/js/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/index.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/dist/angular.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/init.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/config.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/state.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/filter.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/service.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/app/controller.js"></script>
-	<!--<script type="text/javascript" src="./js/dist/app.js"></script>-->
-	<script type="text/javascript" src="__PUBLIC__/plugins/uikit/js/uikit.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/plugins/uikit/js/components/form-password.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/plugins/uikit/js/components/datepicker.js"></script><!-- 日期选择控件 -->
-	<script type="text/javascript" src="__PUBLIC__/plugins/uikit/js/components/form-select.min.js"></script><!-- 选择表单控件 -->
-	<script type="text/javascript" src="__PUBLIC__/plugins/uikit/js/components/notify.min.js"></script><!-- 顶部通知控件 -->
-	<!-- ECharts -->
-    <script src="__PUBLIC__/plugins/echarts/dist/echarts-all.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://7xot8q.com1.z0.glb.clouddn.com/js/uikit/css/uikit.almost-flat.min.css">
+	<link rel="stylesheet" type="text/css" href="http://7xot8q.com1.z0.glb.clouddn.com/css/dist/uk-plugins-css.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css">
+	<script type="text/javascript" src="http://7xot8q.com1.z0.glb.clouddn.com/js/jquery/dist/jquery.min.js"></script>
 	<title>随手记-首页</title>
 </head>
 <body>
@@ -78,7 +59,18 @@
 	</div>
 </div>
 </body>
+<script type="text/javascript" src="__PUBLIC__/js/index.js"></script>
+<script type="text/javascript" src="http://7xot8q.com1.z0.glb.clouddn.com/js/dist/angular.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/dist/app.js"></script>
+<script type="text/javascript" src="http://7xot8q.com1.z0.glb.clouddn.com/js/dist/uk-js.min.js"></script>
+<script src="http://7xot8q.com1.z0.glb.clouddn.com/js/echarts/dist/echarts.js"></script><!-- ECharts -->
 <script type="text/javascript">
+	//配置echarts
+	require.config({
+        paths: {
+            echarts: 'http://7xot8q.com1.z0.glb.clouddn.com/js/echarts/dist'
+        }
+    });
 	//获取当前日期
 	var date = new Date();
 	var minDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (parseInt(date.getDate())-7);//前一周

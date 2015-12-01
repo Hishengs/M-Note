@@ -506,7 +506,8 @@ note.controller('c_bill_details',function($scope,$rootScope,$state,$http,Bill){
 					var bill_detail_modal = UIkit.modal("#bill-detail-modal");
 					bill_detail_modal.hide();
 					hMessage("账单删除成功！",2000);
-					$("#bill_"+bill_id).remove();
+					//$("#bill_"+bill_id).remove();
+					document.getElementById("bill_"+bill_id).parentNode.removeChild(document.getElementById("bill_"+bill_id));
 				}
 				else hMessage(res.msg,2000);
 			});

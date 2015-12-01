@@ -13,10 +13,10 @@ note.controller('c_login',function($scope,$state,$rootScope,$timeout,ipCookie,Us
 		//post
 		var loginInfo = {'username':$scope.username,'password':$scope.password};
 		var is_new = true;
-		$timeout(function(){if(is_new)hMessage('这可能是你的第一次登陆，相关数据正在初始化，请耐心等候...');},2000);
+		$timeout(function(){if(is_new)hMessage('这可能是你的第一次登陆，相关数据正在初始化，请耐心等候...');},3000);
 		User.login(loginInfo).success(function(res){
+			is_new = false;
 			if(res.error === 0){
-				is_new = false;
 				loginable = true;
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
@@ -36,7 +36,7 @@ note.controller('c_login',function($scope,$state,$rootScope,$timeout,ipCookie,Us
 
 				setTimeout(function(){$state.go('home');},1500);
 			}else if(res.error === 2){hMessage("该用户不存在！",1500);loginable = true;}
-			else hMessage(res.msg,2000);
+			else{hMessage(res.msg,2000);loginable = true;}
 		}).error(function(data,state){
 			console.log(data);
 			console.log(state);
@@ -61,8 +61,10 @@ note.controller('c_register',function($scope,$state,User){
 		else if($scope.password.length > 1 && $scope.password.length < 6){hMessage("请输入6位以上的密码！",2000);return;}
 		else if($scope.password !== $scope.password_confirm){hMessage("两次输入的密码不一致！",2000);return;}
 		//将按钮设为不可用状态
-		$("#register-btn").html("注册中...");
-		$("#register-btn").attr("disabled","disabled");
+		//$("#register-btn").html("注册中...");
+		//$("#register-btn").attr("disabled","disabled");
+		document.getElementById('register-btn').innerHTML = "注册中...";
+		document.getElementById('register-btn').disabled = "disabled";
 		//post
 		var registerInfo = {'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm};
 		User.register(registerInfo).success(function(res){
@@ -73,8 +75,10 @@ note.controller('c_register',function($scope,$state,User){
 			}
 			else {hMessage(res.msg,2000);registerable = true;}
 			//恢复按钮状态
-			$("#register-btn").html("注册");
-			$("#register-btn").attr("disabled",false);
+			//$("#register-btn").html("注册");
+			//$("#register-btn").attr("disabled",false);
+			document.getElementById('register-btn').innerHTML = "注册";
+			document.getElementById('register-btn').disabled = false;
 		});
 	}
 });

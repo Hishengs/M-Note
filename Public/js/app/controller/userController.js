@@ -95,12 +95,14 @@ note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$int
 	    }
 	    //执行上传操作
 	    if(uploadable){
-	        $("form.upload-avatar-form").submit();
+	        //$("form.upload-avatar-form").submit()
+	        document.getElementsByClassName("upload-avatar-form")[0].submit();
 	        $scope.uploadAvatarBtn = "上传中...";
 	        var stop = $interval(function(){
-	            if($(window.frames["upload_avatar_iframe"].document).find('pre').html() != undefined)
+	        	var upload_avatar_iframe = window.frames["upload_avatar_iframe"].document;
+	            if(upload_avatar_iframe.getElementsByTagName('pre')[0] != undefined)
 	            {
-		            var callback = JSON.parse($(window.frames["upload_avatar_iframe"].document).find('pre').html());
+		            var callback = JSON.parse(upload_avatar_iframe.getElementsByTagName('pre')[0].innerHTML);
 		            console.log(callback);
 		            if(callback.error == 0){
 		            	//判断是相对路径还是绝对路径
@@ -112,7 +114,7 @@ note.controller('c_modify_userInfo_modal',function($scope,$state,$rootScope,$int
 		              	hMessage("上传成功！");
 		              	$interval(function(){$scope.uploadAvatarBtn = "上传头像";},2000);
 		            }else hMessage(callback.msg);
-		            $(window.frames["upload_avatar_iframe"].document).find('pre').html('');
+		            upload_avatar_iframe.getElementsByTagName('pre')[0].innerHTML = '';
 		            $interval.cancel(stop);
 	            }
 	      	},checkTime);

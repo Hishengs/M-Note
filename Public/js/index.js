@@ -107,8 +107,7 @@ function usernameVerify(username){
 }
 //
 function setTitle(title){
-	$("title").html(title);
-	//document.getElementByTagName("title");
+    document.title = title;
 }
 //check if empty
 function checkEmpty(value){
