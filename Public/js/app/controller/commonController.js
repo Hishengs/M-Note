@@ -3,19 +3,27 @@ var site_prefix = "http://localhost/note2/"
 //var controller_path = '';
 //----------------------------------------主页------------------------------------------------
 note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
+	/*$rootScope.$on('$viewContentLoaded', function(event){
+		console.log('content loaded: ', event);
+		if(!ipCookie('is_logined')){
+        	$state.go('welcome');
+		}else $state.go('home');
+	});*/
 	$state.go('home');
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
         if(!ipCookie('is_logined')){
         	//如果未登录，除了注册登陆不允许跳转到别的地方
         	console.log(arguments);
-        	console.log(arguments[1].split('#')[1]);
-        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register" && arguments[1].split('#')[1] != "/welcome"){
+        	var url_suffix = arguments[1].split('#')[1];
+        	url_suffix = url_suffix==undefined?'/#':url_suffix;
+        	console.log(url_suffix);
+        	if(url_suffix != "/login" && url_suffix != "/register" && url_suffix != "/welcome"){
 				$state.go('welcome');
 				//$state.go('login');
 				//hMessage("请登录后再操作！");
 			}
-		} 
+		}
 	});
 
 	//拷贝对象
@@ -70,17 +78,13 @@ note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log
 });
 //----------------------------------------导航栏------------------------------------------------
 note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
-	//在这之前向服务器请求用户的登陆状态
-	/*$http.get(home_path+"/User/is_logined.html").success(function(){
-		if(res.error === 0){
-			if(res.is_logined)
-				$rootScope.user.is_logined = true;//登陆状态
-			else $rootScope.user.is_logined = false;
-		}else $rootScope.user.is_logined = false;
-	});*/
+
 	$scope.current_tab = 'home';
 	$scope.switchTab = function(tab){
 		$scope.current_tab = tab;
+		if(!ipCookie('is_logined') && tab !== 'welcome'){console.log('nothing');return;}
+		if(!ipCookie('is_logined') && tab === 'welcome'){console.log('welcome');$state.go('welcome');return;}
+		if(ipCookie('is_logined') && tab === 'welcome'){console.log('home');$state.go('home');return;}
 		$state.go(tab);
 	}
 	if(!ipCookie('is_logined'))

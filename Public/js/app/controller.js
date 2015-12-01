@@ -3,19 +3,27 @@ var site_prefix = "http://localhost/note2/"
 //var controller_path = '';
 //----------------------------------------主页------------------------------------------------
 note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log,ipCookie){
+	/*$rootScope.$on('$viewContentLoaded', function(event){
+		console.log('content loaded: ', event);
+		if(!ipCookie('is_logined')){
+        	$state.go('welcome');
+		}else $state.go('home');
+	});*/
 	$state.go('home');
 	//对所有的url跳转作权限验证
 	$rootScope.$on('$locationChangeStart', function(event){
         if(!ipCookie('is_logined')){
         	//如果未登录，除了注册登陆不允许跳转到别的地方
         	console.log(arguments);
-        	console.log(arguments[1].split('#')[1]);
-        	if(arguments[1].split('#')[1] != "/login" && arguments[1].split('#')[1] != "/register" && arguments[1].split('#')[1] != "/welcome"){
+        	var url_suffix = arguments[1].split('#')[1];
+        	url_suffix = url_suffix==undefined?'/#':url_suffix;
+        	console.log(url_suffix);
+        	if(url_suffix != "/login" && url_suffix != "/register" && url_suffix != "/welcome"){
 				$state.go('welcome');
 				//$state.go('login');
 				//hMessage("请登录后再操作！");
 			}
-		} 
+		}
 	});
 
 	//拷贝对象
@@ -70,17 +78,13 @@ note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log
 });
 //----------------------------------------导航栏------------------------------------------------
 note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
-	//在这之前向服务器请求用户的登陆状态
-	/*$http.get(home_path+"/User/is_logined.html").success(function(){
-		if(res.error === 0){
-			if(res.is_logined)
-				$rootScope.user.is_logined = true;//登陆状态
-			else $rootScope.user.is_logined = false;
-		}else $rootScope.user.is_logined = false;
-	});*/
+
 	$scope.current_tab = 'home';
 	$scope.switchTab = function(tab){
 		$scope.current_tab = tab;
+		if(!ipCookie('is_logined') && tab !== 'welcome'){console.log('nothing');return;}
+		if(!ipCookie('is_logined') && tab === 'welcome'){console.log('welcome');$state.go('welcome');return;}
+		if(ipCookie('is_logined') && tab === 'welcome'){console.log('home');$state.go('home');return;}
 		$state.go(tab);
 	}
 	if(!ipCookie('is_logined'))
@@ -95,17 +99,25 @@ note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 	}
 });
 //-------------------登陆注册控制器----------------------
-note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
+note.controller('c_login',function($scope,$state,$rootScope,$timeout,ipCookie,User){
+	
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
+	var loginable = true;
 	$scope.login = function(){
+		if(!loginable){hMessage('正在登陆，请耐心等待...');return;}
+		loginable = false;
 		//格式验证
 		if($scope.username.length < 1 || $scope.password.length < 1){hMessage("用户名或密码不能为空！",2000);return;}
 		else if($scope.password.length >= 1 && $scope.password.length < 6){hMessage("请输入6位以上的密码！",2000);return;}
 		//post
 		var loginInfo = {'username':$scope.username,'password':$scope.password};
+		var is_new = true;
+		$timeout(function(){if(is_new)hMessage('这可能是你的第一次登陆，相关数据正在初始化，请耐心等候...');},2000);
 		User.login(loginInfo).success(function(res){
 			if(res.error === 0){
+				is_new = false;
+				loginable = true;
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
 				$rootScope.user_show = true;
@@ -123,7 +135,7 @@ note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 				$rootScope.user.avatar = "https://dn-lanbaidiao.qbox.me/avatar_1000_a645761e1fc399f5be08308eacead7ce?imageView2/1/w/80/h/80";
 
 				setTimeout(function(){$state.go('home');},1500);
-			}else if(res.error === 2){hMessage("该用户不存在！",1500);}
+			}else if(res.error === 2){hMessage("该用户不存在！",1500);loginable = true;}
 			else hMessage(res.msg,2000);
 		}).error(function(data,state){
 			console.log(data);
@@ -134,7 +146,10 @@ note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 note.controller('c_register',function($scope,$state,User){
 	setTitle("随手记-注册");
 	$scope.username = $scope.email = $scope.password = $scope.password_confirm = '';
+	var registerable = true;
 	$scope.register = function(){
+		if(!registerable){hMessage('正在登陆，请耐心等待...');return;}
+		registerable = false;
 		//格式验证
 		console.log($scope.username+","+$scope.email+","+$scope.password+","+$scope.password_confirm);
 		//格式验证
@@ -152,10 +167,11 @@ note.controller('c_register',function($scope,$state,User){
 		var registerInfo = {'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm};
 		User.register(registerInfo).success(function(res){
 			if(res.error === 0){
+				registerable = true;
 				hMessage("注册成功，请登陆！",2000);
 				$state.go('login');
 			}
-			else hMessage(res.msg,2000);
+			else {hMessage(res.msg,2000);registerable = true;}
 			//恢复按钮状态
 			$("#register-btn").html("注册");
 			$("#register-btn").attr("disabled",false);
@@ -1572,7 +1588,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,ipCookie,Us
 		User.logout().success(function(res){
 			if(res.error === 0){
 				hMessage("退出登陆成功！",1200);
-				ipCookie('is_logined',0);
+				ipCookie('is_logined',null);
 				$rootScope.login_register_show = true;
 				$rootScope.user_show = false;
 				$rootScope.username_text = '';

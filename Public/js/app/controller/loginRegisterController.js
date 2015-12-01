@@ -1,15 +1,23 @@
 //-------------------登陆注册控制器----------------------
-note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
+note.controller('c_login',function($scope,$state,$rootScope,$timeout,ipCookie,User){
+	
 	setTitle("随手记-登陆");
 	$scope.username = $scope.password = '';
+	var loginable = true;
 	$scope.login = function(){
+		if(!loginable){hMessage('正在登陆，请耐心等待...');return;}
+		loginable = false;
 		//格式验证
 		if($scope.username.length < 1 || $scope.password.length < 1){hMessage("用户名或密码不能为空！",2000);return;}
 		else if($scope.password.length >= 1 && $scope.password.length < 6){hMessage("请输入6位以上的密码！",2000);return;}
 		//post
 		var loginInfo = {'username':$scope.username,'password':$scope.password};
+		var is_new = true;
+		$timeout(function(){if(is_new)hMessage('这可能是你的第一次登陆，相关数据正在初始化，请耐心等候...');},2000);
 		User.login(loginInfo).success(function(res){
 			if(res.error === 0){
+				is_new = false;
+				loginable = true;
 				hMessage("登陆成功！",1500);
 				$rootScope.login_register_show = false;
 				$rootScope.user_show = true;
@@ -27,7 +35,7 @@ note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 				$rootScope.user.avatar = "https://dn-lanbaidiao.qbox.me/avatar_1000_a645761e1fc399f5be08308eacead7ce?imageView2/1/w/80/h/80";
 
 				setTimeout(function(){$state.go('home');},1500);
-			}else if(res.error === 2){hMessage("该用户不存在！",1500);}
+			}else if(res.error === 2){hMessage("该用户不存在！",1500);loginable = true;}
 			else hMessage(res.msg,2000);
 		}).error(function(data,state){
 			console.log(data);
@@ -38,7 +46,10 @@ note.controller('c_login',function($scope,$state,$rootScope,ipCookie,User){
 note.controller('c_register',function($scope,$state,User){
 	setTitle("随手记-注册");
 	$scope.username = $scope.email = $scope.password = $scope.password_confirm = '';
+	var registerable = true;
 	$scope.register = function(){
+		if(!registerable){hMessage('正在登陆，请耐心等待...');return;}
+		registerable = false;
 		//格式验证
 		console.log($scope.username+","+$scope.email+","+$scope.password+","+$scope.password_confirm);
 		//格式验证
@@ -56,10 +67,11 @@ note.controller('c_register',function($scope,$state,User){
 		var registerInfo = {'username':$scope.username,'email':$scope.email,'password':$scope.password,'password_confirm':$scope.password_confirm};
 		User.register(registerInfo).success(function(res){
 			if(res.error === 0){
+				registerable = true;
 				hMessage("注册成功，请登陆！",2000);
 				$state.go('login');
 			}
-			else hMessage(res.msg,2000);
+			else {hMessage(res.msg,2000);registerable = true;}
 			//恢复按钮状态
 			$("#register-btn").html("注册");
 			$("#register-btn").attr("disabled",false);

@@ -36,7 +36,16 @@ class UserController extends Controller {
                     session('user_id',$user['user_id']);
                     session('username',$user_name);
                     setcookie("fingerprint",$fingerprint,time()+30*24*3600,"/");
-                    $this->ajaxReturn(array('error'=>0,'msg'=>'登陆成功！'));
+                    //检查是否已初始化，如果为初始化，说明是新用户，则进行数据初始化
+                    if(!$this->_check_init_status($user['user_id'])){
+                        if($this->_init_user_data($user['user_id']))//这一步应该是异步的
+                            $this->ajaxReturn(array('error'=>0,'msg'=>'登陆成功！'));
+                        else{
+                            //重置初始化数据
+                            $this->_reset_init_data($user['user_id']);
+                            $this->ajaxReturn(array('error'=>1,'msg'=>'初始化失败！你可尝试刷新页面再次初始化！'));
+                        }
+                    }else $this->ajaxReturn(array('error'=>0,'msg'=>'登陆成功！'));
                 }
                 else $this->ajaxReturn(array('error'=>1,'msg'=>'用户名或密码错误！'));
             }else $this->ajaxReturn(array('error'=>1,'msg'=>'登陆失败，不存在该用户！'));
@@ -64,8 +73,6 @@ class UserController extends Controller {
         $user = array('user_name'=>$user_name,'user_email'=>$user_email,'user_password'=>$user_password,'user_salt'=>$user_salt,'user_encrypt_times'=>$encrypt_times);
         $result = $this->user_model->add($user);
         if($result !== false){
-            //初始化用户数据
-            $this->_init_user_data($result);
             $this->ajaxReturn(array('error'=>0,'msg'=>'注册成功！'));
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'注册失败！'));
     }
@@ -190,79 +197,123 @@ class UserController extends Controller {
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'用户密码修改失败！'));
     }
     //初始化用户数据
-    public function _init_user_data($user_id){
-        //$user_id = I("get.user_id");
+    protected function _init_user_data($user_id){
+        
         //添加默认的一级账单分类和账户类型
-        $this->_init_outcome_category_type($user_id);
-        $this->_init_income_category_type($user_id);
-        $this->_init_account_type($user_id);
+        if(!$this->_init_outcome_category_items($user_id) || !$this->_init_income_category_items($user_id) || !$this->_init_account_items($user_id))return false;
         //添加默认的账单分类和账户
         //获取新增的一级分类和账户类型
-        $bill_category_type_model = D('BillCategoryType');
-        $account_type_model = D('AccountType');
-        $cdt = array('bill_category_type_creater_id'=>$user_id,'bill_type'=>1);//支出分类
-        $outcome_category_types = $bill_category_type_model->where($cdt)->select();
-        $cdt = array('bill_category_type_creater_id'=>$user_id,'bill_type'=>2);//收入分类
-        $income_category_types = $bill_category_type_model->where($cdt)->select();
-        $cdt = array('account_type_creater_id'=>$user_id);//账户分类
-        $account_types = $account_type_model->where($cdt)->select();
+        $bill_category_model = D('BillCategory');
+        $account_model = D('Account');
+        $cdt = array('bill_category_user_id'=>$user_id,'bill_type'=>1);//支出分类
+        $outcome_category_items = $bill_category_model->where($cdt)->select();
+        $cdt = array('bill_category_user_id'=>$user_id,'bill_type'=>2);//收入分类
+        $income_category_items = $bill_category_model->where($cdt)->select();
+        $cdt = array('account_user_id'=>$user_id);//账户分类
+        $account_items = $account_model->where($cdt)->select();
 
-        $bill_category_model = M('BillCategory');
-        $outcome_category = array(array('衣服裤子','鞋帽包包','化妆饰品'),array('早午晚餐','烟酒茶','水果零食'),
+        $child_bill_category_model = M('ChildBillCategory');
+        $child_outcome_category_items = array(array('衣服裤子','鞋帽包包','化妆饰品'),array('早午晚餐','烟酒茶','水果零食'),
             array('日常用品','水电煤气','房租','物业管理','维修保养'),array('公共交通','打车租车','私家车费用'),
             array('座机费','手机费','上网费','邮寄费'),array('运动健身','腐败聚会','休闲玩乐','宠物宝贝','旅游度假'),
             array('书报杂志','培训进修','数码装备'),array('送礼请客','孝敬家长','还人钱物','慈善捐助'),
             array('药品费','保健费','美容费','治疗费'),array('银行手续','投资亏损','按揭还款','消费税收','利息支出','赔偿罚款'),
             array('其它支出','意外丢失','烂账损失'));
-        foreach ($outcome_category as $key => $value) {
-            for($i=0;$i<count($value);$i++){
-                $data = array('bill_type'=>1,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$outcome_category_types[$key]['bill_category_type_id']);
-                $bill_category_model->add($data);
+        foreach ($child_outcome_category_items as $key => $item) {
+            $items = array();
+            for($i=0;$i<count($item);$i++){
+                array_push($items, array('bill_type'=>1,'child_bill_category_name'=>$item[$i],'child_bill_category_user_id'=>$user_id,'bill_category_id'=>$outcome_category_items[$key]['bill_category_id']));
             }
+            $child_bill_category_model->addAll($items);
         }
-        $income_category = array(array('工资收入','利息收入','加班收入','奖金收入','投资收入','兼职收入'),array('礼金收入','中奖收入','意外收入','经营所得'));
-        foreach ($income_category as $key => $value) {
-            for($i=0;$i<count($value);$i++){
-                $data = array('bill_type'=>2,'bill_category_name'=>$value[$i],'bill_category_user_id'=>$user_id,'bill_category_type_id'=>$income_category_types[$key]['bill_category_type_id']);
-                $bill_category_model->add($data);
+        $child_income_category_items = array(array('工资收入','利息收入','加班收入','奖金收入','投资收入','兼职收入'),array('礼金收入','中奖收入','意外收入','经营所得'));
+        foreach ($child_income_category_items as $key => $item) {
+            $items = array();
+            for($i=0;$i<count($item);$i++){
+                array_push($items,array('bill_type'=>2,'child_bill_category_name'=>$item[$i],'child_bill_category_user_id'=>$user_id,'bill_category_id'=>$income_category_items[$key]['bill_category_id']));
             }
+            $child_bill_category_model->addAll($items);
         }
         //添加默认账户
-        $account_model = M("Account");
-        $account = array(array('现金'),array('信用卡'),array('银行卡'),array('饭卡','支付宝','公交卡'),array('应付款项'),array('公司报销','应收款项'),array('基金账户','余额宝','股票账户'));
-        foreach ($account as $key => $value) {
-            for($i=0;$i<count($value);$i++){
-                $data = array('account_user_id'=>$user_id,'account_type_id'=>$account_types[$key]['account_type_id'],'account_name'=>$value[$i],'account_balance'=>0);
-                $account_model->add($data);
+        $child_account_model = M("ChildAccount");
+        $child_account_items = array(array('现金'),array('信用卡'),array('银行卡'),array('饭卡','支付宝','公交卡'),array('应付款项'),array('公司报销','应收款项'),array('基金账户','余额宝','股票账户'));
+        foreach ($child_account_items as $key => $item) {
+            $items = array();
+            for($i=0;$i<count($item);$i++){
+                array_push($items,array('child_account_user_id'=>$user_id,'account_id'=>$account_items[$key]['account_id'],'child_account_name'=>$item[$i],'child_account_balance'=>0));
             }
+            $child_account_model->addAll($items);
         }
+        //将初始化标志设为1
+        $this->user_model->where('user_id='.$user_id)->setField('is_init',1);
+        return true;
     }
-    protected function _init_outcome_category_type($user_id){
-        $outcome_category_type = array('衣服服饰','食品酒水','居家物业','行车交通','交流通讯','休闲娱乐','学习进修','人情来往','医疗保健','金融保险','其它杂项');
-        $bill_category_type_model = M('BillCategoryType');
-        foreach ($outcome_category_type as $key => $value) {
-            $data = array('bill_type'=>1,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>$user_id);
-            $bill_category_type_model->add($data);
+    //初始化支出分类
+    protected function _init_outcome_category_items($user_id){
+        $outcome_category_items = array('衣服服饰','食品酒水','居家物业','行车交通','交流通讯','休闲娱乐','学习进修','人情来往','医疗保健','金融保险','其它杂项');
+        $bill_category_model = D('BillCategory');
+        $items = array();
+        foreach ($outcome_category_items as $key => $value) {
+            array_push($items, array('bill_type'=>1,'bill_category_name'=>$value,'bill_category_user_id'=>$user_id));
         }
-        //echo "outcome_category_type init success!";
+        if($bill_category_model->addAll($items))return true;
+        else return false;
+        //echo "outcome_category_items init success!";
     }
-    protected function _init_income_category_type($user_id){
-        $income_category_type = array('职业收入','其它收入');
-        $bill_category_type_model = M('BillCategoryType');
-        foreach ($income_category_type as $key => $value) {
-            $data = array('bill_type'=>2,'bill_category_type_name'=>$value,'bill_category_type_creater_id'=>$user_id);
-            $bill_category_type_model->add($data);
+    //初始化收入分类
+    protected function _init_income_category_items($user_id){
+        $income_category_items = array('职业收入','其它收入');
+        $bill_category_model = D('BillCategory');
+        $items = array();
+        foreach ($income_category_items as $key => $value) {
+            array_push($items, array('bill_type'=>2,'bill_category_name'=>$value,'bill_category_user_id'=>$user_id));
         }
-        //echo "income_category_type init success!";
+        if($bill_category_model->addAll($items))return true;
+        else return false;
+        //echo "income_category_items init success!";
     }
-    protected function _init_account_type($user_id){
-        $account_type = array('现金账户','信用卡','金融账户','虚拟账户','负债账户','债权账户','投资账户');
-        $account_type_model = M('AccountType');
-        foreach ($account_type as $key => $value) {
-            $data = array('account_type_name'=>$value,'account_type_creater_id'=>$user_id);
-            $account_type_model->add($data);
+    //初始化账户分类
+    protected function _init_account_items($user_id){
+        $account_items = array('现金账户','信用卡','金融账户','虚拟账户','负债账户','债权账户','投资账户');
+        $account_model = D('Account');
+        $items = array();
+        foreach ($account_items as $key => $value) {
+            array_push($items, array('account_name'=>$value,'account_user_id'=>$user_id));
         }
-        //echo "account_type init success!";
+        if($account_model->addAll($items))return true;
+        else return false;
+        //echo "account_items init success!";
     }
-
+    //删除相关的初始化数据并将初始化标志设为0
+    protected function _reset_init_data($user_id){
+        //删除分类
+        $bill_category_model = D('BillCategory');
+        $bill_category_model->where('bill_category_user_id='.$user_id)->delete();
+        $child_bill_category_model = D('ChildBillCategory');
+        $child_bill_category_model->where('child_bill_category_user_id='.$user_id)->delete();
+        //删除账户
+        $account_model = D('Account');
+        $account_model->where('account_user_id='.$user_id)->delete();
+        $child_account_model = D('ChildAccount');
+        $child_account_model->where('child_account_user_id='.$user_id)->delete();
+    }
+    /*public function reset_init_data(){
+        $user_id = I('get.user_id');
+        //删除分类
+        $bill_category_model = D('BillCategory');
+        $bill_category_model->where('bill_category_user_id='.$user_id)->delete();
+        $child_bill_category_model = D('ChildBillCategory');
+        $child_bill_category_model->where('child_bill_category_user_id='.$user_id)->delete();
+        //删除账户
+        $account_model = D('Account');
+        $account_model->where('account_user_id='.$user_id)->delete();
+        $child_account_model = D('ChildAccount');
+        $child_account_model->where('child_account_user_id='.$user_id)->delete();
+    }*/
+    //检查是否已初始化
+    protected function _check_init_status($user_id){
+        $cdt = array('user_id'=>$user_id,'is_init'=>1);
+        if($this->user_model->where($cdt)->find())return true;
+        else return false;
+    }
 }

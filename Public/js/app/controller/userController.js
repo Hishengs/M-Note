@@ -28,7 +28,7 @@ note.controller('c_user_basicInfo',function($scope,$state,$rootScope,ipCookie,Us
 		User.logout().success(function(res){
 			if(res.error === 0){
 				hMessage("退出登陆成功！",1200);
-				ipCookie('is_logined',0);
+				ipCookie('is_logined',null);
 				$rootScope.login_register_show = true;
 				$rootScope.user_show = false;
 				$rootScope.username_text = '';

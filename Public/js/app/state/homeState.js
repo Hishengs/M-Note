@@ -1,7 +1,7 @@
 //首页
 note.config(['$stateProvider',function($stateProvider){
 	$stateProvider.state('home',{  
-		url:'',
+		url:'/home',
 		views:{'content':{templateUrl:templates_path+'/home.html'}}
 	}).state('welcome',{  //欢迎页
 		url:'/welcome',

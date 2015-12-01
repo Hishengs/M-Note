@@ -39,7 +39,7 @@
 <div class="nav-wrapper" ng-controller="c_nav">
 	<nav class="nav uk-navbar">
 		<ul class="nav-items uk-navbar-nav">
-	        <li ng-class="{'uk-active': current_tab=='home'}" ng-click="switchTab('home')">
+	        <li ng-class="{'uk-active': current_tab=='welcome'}" ng-click="switchTab('welcome')">
 		        <a href="javascript:void(0);">
 		        M-NOTE
 		        </a></li>
