@@ -4,8 +4,6 @@ Money Notes,一个记账系统
 ##前端
 >[jQuery](http://www.jquery.com)
 
->[Bootstrap](http://www.bootcss.com)
-
 >[uikit](http://www.getuikit.net/index.html)
 
 >[AngularJs](http://www.angularjs.org)
