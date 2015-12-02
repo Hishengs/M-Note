@@ -15,13 +15,11 @@ note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log
         if(!ipCookie('is_logined')){
         	//如果未登录，除了注册登陆不允许跳转到别的地方
         	console.log(arguments);
-        	var url_suffix = arguments[1].split('#')[1];
-        	url_suffix = url_suffix==undefined?'/#':url_suffix;
+        	var url_suffix = arguments[1].split('M-Note')[1];
+        	url_suffix = url_suffix==undefined?'/':url_suffix;
         	console.log(url_suffix);
         	if(url_suffix != "/login" && url_suffix != "/register" && url_suffix != "/welcome"){
 				$state.go('welcome');
-				//$state.go('login');
-				//hMessage("请登录后再操作！");
 			}
 		}
 	});
@@ -85,7 +83,7 @@ note.controller('c_nav',function($scope,$state,$rootScope,$http,ipCookie){
 		if(!ipCookie('is_logined') && tab !== 'welcome'){console.log('nothing');return;}
 		if(!ipCookie('is_logined') && tab === 'welcome'){console.log('welcome');$state.go('welcome');return;}
 		if(ipCookie('is_logined') && tab === 'welcome'){console.log('home');$state.go('home');return;}
-		$state.go(tab);
+		$state.go(tab,{reload:true});
 	}
 	if(!ipCookie('is_logined'))
 	{

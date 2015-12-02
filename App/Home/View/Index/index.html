@@ -24,9 +24,9 @@
 		        <a href="javascript:void(0);">
 		        M-NOTE
 		        </a></li>
-	        <li ng-class="{'uk-active': current_tab=='bill'}" ng-click="switchTab('bill')"><a href="javascript:void(0);">记账</a></li>
-	        <li ng-class="{'uk-active': current_tab=='charts'}" ng-click="switchTab('charts')"><a href="javascript:void(0);">报表</a></li>
-	        <li ng-class="{'uk-active': current_tab=='accounts'}" ng-click="switchTab('accounts')"><a href="javascript:void(0);">账户</a></li>
+	        <li ng-class="{'uk-active': current_tab=='today_bills'}" ng-click="switchTab('today_bills')"><a href="javascript:void(0);">记账</a></li>
+	        <li ng-class="{'uk-active': current_tab=='budget'}" ng-click="switchTab('budget')"><a href="javascript:void(0);">报表</a></li>
+	        <li ng-class="{'uk-active': current_tab=='account_manage'}" ng-click="switchTab('account_manage')"><a href="javascript:void(0);">账户</a></li>
 	    </ul>
 	    <div class="uk-navbar-flip">
 	        <ul class="uk-navbar-nav login_register" ng-show="login_register_show">
@@ -38,7 +38,7 @@
 	            </li>
 	        </ul>
 	        <ul class="uk-navbar-nav user" ng-show="user_show">
-	        	<li ng-class="{'uk-active': current_tab=='user'}" ng-click="switchTab('user')">
+	        	<li ng-class="{'uk-active': current_tab=='basicInfo'}" ng-click="switchTab('basicInfo')">
 	        		<a href="javascript:void(0);" ui-sref="basicInfo" ng-bind-html="username_text | trustHtml"></a>
 	        	</li>
 	        </ul>

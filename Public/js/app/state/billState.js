@@ -4,7 +4,7 @@ note.config(['$stateProvider',function($stateProvider){
 		url:'/bill',
 		views:{'content':{templateUrl:templates_path+'/bill/bill.html'}}
 	}).state('today_bills',{ //记账-今日账单-默认的state
-		url:'/today_bills',
+		url:'/today',
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/today_bills.html'}}
 	}).state('bill_query',{ //记账-账单查询
@@ -12,7 +12,7 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_query.html'}}
 	}).state('bill_category',{ //记账-账单分类
-		url:'/category',
+		url:'/categoryItems',
 		parent:'bill',
 		views:{'bill_view':{templateUrl:templates_path+'/bill/bill_category.html'}}
 	}).state('bill_details',{ //记账-账单详情
@@ -24,11 +24,11 @@ note.config(['$stateProvider',function($stateProvider){
 		parent:'today_bills',
 		views:{'bill_details_view':{templateUrl:templates_path+'/bill/modify_bill.html'}}
 	}).state('modify_bill_outcome',{ //记账-账单修改-outcome
-		url:'/modify_bill_outcome',
+		url:'/modifyBillOutcome',
 		parent:'modify_bill',
 		views:{'modify_bill_view':{templateUrl:templates_path+'/bill/modify_bill_outcome.html'}}
 	}).state('modify_bill_income',{ //记账-账单修改-income
-		url:'/modify_bill_income',
+		url:'/modifyBillIncome',
 		parent:'modify_bill',
 		views:{'modify_bill_view':{templateUrl:templates_path+'/bill/modify_bill_income.html'}}
 	}).state('bill_add_outcome',{ //新建支出

@@ -1,5 +1,5 @@
 note.config(['$locationProvider', '$urlRouterProvider', '$compileProvider',function($locationProvider, $urlRouterProvider,$compileProvider) {
-    //$locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise("");
     //deal unsafe:javascript:...
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript):/);
