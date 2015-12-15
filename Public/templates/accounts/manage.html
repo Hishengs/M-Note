@@ -36,10 +36,10 @@
 						<td ng-hide="$first"></td>
 						<td>{{child_account.child_account_name}}</td>
 						<td style="color:{{(-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out)<0?'red':'black'}}">
-						{{(-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out) | subFloat:2}}
+						{{(-(-child_account.child_account_balance) + child_account.flow_in - child_account.flow_out) | subFloat:2 | toCurrentFormat}}
 						</td>
-						<td>{{child_account.flow_in | subFloat:2}}</td>
-						<td>{{child_account.flow_out | subFloat:2}}</td>
+						<td>{{child_account.flow_in | subFloat:2 | toCurrentFormat}}</td>
+						<td>{{child_account.flow_out | subFloat:2 | toCurrentFormat}}</td>
 						<td>
 							
 							<button class="uk-button uk-button-primary uk-button-small" ng-click="vModifyChildAccount(child_account)" title="编辑二级账户">
@@ -65,9 +65,9 @@
 					<tr>
 						<td><b>总计</b></td>
 						<td></td>
-						<td><b style="color:{{sum.balance<0?'red':'black'}}">{{sum.balance | subFloat:2}}</b></td>
-						<td><b>{{sum.flow_in | subFloat:2}}</b></td>
-						<td><b>{{sum.flow_out | subFloat:2}}</b></td>
+						<td><b style="color:{{sum.balance<0?'red':'black'}}">{{sum.balance | subFloat:2 | toCurrentFormat}}</b></td>
+						<td><b>{{sum.flow_in | subFloat:2 | toCurrentFormat}}</b></td>
+						<td><b>{{sum.flow_out | subFloat:2 | toCurrentFormat}}</b></td>
 						<td></td>
 					</tr>
 				</tbody>

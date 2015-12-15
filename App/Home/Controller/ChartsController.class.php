@@ -37,7 +37,7 @@ class ChartsController extends Controller {
 	    	->group("b.bill_type,b.bill_category_id")->select();
     	}
     	if($bills!==false)
-    		$this->ajaxReturn(array('error'=>0,'bills'=>$bills));
+    		$this->ajaxReturn(array('error'=>0,'bills'=>$bills,'cdt'=>$cdt));
     	else $this->ajaxReturn(array('error'=>1,'msg'=>'查询失败！'));
     }
     //获取收支对比

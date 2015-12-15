@@ -14,7 +14,8 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 	$scope.start_date = $rootScope.sdate;
 	$scope.end_date = $rootScope.edate;
 	$scope.charts_distribute_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
-	
+	$scope.outcome_distribute_table = [];
+	$scope.income_distribute_table = [];
 	//初始化图表
 	require(['echarts','echarts/chart/pie'],function(ec){
 		$scope.income_distribute_chart = ec.init(document.getElementById('charts-distribute-pie-income'));//收入分布图
@@ -22,6 +23,8 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 
 		//查询
 		$scope.query = function(){
+			$scope.outcome_distribute_table = [];
+			$scope.income_distribute_table = [];
 			$scope.income_distribute_chart.clear();$scope.outcome_distribute_chart.clear();
 			$scope.income_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//待装载的数据
 			$scope.income_distribute_chart_options.title.text = "收入分布图";
@@ -42,15 +45,18 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 			Charts.getDistributeData(cdt).success(function(res){
 				console.log(cdt);
 				if(res.error === 0){
+					console.log(res);
 					if($scope.distribute_option == '0'){//账户
 						for(var i=0;i<res.bills.length;i++){
 							if(res.bills[i].bill_type == 1){
 								$scope.outcome_distribute_chart_options.legend.data.push(res.bills[i].child_account_name);
 								$scope.outcome_distribute_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:res.bills[i].child_account_name});
+								$scope.outcome_distribute_table.push({value:res.bills[i].bills_sum,name:res.bills[i].child_account_name});
 							}
 							else{
 								$scope.income_distribute_chart_options.legend.data.push(res.bills[i].child_account_name);
 								$scope.income_distribute_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:res.bills[i].child_account_name});
+								$scope.income_distribute_table.push({value:res.bills[i].bills_sum,name:res.bills[i].child_account_name});
 							}
 						}
 					}else{//分类
@@ -58,17 +64,19 @@ note.controller('c_charts_distribute',function($scope,$rootScope,$http,Charts,$s
 							if(res.bills[i].bill_type == 1){
 								$scope.outcome_distribute_chart_options.legend.data.push(res.bills[i].child_bill_category_name);
 								$scope.outcome_distribute_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:res.bills[i].child_bill_category_name});
+								$scope.outcome_distribute_table.push({value:res.bills[i].bills_sum,name:res.bills[i].child_bill_category_name});
 							}
 							else{
 								$scope.income_distribute_chart_options.legend.data.push(res.bills[i].child_bill_category_name);
 								$scope.income_distribute_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:res.bills[i].child_bill_category_name});
+								$scope.income_distribute_table.push({value:res.bills[i].bills_sum,name:res.bills[i].child_bill_category_name});
 							}
 						}
 					}
 					if(i){
 						$scope.income_distribute_chart.dispose();$scope.outcome_distribute_chart.dispose();
-						$scope.income_distribute_chart = echarts.init(document.getElementById('charts-distribute-pie-income'));//收入分布图
-						$scope.outcome_distribute_chart = echarts.init(document.getElementById('charts-distribute-pie-outcome'));//支出分布图
+						$scope.income_distribute_chart = ec.init(document.getElementById('charts-distribute-pie-income'));//收入分布图
+						$scope.outcome_distribute_chart = ec.init(document.getElementById('charts-distribute-pie-outcome'));//支出分布图
 						$scope.charts_distribute_tip = '';
 					}
 					else {$scope.charts_distribute_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';}
@@ -117,14 +125,16 @@ note.controller('c_charts_compare',function($scope,$rootScope,$http,Charts,$stat
 						if(res.bills[i].bill_type == 1){
 							$scope.compare_chart_options.legend.data.push('支出');
 							$scope.compare_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:'支出'});
+							$scope.compare_outcome_sum = res.bills[i].bills_sum;
 						}else{
 							$scope.compare_chart_options.legend.data.push('收入');
 							$scope.compare_chart_options.series[0].data.push({value:res.bills[i].bills_sum,name:'收入'});
+							$scope.compare_income_sum = res.bills[i].bills_sum;
 						}
 					}
 					if(i){
 						$scope.compare_chart.dispose();
-						$scope.compare_chart = echarts.init(document.getElementById('charts-compare-pie'));
+						$scope.compare_chart = ec.init(document.getElementById('charts-compare-pie'));
 						$scope.charts_compare_tip = '';
 					}else {$scope.charts_compare_tip = '<i class="uk-icon-warning"></i> 未查到相关信息！';}
 
@@ -223,6 +233,8 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 	//初始化图表
 	$scope.end_date = $rootScope.edate;
 	$scope.charts_property_distribute_tip = '<i class="uk-icon-warning"></i> 请输入查询条件查询！';
+	$scope.property_distribute_table = [];//资产分布表
+	$scope.liabilities_property_distribute_table = [];//资产负债表
 
 	//初始化图表
 	require(['echarts','echarts/chart/pie'],function(ec){
@@ -233,6 +245,8 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 		
 		//查询
 		$scope.query = function(){
+			$scope.property_distribute_table = [];//资产分布表
+			$scope.liabilities_property_distribute_table = [];//资产负债表
 			$scope.property_distribute_chart.clear();$scope.liabilities_distribute_chart.clear();
 			$scope.property_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//待装载的数据
 			$scope.liabilities_distribute_chart_options = $rootScope.clone($rootScope.pie_options);//负债
@@ -267,9 +281,11 @@ note.controller('c_property_distribute',function($scope,$rootScope,$http,Charts,
 							if(balance > 0){
 								$scope.property_distribute_chart_options.legend.data[count1++] = name;
 								$scope.property_distribute_chart_options.series[0].data.push({value:Math.abs(balance),name:name});
+								$scope.property_distribute_table.push({value:Math.abs(balance),name:name});
 							}else if(balance < 0){//负债
 								$scope.liabilities_distribute_chart_options.legend.data[count2++] = name;
 								$scope.liabilities_distribute_chart_options.series[0].data.push({value:Math.abs(balance),name:name});
+								$scope.liabilities_property_distribute_table.push({value:Math.abs(balance),name:name});
 							}
 						}
 					}

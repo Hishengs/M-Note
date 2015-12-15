@@ -148,6 +148,9 @@ class BillController extends Controller {
         $start_date = I('post.start_date');
         $end_date = I('post.end_date');
         $bill_type = I('post.bill_type');
+        /*$start_date = '2015-07-01';
+        $end_date = "2015-12-08";
+        $bill_type = '1';*/
         $bill_category_id = I('post.bill_category');
         $bill_account_id = I('post.bill_account');
         if(!empty($start_date) && !empty($end_date) && !empty($bill_type)){
@@ -160,6 +163,8 @@ class BillController extends Controller {
             $bills = $this->bill_model->join("child_account on bill.bill_account_id = child_account.child_account_id")
             ->join("child_bill_category on bill.bill_category_id = child_bill_category.child_bill_category_id")
             ->where("bill.bill_user_id=".$this->user_id.$sql)->select();
+            /*$bills = $this->bill_model->relation(true)
+            ->where("bill.bill_user_id=".$this->user_id.$sql)->select();*/
             if($bills !== false)$this->ajaxReturn(array('error'=>0,'bills'=>$bills));
             else $this->ajaxReturn(array('error'=>1,'msg'=>'查询失败！'));
         }else $this->ajaxReturn(array('error'=>1,'msg'=>'查询条件不能为空！'));

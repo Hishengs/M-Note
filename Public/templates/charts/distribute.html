@@ -19,12 +19,50 @@
 			</span>
 			<hr>
 		</div>
-		<div class="uk-panel-content display-inline-block">
+		<div class="uk-panel-content">
 			<div class="uk-alert" ng-bind-html="charts_distribute_tip | trustHtml" ng-show="charts_distribute_tip"></div>
 			<!-- 收入分布图 -->
 			<div class="charts-distribute-pie margin-top-40 display-inline-block" id="charts-distribute-pie-income" style="width:400px;height:500px;"></div>
 			<!-- 支出分布图 -->
 			<div class="charts-distribute-pie margin-top-40 display-inline-block" id="charts-distribute-pie-outcome" style="width:400px;height:500px;"></div>
+			<!-- 收入分布表 -->
+			<table class="uk-table uk-table-striped display-inline-block margin-right-20" style="width:400px;height:500px;">
+				<caption>收入分布表</caption>
+				<thead>
+					<tr>
+						<th ng-if="distribute_option == '0'">账户</th>
+						<th ng-if="distribute_option != '0'">分类</th>
+						<th>收入</th>
+						<th>占比</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in income_distribute_table" >
+						<td class="uk-width-1-2">{{item.name}}</td>
+						<td class="uk-width-1-2">{{item.value | subFloat:2 | toCurrentFormat}}</td>
+						<td class="uk-width-1-2">{{item.value | countProportion:income_distribute_table}}%</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 支出分布表 -->
+			<table class="uk-table uk-table-striped display-inline-block" style="width:400px;height:500px;">
+				<caption>支出分布表</caption>
+				<thead>
+					<tr>
+						<th ng-if="distribute_option == '0'">账户</th>
+						<th ng-if="distribute_option != '0'">分类</th>
+						<th>支出</th>
+						<th>占比</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in outcome_distribute_table" >
+						<td class="uk-width-1-2">{{item.name}}</td>
+						<td class="uk-width-1-2">{{item.value | subFloat:2 | toCurrentFormat}}</td>
+						<td class="uk-width-1-2">{{item.value | countProportion:outcome_distribute_table}}%</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>

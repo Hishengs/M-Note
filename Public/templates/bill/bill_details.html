@@ -13,6 +13,6 @@
 	<li><label>账户</label><span class="f-right">{{current_bill.child_account_name}}</span></li>
 	<li><label>时间</label><span class="f-right">{{current_bill.bill_time}}</span></li>
     <li><label>地点</label><span class="f-right">{{current_bill.bill_location}}</span></li>
-	<li><label>金额</label><span class="f-right">￥ {{current_bill.bill_sum}}</span></li>
+	<li><label>金额</label><span class="f-right">￥ {{current_bill.bill_sum  | toCurrentFormat}}</span></li>
 	<li><label>备注</label><span class="f-right">{{current_bill.bill_remarks}}</span></li>
 </ul>

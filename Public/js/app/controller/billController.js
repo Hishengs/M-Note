@@ -146,7 +146,7 @@ note.controller('c_bill_add',function($scope,$rootScope,$state,$http,$timeout,Bi
 			$scope.bill.date = $rootScope.current_bill.bill_time.split(' ')[0];
 			$scope.bill.time.hour = parseInt($rootScope.current_bill.bill_time.split(' ')[1].split(':')[0]);
 			$scope.bill.time.minute = parseInt($rootScope.current_bill.bill_time.split(' ')[1].split(':')[1]);
-
+			console.log('骂了隔壁',$rootScope.account_items);
 			//更新账户分类
 			for(var i=0;i<$rootScope.account_items.length;i++){
 				if($rootScope.account_items[i].account_id == $rootScope.current_bill.account_id)break;
@@ -683,7 +683,7 @@ note.controller('c_bill_category',function($scope,$rootScope,$state,Bill){
 	$scope.switchAddSelfCategory = function(){
 		if($scope.is_self_defined){
 			$scope.toggle_type = "off";
-			$scope.added_bill_category = $scope.bill_category_items[0].bill_category.bill_category_id;
+			$scope.added_bill_category = $scope.bill_category_items[0].bill_category_id;
 		}
 		else {
 			$scope.toggle_type = "on";

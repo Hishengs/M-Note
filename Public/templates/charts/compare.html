@@ -1,7 +1,7 @@
 <div class="charts-compare" ng-controller="c_charts_compare">
 	<div class="uk-panel">
 		<div class="uk-panel-header">
-			<span style="font-size:18px;">对比图</span>
+			<span style="font-size:18px;">收支对比图</span>
 			<span class="f-right">
 				<!-- 条件选择 -->
 				<form class="uk-form display-inline-block">
@@ -19,6 +19,23 @@
 			<!-- 收支对比图 -->
 			<div class="charts-compare-line margin-top-40 display-inline-block" id="charts-compare-pie" style="width:600px;height:500px;"></div>
 		</div>
+		<!-- 表格 -->
+		<table class="uk-table uk-table-striped">
+			<thead>
+				<tr>
+					<th>余额</th>
+					<th>支出</th>
+					<th>收入</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{(compare_income_sum-compare_outcome_sum) | subFloat:2 | toCurrentFormat}}</td>
+					<td>{{compare_outcome_sum | subFloat:2 | toCurrentFormat}}</td>
+					<td>{{compare_income_sum | subFloat:2 | toCurrentFormat}}</td>
+				</tr>
+			</tbody>
+		</table>
 		<div class="uk-panel-footer"></div>
 	</div>
 </div>

@@ -71,7 +71,7 @@ note.controller('c_index',function($scope,$rootScope,$state,$http,$location,$log
 
 	var date = new Date();
 	var last_day = new Date(date.getFullYear(),date.getMonth()+1,0).getDate();
-	$rootScope.sdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-1";//一个月的第一天
+	$rootScope.sdate = date.getFullYear()+"-"+(date.getMonth()+1)+"-01";//一个月的第一天
 	$rootScope.edate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+last_day;//一个月的最后一天
 });
 //----------------------------------------导航栏------------------------------------------------

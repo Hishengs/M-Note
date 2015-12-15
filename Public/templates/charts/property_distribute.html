@@ -20,6 +20,42 @@
 			<div class="charts-property-distribute-pie margin-top-40 display-inline-block" id="charts-property-distribute-pie" style="width:400px;height:500px;"></div>
 			<!-- 负债分布图 -->
 			<div class="charts-property-distribute-pie margin-top-40 display-inline-block" id="charts-liabilities-distribute-pie" style="width:400px;height:500px;"></div>
+			<!-- 资产分布表 -->
+			<table class="uk-table uk-table-striped display-inline-block margin-right-20" style="width:400px;height:500px;">
+				<caption>资产分布表</caption>
+				<thead>
+					<tr>
+						<th>账户</th>
+						<th>资产</th>
+						<th>占比</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in property_distribute_table">
+						<td>{{item.name}}</td>
+						<td>{{item.value | subFloat:2 | toCurrentFormat}}</td>
+						<td class="uk-width-1-2">{{item.value | countProportion:property_distribute_table}}%</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 负债分布表 -->
+			<table class="uk-table uk-table-striped display-inline-block" style="width:400px;height:500px;">
+				<caption>负债分布表</caption>
+				<thead>
+					<tr>
+						<th>账户</th>
+						<th>负债</th>
+						<th>占比</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in liabilities_property_distribute_table">
+						<td>{{item.name}}</td>
+						<td>{{item.value | subFloat:2 | toCurrentFormat}}</td>
+						<td class="uk-width-1-2">{{item.value | countProportion:liabilities_property_distribute_table}}%</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>

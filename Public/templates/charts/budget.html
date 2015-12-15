@@ -13,10 +13,27 @@
 		</div>
 		<div class="uk-panel-content">
 			<div class="uk-alert" ng-bind-html="charts_budget_tip | trustHtml" ng-show="charts_budget_tip"></div>
-			本月预算支出 ¥ {{budget.budget_num | subFloat:2}} 元, 已消费 ¥ {{budget.outcome_num | subFloat:2}} 元， 还剩 ¥ {{(budget.budget_num-budget.outcome_num) | subFloat:2}} 可以消费。
+			本月预算支出 ¥ {{budget.budget_num | subFloat:2 | toCurrentFormat}} 元, 已消费 ¥ {{budget.outcome_num | subFloat:2 | toCurrentFormat}} 元， 还剩 ¥ {{(budget.budget_num-budget.outcome_num) | subFloat:2 | toCurrentFormat}} 可以消费。
 			<div class="uk-progress"><!-- 进度条 -->
 			    <div class="uk-progress-bar" style="width: {{proportion}}%;">{{proportion | subFloat:2}}%</div>
 			</div>
+			<!-- 表格 -->
+			<table class="uk-table uk-table-striped">
+				<thead>
+					<tr>
+						<th>预算</th>
+						<th>已支出</th>
+						<th>剩余</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{budget.budget_num | subFloat:2 | toCurrentFormat}}</td>
+						<td>{{budget.outcome_num | subFloat:2 | toCurrentFormat}}</td>
+						<td>{{(budget.budget_num-budget.outcome_num) | subFloat:2 | toCurrentFormat}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div class="uk-panel-footer"></div>
 	</div>
