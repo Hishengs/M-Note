@@ -29,13 +29,14 @@ note.filter('toCurrentFormat',function(){
         }
     }*/
     return function (input) {
-        var str = input.toString();
+        var str = parseFloat(input).toFixed(2).toString();
+        console.log('str:',str);
 
         if(str.lastIndexOf('.') !== -1){
             var str_pre = str.substr(0,str.lastIndexOf('.'));//整数部分
             var float_str = str.substr(str.lastIndexOf('.'),str.length);//小数部分，包括小数点
         }
-        else {var float_str = '';var str_pre = str;}
+        else {var float_str = '.00';var str_pre = str;}
         return str_pre.replace( /\B(?=(?:\d{3})+$)/g, ',' )+float_str; 
     }
 });
